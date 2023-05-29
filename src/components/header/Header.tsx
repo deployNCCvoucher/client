@@ -144,8 +144,8 @@ export default function Header() {
     );
 
     return (
-        <Box sx={{ flexGrow: 1 }}>
-            <AppBar position="static" sx={{ bgcolor: '#f44336', }}>
+        <Box sx={{ flexGrow: 1, }}>
+            <AppBar position="static" sx={{ bgcolor: '#f44336', zIndex: '1', position: 'fixed', width: '100%', top: 0, }}>
                 <Toolbar>
                     <Box sx={{ bgcolor: '#fff', mr: '10px' }}>
                         <img src="./favicon.png" alt="" width={20} height={20} style={{ verticalAlign: 'middle' }} />
