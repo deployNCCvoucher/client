@@ -1,20 +1,43 @@
-import { Box, List, ListItem, ListItemButton, ListItemText } from "@mui/material";
+import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
+import InboxIcon from '@mui/icons-material/Inbox';
+import DraftsIcon from '@mui/icons-material/Drafts';
+import { Link } from "react-router-dom";
 
 const SlideBar = () => {
     return (
         <Box>
-            <nav aria-label="secondary mailbox folders">
+            <nav aria-label="main mailbox folders">
                 <List>
-                    <ListItem disablePadding>
-                        <ListItemButton>
-                            <ListItemText primary="Trash" />
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem disablePadding>
-                        <ListItemButton component="a" href="#simple-list">
-                            <ListItemText primary="Spam" />
-                        </ListItemButton>
-                    </ListItem>
+                    <Link to='/' className='nav-link'>
+                        <ListItem disablePadding>
+                            <ListItemButton>
+                                <ListItemIcon>
+                                    <InboxIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="My Profile" />
+                            </ListItemButton>
+                        </ListItem>
+                    </Link>
+                    <Link to='/request' className='nav-link'>
+                        <ListItem disablePadding>
+                            <ListItemButton>
+                                <ListItemIcon>
+                                    <InboxIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Request" />
+                            </ListItemButton>
+                        </ListItem>
+                    </Link>
+                    <Link to='/history' className='nav-link'>
+                        <ListItem disablePadding>
+                            <ListItemButton>
+                                <ListItemIcon>
+                                    <InboxIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="History" />
+                            </ListItemButton>
+                        </ListItem>
+                    </Link>
                 </List>
             </nav>
         </Box>
