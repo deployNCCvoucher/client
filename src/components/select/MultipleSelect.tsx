@@ -38,7 +38,7 @@ export const MultipleSelect: React.FC<IProps> = ({ date }) => {
                 open={open}
                 onClose={handleClose}
                 onOpen={handleOpen}
-                value={moths === '' && date.type === 1 ? d.getMonth() : moths === '' && date.type === 2 ? d.getFullYear() : moths}
+                value={moths === '' && date.type === 1 ? date.value[d.getMonth()] : moths === '' && date.type === 2 ? d.getFullYear() : moths}
                 label="Moth"
                 onChange={handleChange}
                 sx={{ ".MuiSelect-select": { p: '11px 14px' } }}
@@ -48,7 +48,6 @@ export const MultipleSelect: React.FC<IProps> = ({ date }) => {
                         <MenuItem key={item} value={item}>{item}</MenuItem>
                     )
                 })}
-
             </Select>
         </FormControl>
     );
