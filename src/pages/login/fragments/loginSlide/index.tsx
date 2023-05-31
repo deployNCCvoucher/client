@@ -20,8 +20,11 @@ const LoginSlide = () => {
       setOpen(true);
     }
   }, []);
+  const handleLogin = () => {
+    localStorage.setItem('token', 'login');
+  }
   return (
-    <div className="login-slide">
+    <div className="login-slide " onClick={handleLogin}>
       <div className="login-right-wrap">
         {open ? (
           <>
