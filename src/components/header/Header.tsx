@@ -13,50 +13,15 @@ import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
-
 import MoreIcon from '@mui/icons-material/MoreVert';
 
-const Search = styled('div')(({ theme }) => ({
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    '&:hover': {
-        backgroundColor: alpha(theme.palette.common.white, 0.25),
-    },
-    marginRight: theme.spacing(2),
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-        marginLeft: theme.spacing(3),
-        width: 'auto',
-    },
-}));
 
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-}));
+interface Iprops {
+    openSidebar: boolean,
+    setOpenSidebar: React.Dispatch<React.SetStateAction<boolean>>,
+}
+const Header: React.FC<Iprops> = ({ openSidebar, setOpenSidebar }) => {
 
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: 'inherit',
-    '& .MuiInputBase-input': {
-        padding: theme.spacing(1, 1, 1, 0),
-        // vertical padding + font size from searchIcon
-        paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-        transition: theme.transitions.create('width'),
-        width: '100%',
-        [theme.breakpoints.up('md')]: {
-            width: '20ch',
-        },
-    },
-}));
-
-export default function Header() {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] =
         React.useState<null | HTMLElement>(null);
@@ -142,13 +107,28 @@ export default function Header() {
             </MenuItem>
         </Menu>
     );
+    const handleOpenSidebar = () => {
+        setOpenSidebar(!openSidebar);
+
+    }
 
     return (
         <Box sx={{ flexGrow: 1, }}>
-            <AppBar position="static" sx={{ bgcolor: '#f44336', zIndex: '1', position: 'fixed', width: '100%', top: 0, }}>
+            <AppBar sx={{ bgcolor: '#f44336', zIndex: '4', position: 'fixed', width: '100%', height: '64px', top: 0, }}>
                 <Toolbar>
+                    <IconButton
+                        edge="start"
+                        color="inherit"
+                        aria-label="menu"
+                        sx={{
+                            display: { lg: 'none', sm: 'flex' }
+                        }}
+                        onClick={handleOpenSidebar}
+                    >
+                        <MenuIcon />
+                    </IconButton>
                     <Box sx={{ bgcolor: '#fff', mr: '10px' }}>
-                        <img src="./favicon.png" alt="" width={20} height={20} style={{ verticalAlign: 'middle' }} />
+                        <img src="../favicon.png" alt="" width={20} height={20} style={{ verticalAlign: 'middle' }} />
                     </Box>
                     <Typography
                         variant="h6"
@@ -196,3 +176,4 @@ export default function Header() {
         </Box>
     );
 }
+export default Header;
