@@ -9,6 +9,7 @@ import {
   FormControlLabel,
   Radio,
   Button,
+  styled,
 } from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller } from "react-hook-form";
@@ -105,6 +106,9 @@ const MyRequest = () => {
           display: "flex",
           flexDirection: "column",
           gap: "20px",
+          "@media (max-width: 1025px)": {
+            width: "100%",
+          },
         }}
       >
         <form
@@ -112,7 +116,14 @@ const MyRequest = () => {
           style={{ display: "flex", flexDirection: "column", gap: "20px" }}
         >
           <Box>
-            <Typography>
+            <Typography
+              sx={{
+                fontSize: "14px",
+                "@media (max-width: 1025px)": {
+                  fontSize: "12px",
+                },
+              }}
+            >
               Hình ảnh <span style={{ color: "red" }}>*</span>
             </Typography>
             <Box
@@ -131,33 +142,97 @@ const MyRequest = () => {
                 overFlow: "hidden",
                 backgroundColor: "#ffffff",
                 border: "3px solid var(--secondary-color)",
+                "@media (max-width: 1025px)": {
+                  height: "400px",
+                  borderRadius: "10px",
+                },
+                "@media (max-width: 769px)": {
+                  height: "300px",
+                  gap: "10px",
+                },
               }}
               {...getRootProps()}
             >
               {file === null && (
                 <>
                   <CloudUploadIcon
-                    sx={{ fontSize: "400px", color: "var(--secondary-color)" }}
+                    sx={{
+                      fontSize: "400px",
+                      color: "var(--secondary-color)",
+                      "@media (max-width: 1025px)": {
+                        fontSize: "200px",
+                      },
+                      "@media (max-width: 769px)": {
+                        fontSize: "100px",
+                      },
+                    }}
                   />
                   {isDragActive ? (
-                    <p>Thả file vào đây</p>
+                    <Typography
+                      sx={{
+                        fontSize: "20px",
+                        color: "var(--secondary-color)",
+                        "@media (max-width: 1025px)": {
+                          fontSize: "12px",
+                        },
+                      }}
+                    >
+                      Thả file vào đây
+                    </Typography>
                   ) : (
-                    <p>Kéo và thả hoặc click để chọn file</p>
+                    <Typography
+                      sx={{
+                        fontSize: "20px",
+                        color: "var(--secondary-color)",
+                        "@media (max-width: 1025px)": {
+                          fontSize: "12px",
+                        },
+                      }}
+                    >
+                      Kéo và thả hoặc click để chọn file
+                    </Typography>
                   )}
-                  {/* <input {...getInputProps()} style={{ cursor: "pointer" }} /> */}
                 </>
               )}
               {file && !file.type.startsWith("image/") && (
                 <>
                   <CloudUploadIcon
-                    sx={{ fontSize: "400px", color: "var(--secondary-color)" }}
+                    sx={{
+                      fontSize: "400px",
+                      color: "var(--secondary-color)",
+                      "@media (max-width: 1025px)": {
+                        fontSize: "200px",
+                      },
+                      "@media (max-width: 769px)": {
+                        fontSize: "100px",
+                      },
+                    }}
                   />
                   {isDragActive ? (
-                    <p>Thả file vào đây</p>
+                    <Typography
+                      sx={{
+                        fontSize: "20px",
+                        color: "var(--secondary-color)",
+                        "@media (max-width: 1025px)": {
+                          fontSize: "12px",
+                        },
+                      }}
+                    >
+                      Thả file vào đây
+                    </Typography>
                   ) : (
-                    <p>Kéo và thả hoặc click để chọn file</p>
+                    <Typography
+                      sx={{
+                        fontSize: "20px",
+                        color: "var(--secondary-color)",
+                        "@media (max-width: 1025px)": {
+                          fontSize: "12px",
+                        },
+                      }}
+                    >
+                      Kéo và thả hoặc click để chọn file
+                    </Typography>
                   )}
-                  {/* <input {...getInputProps()} style={{ cursor: "pointer" }} /> */}
                 </>
               )}
               {file && file.type.startsWith("image/") && (
@@ -169,6 +244,9 @@ const MyRequest = () => {
                     height: "100%",
                     overflow: "hidden",
                     borderRadius: "12px",
+                    "@media (max-width: 1025px)": {
+                      borderRadius: "7px",
+                    },
                   }}
                 >
                   <Box
@@ -200,6 +278,9 @@ const MyRequest = () => {
                       sx={{
                         fontSize: "40px",
                         color: "var(--secondary-color01)",
+                        "@media (max-width: 1025px)": {
+                          fontSize: "22px",
+                        },
                       }}
                     />
                     {isDragActive ? (
@@ -207,6 +288,9 @@ const MyRequest = () => {
                         sx={{
                           fontSize: "20px",
                           color: "var(--secondary-color01)",
+                          "@media (max-width: 1025px)": {
+                            fontSize: "12px",
+                          },
                         }}
                       >
                         Thả file vào đây
@@ -216,6 +300,9 @@ const MyRequest = () => {
                         sx={{
                           fontSize: "20px",
                           color: "var(--secondary-color01)",
+                          "@media (max-width: 1025px)": {
+                            fontSize: "12px",
+                          },
                         }}
                       >
                         Kéo và thả hoặc click để chọn file khác
@@ -226,9 +313,33 @@ const MyRequest = () => {
               )}
             </Box>
           </Box>
-          <Box sx={{ display: "flex", gap: "40px" }}>
-            <Box sx={{ width: "50%" }}>
-              <Typography>Code</Typography>
+          <Box
+            sx={{
+              display: "flex",
+              gap: "40px",
+              "@media (max-width: 1025px)": {
+                flexDirection: "column",
+              },
+            }}
+          >
+            <Box
+              sx={{
+                width: "50%",
+                "@media (max-width: 1025px)": {
+                  width: "100%",
+                },
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: "14px",
+                  "@media (max-width: 1025px)": {
+                    fontSize: "12px",
+                  },
+                }}
+              >
+                Code
+              </Typography>
               <TextField
                 {...register("code")}
                 name="code"
@@ -237,8 +348,22 @@ const MyRequest = () => {
                 sx={{ width: "100%" }}
               />
             </Box>
-            <Box sx={{ width: "50%" }}>
-              <Typography>
+            <Box
+              sx={{
+                width: "50%",
+                "@media (max-width: 1025px)": {
+                  width: "100%",
+                },
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: "14px",
+                  "@media (max-width: 1025px)": {
+                    fontSize: "12px",
+                  },
+                }}
+              >
                 Loại voucher <span style={{ color: "red" }}>*</span>
               </Typography>
               <Controller

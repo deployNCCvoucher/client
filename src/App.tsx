@@ -12,7 +12,7 @@ function App() {
         bgcolor: 'rgba(170, 191, 242, 0.368627451)',
       }}>
         <Box sx={{ display: 'flex', }}>
-          <Box sx={{ flexShrink: 0, width: '250px', }}>
+          <Box sx={{ flexShrink: 0, width: '250px', display: 'none' }}>
             <Box sx={{
               boxShadow: '0px 10px 8px 0px rgba(0,0,0,.35)',
               position: 'sticky',
