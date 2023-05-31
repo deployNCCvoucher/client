@@ -1,35 +1,18 @@
-import { Box } from '@mui/material';
+
+import { Route, Routes } from 'react-router-dom';
 import './App.css';
-import Header from './components/header/Header';
-import SlideBar from './components/slidebar/SlideBar';
-import AppRoutes from './routes/AppRoutes';
+import Layout from './components/layout/Layout';
+import Login from './pages/login';
+import { PrivateRoutes } from './routes/PrivateRoutes';
 function App() {
+  const tokenLogin = localStorage.getItem("token");
   return (
     <>
-      <Header />
-      <Box sx={{
-        pt: '64px',
-        bgcolor: 'rgba(170, 191, 242, 0.368627451)',
-      }}>
-        <Box sx={{ display: 'flex', }}>
-          <Box sx={{ flexShrink: 0, width: '250px', display: 'none' }}>
-            <Box sx={{
-              boxShadow: '0px 10px 8px 0px rgba(0,0,0,.35)',
-              position: 'sticky',
-              bgcolor: "#fff",
-              height: 'calc(100vh - 64px)',
-              top: '64px'
-            }}>
-              <SlideBar />
-            </Box>
-          </Box>
-          <Box sx={{ width: '100%', }}>
-            <Box sx={{ m: "30px", p: "16px", bgcolor: '#fff', boxShadow: '0 5px 15px rgba(0,0,0,.35)', }}>
-              <AppRoutes />
-            </Box>
-          </Box>
-        </Box>
-      </Box >
+      <Routes>
+        <Route path='app/*' element={<Layout />} />
+        <Route path='/login' element={<Login />} />
+      </Routes>
+
     </>
 
   );

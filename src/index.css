@@ -4,12 +4,12 @@
   box-sizing: border-box;
   font-family: "Poppins", sans-serif !important;
 }
-:root{
-  --primary-color: #F1626F;
-  --secondary-color: #3E50AF;
-  --border-color: #AABFF2;
+:root {
+  --primary-color: #f1626f;
+  --secondary-color: #3e50af;
+  --border-color: #aabff2;
   --text-color: #3a3a3a;
-  --secondary-color01: #F2F5FD;
+  --secondary-color01: #f2f5fd;
 }
 
 html,
@@ -148,6 +148,15 @@ body {
 }
 a {
   text-decoration: none;
+}
+.nav-link.active {
+  color: red;
+}
+.nav-link.active svg {
+  fill: red;
+}
+.nav-link {
+  color: #767676;
 }
 .scrollbar::-webkit-scrollbar {
   width: 3px;
