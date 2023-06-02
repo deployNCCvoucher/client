@@ -1,7 +1,29 @@
 import "./style.scss";
 import { useEffect, useState } from "react";
+import { GoogleLogin } from "react-google-login";
+import { gapi } from "gapi-script";
+import axiosClient from '../../../../api/axiosClient'
+
 const LoginSlide = () => {
+  const clientId =
+    "9811993498-flmr9etgn9vr42st1lhl2mf14of8jlu4.apps.googleusercontent.com";
+  useEffect(() => {
+    function start() {
+      gapi.client.init({
+        clientId: clientId,
+        scope: "email",
+      });
+    }
+    gapi.load("client:auth2", start);
+  }, []);
   const [open, setOpen] = useState(false);
+  const responseGoogle = (response: any) => {
+    console.log("response", response);
+    if (response.accessToken) {
+      const accessToken = response.accessToken;
+      window.localStorage.setItem("accessToken", accessToken);
+    }
+  };
   useEffect(() => {
     const handleOpen = (): void => {
       if (window.innerWidth > 769) {
@@ -20,24 +42,34 @@ const LoginSlide = () => {
       setOpen(true);
     }
   }, []);
-  const handleLogin = () => {
-    localStorage.setItem('token', 'login');
-  }
   return (
-    <div className="login-slide " onClick={handleLogin}>
+    <div className="login-slide ">
       <div className="login-right-wrap">
         {open ? (
           <>
             <img className="logo" src="./images/logo.png" alt="logo" />
             <h1 className="logo-text">VOUCHER</h1>
-            <button className="button">
-              <img
-                src="./images/google-logo.png"
-                className="google-logo"
-                alt=""
-              />
-              <p>Sign in with google</p>
-            </button>
+            <GoogleLogin
+              clientId={clientId}
+              buttonText="Login with Google"
+              onSuccess={responseGoogle}
+              onFailure={responseGoogle}
+              cookiePolicy={"single_host_origin"}
+              render={(renderProps) => (
+                <button
+                  onClick={renderProps.onClick}
+                  disabled={renderProps.disabled}
+                  className="button"
+                >
+                  <img
+                    src="./images/google-logo.png"
+                    className="google-logo"
+                    alt=""
+                  />
+                  <p>Sign in with google</p>
+                </button>
+              )}
+            />
             <p className="term-text">
               By sign in you agree to the{" "}
               <span style={{ fontWeight: "700" }}>Terms</span> and the{" "}

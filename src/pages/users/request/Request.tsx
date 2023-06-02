@@ -1,5 +1,5 @@
 import "react-toastify/dist/ReactToastify.css";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import {
   Box,
@@ -9,7 +9,6 @@ import {
   FormControlLabel,
   Radio,
   Button,
-  styled,
 } from "@mui/material";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller } from "react-hook-form";
@@ -18,22 +17,12 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { ToastContainer, toast } from "react-toastify";
 
 const MyRequest = () => {
+  const [imageData, setImageData] = useState('');
   const [file, setFile] = useState<any>(null);
-  console.log("file", file);
   const schema = yup.object({
     file: yup
       .mixed()
-      .required("Vui lòng thêm hình ảnh hóa đơn vào!")
-      .test("is-image", "Hóa đơn phải là một hình ảnh!", function (value: any) {
-        if (value !== null && value !== undefined) {
-          if (value.type && value.type.startsWith("image/")) {
-            return true;
-          }
-          return false;
-        }
-        return true;
-      }),
-    // code: yup.string().required("Vui lòng điền code vào!"),
+      .required("Vui lòng thêm hình ảnh hóa đơn vào!"),
     code: yup.string(),
     moneyReduce: yup.number().required("Vui lòng chọn loại voucher!"),
   });
@@ -48,7 +37,8 @@ const MyRequest = () => {
     mode: "all",
     resolver: yupResolver(schema),
   });
-  const onSubmit = handleSubmit((data) => {
+  const img = window.localStorage.getItem('img');
+  const onSubmit = handleSubmit((data: any) => {  
     toast.success("request success");
     console.log("data", data);
     reset({
@@ -58,15 +48,23 @@ const MyRequest = () => {
     setFile(null);
   });
   const onDrop = (acceptedFiles: any): any => {
-    if (file === null) {
-      setFile(acceptedFiles[0]);
-    } else if (file !== null) {
-      if (acceptedFiles[0] && acceptedFiles[0].type.startsWith("image/")) {
-        setFile(acceptedFiles[0]);
+    const file = acceptedFiles[0];
+    if (file === undefined) {
+      return;
+    }
+    if (file !== null) {
+      if (file.type.startsWith("image/")) {
+        setFile(file);
       } else {
         toast.error("Hóa đơn phải là một hình ảnh!");
       }
     }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const base64Data: any = reader.result;
+      setImageData(base64Data);
+    };
+    reader.readAsDataURL(file);
   };
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   useEffect(() => {
@@ -82,11 +80,13 @@ const MyRequest = () => {
   }, [errors]);
   useEffect(() => {
     if (file !== null && file.type.startsWith("image/")) {
-      setValue("file", file);
+      setValue("file", imageData);
     } else if (file !== null) {
       toast.error("Hóa đơn phải là một hình ảnh!");
     }
-  }, [file]);
+  }, [imageData]);
+  console.log('newimg', img)
+  console.log('imgdataa', imageData);
   return (
     <Box>
       <Typography
