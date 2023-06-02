@@ -53,7 +53,7 @@
       padding: 10px 40px;
       justify-content: center;
       align-items: center;
-      cursor: pointer !important;
+      cursor: pointer;
       .google-logo {
         width: 20px;
       }
@@ -62,6 +62,12 @@
         color: var(--secondary-color);
         font-weight: 500;
       }
+      &:hover {
+        background-color: var(--secondary-color);
+        p {
+          color: #fff;
+        }
+      }
     }
     .term-text {
       font-size: 14px;
@@ -69,21 +75,15 @@
     }
   }
 }
-.login-slide.login-right-wrap.button:hover {
-  background-color: var(--secondary-color);
-  p {
-    color: #fff;
-  }
-}
 
 @keyframes zoom-out {
   0% {
     transform: scale(0.5, 0.5) translateY(-40%);
-    top: 50%;
+    top: 70%;
   }
   100% {
     transform: scale(1, 1) translateY(-40%);
-    top: 50%;
+    top: 70%;
   }
 }
 @keyframes in {
@@ -115,10 +115,10 @@
       top: 100%;
       animation: in 0.5s ease-out forwards;
       animation-delay: 1s;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
       .mob-wrap{
-        display: flex;
-        text-align: center;
-        justify-content: center;
         .logo {
           width: 20%;
           height: auto;
@@ -137,7 +137,6 @@
           padding: 8px 20px;
           justify-content: center;
           align-items: center;
-          cursor: pointer !important;
           .google-logo {
             width: 20px;
           }

@@ -1,12 +1,7 @@
-import { Route, Routes } from "react-router-dom";
-import Layout from "../components/layout/Layout";
+import { Outlet, Navigate } from 'react-router-dom';
 
-
-export const PrivateRoutes = () => {
-    return (
-        <Routes>
-            <Route path='app/*' element={<Layout />} />
-        </Routes>
-    )
-
-}
+const PrivateRoutes = (): JSX.Element => {
+  const token = window.localStorage.getItem('accessToken')
+  return token ? <Outlet /> : <Navigate to="/login" />;
+};
+export default PrivateRoutes;

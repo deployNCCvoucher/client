@@ -158,3 +158,15 @@ a {
 .nav-link {
   color: #767676;
 }
+.scrollbar::-webkit-scrollbar {
+  width: 3px;
+  background-color: #F5F5F5;
+} 
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: var(--secondary-color);
+  border-radius: 20px;
+
+}
+.scrollbar::-webkit-scrollbar-track {
+  border-radius: 20px;
+}
