@@ -5,12 +5,20 @@ import {
 } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import CheckIcon from '@mui/icons-material/Check';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { getAllUser } from '../../../../redux/user/userAction'
+import { useAppDispatch, useAppSelector } from "../../../../redux/hook/useTypedSeletor";
+import { setUser } from "../../../../redux/user/userSlide";
+import { getAllInvoice } from "../../../../redux/invoice/invoiceAction";
+import { filterInvoice } from "../../../../redux/invoice/invoiceSlide";
 
 interface IProps {
     codeVoucher: number;
 }
 const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
+    const idUser = useAppSelector((state) => state.user.currentUser.id)
+    console.log('idUser', idUser);
+    const dispatch = useAppDispatch()
     const [openViewImg, setOpenViewImg] = useState<boolean>(false)
     const handleViewIamge = () => {
         setOpenViewImg(!openViewImg);
@@ -25,6 +33,15 @@ const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
         paddingTop: '10%',
         background: '#000',
     })
+    useEffect(() => {
+        const fetchData = async () => {
+          await dispatch(getAllUser());
+          await dispatch(getAllInvoice())
+          dispatch(setUser());
+          dispatch(filterInvoice(1 as any))
+        };
+        fetchData();
+      }, []);
     return (
         <Box sx={{ boxShadow: '0 5px 15px rgba(0,0,0,.35)', mt: '40px' }}>
             <Typography
