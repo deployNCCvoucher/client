@@ -5,8 +5,12 @@ import LanguageIcon from '@mui/icons-material/Language';
 import { MultipleSelect } from "../../../components/select/MultipleSelect";
 import DetailsVoucher from "./detailsVoucher/DetailsVoucher";
 import { useState } from "react";
+import { useAppSelector } from "../../../redux/hook/useTypedSeletor";
+
 
 const MyProfile = () => {
+    const user = useAppSelector((state) => state.user.currentUser);
+    console.log('user', user);
     const moths = { value: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], label: "Moth", type: 1 };
     const years = { value: [2021, 2022, 2023, 2024], label: "Year", type: 2 };
     const [codeVoucher, setCodeVoucher] = useState<number>(0)
@@ -34,10 +38,10 @@ const MyProfile = () => {
                                     component="h2"
                                     sx={{ color: '#606060', fontSize: '21px', lineHeight: '30px', fontWeight: '500' }}
                                 >
-                                    Hoang Phi Khanh
+                                    {user.name}
                                 </Box>
                                 <Typography sx={{ color: '#767676', fontSize: '16px' }}>
-                                    dev
+                                    {user.role}
                                 </Typography>
                             </Box>
                             <Box
@@ -57,13 +61,7 @@ const MyProfile = () => {
                                 <Box>
                                     <MailIcon fontSize="small" />
                                     <Typography sx={{ pl: '10px' }}>
-                                        khanh.hoangphi@ncc.asia
-                                    </Typography>
-                                </Box>
-                                <Box>
-                                    <CallIcon fontSize="small" />
-                                    <Typography sx={{ pl: '10px' }}>
-                                        0888999777
+                                        {user.gmail}
                                     </Typography>
                                 </Box>
                                 <Box>

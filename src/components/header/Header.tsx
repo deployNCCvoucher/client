@@ -15,14 +15,16 @@ import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { GoogleLogout } from "react-google-login";
-
+import { useAppDispatch } from "../../redux/hook/useTypedSeletor";
+import { logOut } from "../../redux/user/userSlide"
 interface Iprops {
   openSidebar: boolean;
   setOpenSidebar: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const Header: React.FC<Iprops> = ({ openSidebar, setOpenSidebar }) => {
+  const dispatch = useAppDispatch()
     const onSuccess = () => {
-        window.localStorage.removeItem("accessToken");
+        dispatch(logOut())
       };
   const clientId =
     "9811993498-flmr9etgn9vr42st1lhl2mf14of8jlu4.apps.googleusercontent.com";

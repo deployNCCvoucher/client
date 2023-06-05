@@ -1,6 +1,8 @@
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
+import { useAppDispatch } from "../../../redux/hook/useTypedSeletor";
+import { createInvoice } from "../../../redux/invoice/invoiceAction"
 import {
   Box,
   Typography,
@@ -16,7 +18,9 @@ import * as yup from "yup";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { ToastContainer, toast } from "react-toastify";
 
+
 const MyRequest = () => {
+  const dispatch = useAppDispatch();
   const [imageData, setImageData] = useState('');
   const [file, setFile] = useState<any>(null);
   const schema = yup.object({
@@ -41,6 +45,13 @@ const MyRequest = () => {
   const onSubmit = handleSubmit((data: any) => {  
     toast.success("request success");
     console.log("data", data);
+    dispatch(createInvoice({
+      image: imageData,
+      code: "string",
+      reducedType: '30k',
+      gmail: "nga.nguyenthithanh@ncc.asia",
+      createBy: 1
+    }))
     reset({
       code: "",
       moneyReduce: undefined,

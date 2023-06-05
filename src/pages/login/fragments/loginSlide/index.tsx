@@ -2,27 +2,42 @@ import "./style.scss";
 import { useEffect, useState } from "react";
 import { GoogleLogin } from "react-google-login";
 import { gapi } from "gapi-script";
-import axiosClient from '../../../../api/axiosClient'
+import { createUser } from "../../../../redux/user/userAction";
 
 const LoginSlide = () => {
   const clientId =
     "9811993498-flmr9etgn9vr42st1lhl2mf14of8jlu4.apps.googleusercontent.com";
-  useEffect(() => {
-    function start() {
-      gapi.client.init({
-        clientId: clientId,
-        scope: "email",
-      });
-    }
-    gapi.load("client:auth2", start);
-  }, []);
+    useEffect(() => {
+      function start() {
+        gapi.load("auth2", () => {
+          gapi.auth2
+            .init({
+              client_id: clientId,
+              scope: "email",
+            })
+            .then(() => {
+              // Khởi tạo thành công
+            })
+            .catch((error: any) => {
+              // Xử lý lỗi khi khởi tạo
+              console.log("Lỗi khi khởi tạo gapi.auth2:", error);
+            });
+        });
+      }
+    
+      gapi.load("client", start);
+    }, []);
   const [open, setOpen] = useState(false);
   const responseGoogle = (response: any) => {
-    console.log("response", response);
     if (response.accessToken) {
       const accessToken = response.accessToken;
       window.localStorage.setItem("accessToken", accessToken);
     }
+    const name = `${response.profileObj.familyName} ${response.profileObj.givenName}`;
+    if (response.profileObj) {
+      window.localStorage.setItem("currentUser", response.profileObj.email);
+    }
+    createUser({gmail: response.profileObj.email, name: name})
   };
   useEffect(() => {
     const handleOpen = (): void => {
