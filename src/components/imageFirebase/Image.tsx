@@ -21,7 +21,7 @@ const Image = ({image}: any) => {
   }, []);
 
   return (
-    <img src={imageUrl} alt="Firebase Image" />
+    <img src={imageUrl} style ={{ width:'100%'}} alt="Firebase Image" />
   );
 };
 

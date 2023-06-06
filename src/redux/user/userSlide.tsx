@@ -1,12 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getAllUser, createUser } from "./userAction";
-// import { UserProp } from "./userInterface";
+import { getAllUser, createUser, login } from "./userAction";
 
-let auth: string = '';
-if (window.localStorage.getItem('accessToken') !== null) {
-  const result = window.localStorage.getItem('accessToken') ?? '';
-  auth = result
-}
 const initialUserState = {
   loadingUser: false,
   dataUser: [],
@@ -20,7 +14,7 @@ const initialUserState = {
     createAt: "",
     updateAt: null,
   },
-  token: auth ?? null,
+  token: false,
 } as any;
 
 const userSlice = createSlice({
@@ -61,6 +55,17 @@ const userSlice = createSlice({
       })
       .addCase(createUser.rejected, (state: any, action: any) => {
         state.loadingUser = false;
+      })
+      .addCase(login.fulfilled, (state: any, action: any) => {
+        console.log('login success', action.payload)
+        window.localStorage?.setItem('accessToken', action.payload.accessToken)
+        if(action.payload.accessToken){
+          state.token = true
+        }        
+        console.log('accessToken', state.to)
+      })
+      .addCase(login.rejected, (state: any, action: any) => {
+        console.log('login error',action.payload)
       });
   },
 });
