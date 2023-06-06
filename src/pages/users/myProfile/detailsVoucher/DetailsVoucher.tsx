@@ -8,16 +8,20 @@ import CheckIcon from '@mui/icons-material/Check';
 import React, { useEffect, useState } from "react";
 import { getAllUser } from '../../../../redux/user/userAction'
 import { useAppDispatch, useAppSelector } from "../../../../redux/hook/useTypedSeletor";
-import { setUser } from "../../../../redux/user/userSlide";
 import { getAllInvoice } from "../../../../redux/invoice/invoiceAction";
-import { filterInvoice } from "../../../../redux/invoice/invoiceSlide";
+import { filterInvoice, invoiceReducer } from "../../../../redux/invoice/invoiceSlide";
+import { setUser } from '../../../../redux/user/userSlide'
+import Image from '../../../../components/image/Image'
 
 interface IProps {
     codeVoucher: number;
 }
 const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
-    const idUser = useAppSelector((state) => state.user.currentUser.id)
-    console.log('idUser', idUser);
+    const value = useAppSelector((state: any) => state.user)
+    const invoice = useAppSelector((state) => state.invoice)
+    console.log('invoice', invoice)
+    const { userInvoice } = invoice
+    const { currentUser } = value
     const dispatch = useAppDispatch()
     const [openViewImg, setOpenViewImg] = useState<boolean>(false)
     const handleViewIamge = () => {
@@ -36,12 +40,14 @@ const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
     useEffect(() => {
         const fetchData = async () => {
           await dispatch(getAllUser());
-          await dispatch(getAllInvoice())
-          dispatch(setUser());
-          dispatch(filterInvoice(1 as any))
+          await dispatch(getAllInvoice());
+          dispatch(setUser())
         };
         fetchData();
       }, []);
+      useEffect(() => {
+            dispatch(filterInvoice(currentUser.id));
+      }, [currentUser, dispatch]);
     return (
         <Box sx={{ boxShadow: '0 5px 15px rgba(0,0,0,.35)', mt: '40px' }}>
             <Typography
@@ -66,13 +72,15 @@ const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
                         </TableRow>
                     </TableHead>
                     <TableBody sx={{ "& .MuiTableCell-root": { p: ' 16px' } }}>
-                        <TableRow
+                        {
+                            userInvoice.map((invoice: any) => 
+                            <TableRow
                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                         >
-                            <TableCell align="center" width='10%'>#123K12</TableCell>
+                            <TableCell align="center" width='10%'>{invoice.code}</TableCell>
                             <TableCell align="center" width='20%'>
                                 <Box component='span' sx={{ cursor: 'pointer' }} onClick={handleViewIamge}>
-                                    <img src="../images/hoadon.jpg" alt="imga" width={45} height={45} />
+                                    <Image image={invoice.image}/>
                                     {
                                         openViewImg ?
                                             <ViewImg>
@@ -81,21 +89,12 @@ const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
                                     }
                                 </Box>
                             </TableCell>
-                            <TableCell align="center" width='20%'>30</TableCell>
+                            <TableCell align="center" width='20%'>{invoice.reducedType}</TableCell>
                             <TableCell align="center" width='20%'><Box sx={{ color: 'red' }}><CloseIcon /></Box></TableCell>
                             <TableCell align="center" width='30%'>note</TableCell>
                         </TableRow>
-                        <TableRow
-                            sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                        >
-                            <TableCell align="center">#123K12</TableCell>
-                            <TableCell align="center">
-                                <img src="../images/hoadon.jpg" alt="imga" width={45} height={45} />
-                            </TableCell>
-                            <TableCell align="center">30</TableCell>
-                            <TableCell align="center"><Box sx={{ color: 'blue' }}><CheckIcon /></Box></TableCell>
-                            <TableCell align="center">note</TableCell>
-                        </TableRow>
+                            )
+                        }
                     </TableBody>
                 </Table>
             </TableContainer>

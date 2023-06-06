@@ -12,7 +12,7 @@ const initialUserState = {
   dataUser: [],
   currentEmail: "",
   currentUser: {
-    id: 0,
+    id: null,
     role: "user",
     name: "",
     gmail: "",
@@ -35,7 +35,7 @@ const userSlice = createSlice({
       state.currentUser = {...newState[0]}
     },
     logOut: (state) => {
-      state.token = undefined;
+      state.token = null;
       window.localStorage.removeItem('accessToken');
       window.localStorage.removeItem('currentUser');
     },
@@ -48,6 +48,10 @@ const userSlice = createSlice({
       .addCase(getAllUser.fulfilled, (state: any, action: any) => {
         state.loadingUser = false;
         state.dataUser = action.payload;
+        const userEmail = window.localStorage.getItem('currentUser');
+        const newState = state.dataUser.find((user: any) => user.gmail === userEmail
+        );
+        state.currentUser = {...newState}
       })
       .addCase(getAllUser.rejected, (state: any, action: any) => {
         state.loadingUser = false;

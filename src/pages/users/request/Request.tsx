@@ -43,7 +43,6 @@ const MyRequest = () => {
   });
   const img = window.localStorage.getItem('img');
   const onSubmit = handleSubmit((data: any) => {  
-    toast.success("request success");
     console.log("data", data);
     dispatch(createInvoice({
       image: imageData,

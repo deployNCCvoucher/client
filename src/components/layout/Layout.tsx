@@ -1,9 +1,8 @@
 import { Box } from "@mui/material";
 import Header from "../header/Header";
 import SlideBar from "../slidebar/SlideBar";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 import { styled } from "@mui/system";
-import axios from 'axios';
 
 
 interface DefaultLayoutProps {
