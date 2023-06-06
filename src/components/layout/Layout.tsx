@@ -3,13 +3,13 @@ import Header from "../header/Header";
 import SlideBar from "../slidebar/SlideBar";
 import { ReactNode, useState } from "react";
 import { styled } from "@mui/system";
-
+import { Outlet } from "react-router-dom";
 
 interface DefaultLayoutProps {
   children: ReactNode;
 }
 
-const Layout = ({ children }: DefaultLayoutProps): JSX.Element => {
+const Layout = (): JSX.Element => {
   const [openSidebar, setOpenSidebar] = useState<boolean>(false);
   const Showsbar = styled("div")({
     flexShrink: 0,
@@ -74,7 +74,7 @@ const Layout = ({ children }: DefaultLayoutProps): JSX.Element => {
                 boxShadow: "0 5px 15px rgba(0,0,0,.35)",
               }}
             >
-              {children}
+              <Outlet />
             </Box>
           </Box>
         </Box>

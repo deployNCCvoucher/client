@@ -3,8 +3,11 @@ import { useEffect, useState } from "react";
 import { GoogleLogin } from "react-google-login";
 import { gapi } from "gapi-script";
 import { createUser } from "../../../../redux/user/userAction";
+import { login } from "../../../../redux/user/userAction";
+import { useAppDispatch } from "../../../../redux/hook/useTypedSeletor";
 
 const LoginSlide = () => {
+  const dispatch = useAppDispatch()
   const clientId =
     "9811993498-flmr9etgn9vr42st1lhl2mf14of8jlu4.apps.googleusercontent.com";
     useEffect(() => {
@@ -17,26 +20,16 @@ const LoginSlide = () => {
             })
             .then(() => {
             })
-            .catch((error: any) => {
+            .catch((error: any) => { 
               console.log("Lỗi khi khởi tạo gapi.auth2:", error);
             });
         });
       }
-    
       gapi.load("client", start);
     }, []);
   const [open, setOpen] = useState(false);
   const responseGoogle = (response: any) => {
-    if (response.accessToken) {
-      const accessToken = response.accessToken;
-      window.localStorage.setItem("accessToken", accessToken);
-    }
-    const name = `${response.profileObj.familyName} ${response.profileObj.givenName}`;
-    if (response.profileObj) {
-      window.localStorage.setItem("currentUser", response.profileObj.email);
-      window.localStorage.setItem('profileObj', response.profileObj.image);
-    }
-    createUser({gmail: response.profileObj.email, name: name})
+    dispatch(login())
   };
   useEffect(() => {
     const handleOpen = (): void => {
