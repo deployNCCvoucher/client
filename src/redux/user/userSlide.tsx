@@ -1,9 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { getAllUser, createUser, login } from "./userAction";
 
+let auth: any = '';
+if (window.localStorage.getItem('accessToken') !== null) {
+  const result = window.localStorage.getItem('accessToken');
+  auth = result
+}
 const initialUserState = {
   loadingUser: false,
   dataUser: [],
+  accessToken: auth,
   currentEmail: "",
   currentUser: {
     id: null,
@@ -16,6 +22,7 @@ const initialUserState = {
   },
   token: false,
 } as any;
+
 
 const userSlice = createSlice({
   name: "user",
@@ -31,7 +38,7 @@ const userSlice = createSlice({
     logOut: (state) => {
       state.token = null;
       window.localStorage.removeItem('accessToken');
-      window.localStorage.removeItem('currentUser');
+      state.accessToken = window.localStorage?.getItem('accessToken')
     },
   },
   extraReducers: (builder) => {
@@ -60,7 +67,7 @@ const userSlice = createSlice({
         console.log('login success', action.payload)
         window.localStorage?.setItem('accessToken', action.payload.accessToken)
         if(action.payload.accessToken){
-          state.token = true
+          state.accessToken = window.localStorage?.getItem('accessToken')
         }        
         console.log('accessToken', state.to)
       })
