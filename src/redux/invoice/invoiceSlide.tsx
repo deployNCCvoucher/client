@@ -1,19 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { createInvoice, getAllInvoice } from './invoiceAction'
+import { toast } from "react-toastify";
 
 const initialValue = {
   listInvoice: [],
-  userInvoice: []
+  userInvoice: [],
+  currentUserId: 0
 }
-
 const invoiceSlice = createSlice({
   name: 'invoice',
   initialState: initialValue,
   reducers: {
-    filterInvoice: (state: any, action: any) => {
-      console.log('action', action);
+    filterInvoice: (state, action) => {
+      console.log('action.payload test139024', action.payload);
       const newList = state.listInvoice.filter(
-        (invoice: any) => invoice.createBy === action.payload.createBy
+        (invoice: any) => invoice.createBy === action.payload
       )
       state.userInvoice = [...newList]
       console.log('new list', newList)
@@ -23,15 +24,16 @@ const invoiceSlice = createSlice({
   extraReducers: (builder) => {
     builder
     .addCase(createInvoice.fulfilled, (state: any, action: any) => {
+      toast.success("request success");
       console.log('action.payload', action)
     })
     .addCase(createInvoice.rejected, (state: any, action: any) => {
       console.log('action.payload', action)
+      toast.error('request error')
     })
     .addCase(getAllInvoice.fulfilled, (state: any, action: any) => {
       console.log('action.payload', action)
       state.listInvoice = action.payload;
-      console.log('state.listInvoice', state.listInvoice)
     })
     .addCase(getAllInvoice.rejected, (state: any, action: any) => {
       console.log('action.payload', action)

@@ -16,10 +16,8 @@ const LoginSlide = () => {
               scope: "email",
             })
             .then(() => {
-              // Khởi tạo thành công
             })
             .catch((error: any) => {
-              // Xử lý lỗi khi khởi tạo
               console.log("Lỗi khi khởi tạo gapi.auth2:", error);
             });
         });
@@ -36,6 +34,7 @@ const LoginSlide = () => {
     const name = `${response.profileObj.familyName} ${response.profileObj.givenName}`;
     if (response.profileObj) {
       window.localStorage.setItem("currentUser", response.profileObj.email);
+      window.localStorage.setItem('profileObj', response.profileObj.image);
     }
     createUser({gmail: response.profileObj.email, name: name})
   };

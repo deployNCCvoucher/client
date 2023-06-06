@@ -10,8 +10,7 @@ import { useAppSelector } from "../../../redux/hook/useTypedSeletor";
 
 const MyProfile = () => {
     const user = useAppSelector((state) => state.user.currentUser);
-    console.log('user', user);
-    const moths = { value: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], label: "Moth", type: 1 };
+    const moths = { value: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], label: "Month", type: 1 };
     const years = { value: [2021, 2022, 2023, 2024], label: "Year", type: 2 };
     const [codeVoucher, setCodeVoucher] = useState<number>(0)
     const handleDetailsVoucher = (data: number) => {
