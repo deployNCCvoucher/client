@@ -23,4 +23,15 @@ export const getAllInvoice = createAsyncThunk(
     }
   }
 );
+export const getInvoice = createAsyncThunk(
+  'invoices/getInvoice',
+  async (params: any, thunkApi) => {
+    try {
+      const { data } = await axiosClient.get(`/invoices/getByUserId/${params}`);
+      return data;
+    } catch (error: any) {
+      return thunkApi.rejectWithValue(error.response?.data?.error?.message);
+    }
+  }
+);
 

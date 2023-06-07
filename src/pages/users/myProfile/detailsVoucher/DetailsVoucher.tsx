@@ -19,12 +19,11 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../../../redux/hook/useTypedSeletor";
-import { getAllInvoice } from "../../../../redux/invoice/invoiceAction";
+import { getAllInvoice, getInvoice } from "../../../../redux/invoice/invoiceAction";
 import {
   filterInvoice,
   invoiceReducer,
 } from "../../../../redux/invoice/invoiceSlide";
-import { setUser } from "../../../../redux/user/userSlide";
 import Image from "../../../../components/imageFirebase/Image";
 
 interface IProps {
@@ -52,10 +51,12 @@ const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
     background: "#000",
   });
   useEffect(() => {
+    const userId = window.localStorage.getItem('idUser')
+    console.log(userId);
     const fetchData = async () => {
-      await dispatch(getAllUser());
-      await dispatch(getAllInvoice());
-      dispatch(setUser());
+      if(userId)
+      await dispatch(getAllUser(parseInt(userId)));
+      await dispatch(getInvoice(userId));
     };
     fetchData();
   }, []);

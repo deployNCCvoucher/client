@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { createInvoice, getAllInvoice } from './invoiceAction'
+import { createInvoice, getAllInvoice, getInvoice } from './invoiceAction'
 import { toast } from "react-toastify";
 
 const initialValue = {
@@ -36,6 +36,13 @@ const invoiceSlice = createSlice({
       state.listInvoice = action.payload;
     })
     .addCase(getAllInvoice.rejected, (state: any, action: any) => {
+      console.log('action.payload', action)
+    })
+    .addCase(getInvoice.fulfilled, (state: any, action: any) => {
+      console.log('action.payload', action)
+      state.userInvoice = [action.payload];
+    })
+    .addCase(getInvoice.rejected, (state: any, action: any) => {
       console.log('action.payload', action)
     })
   }
