@@ -41,21 +41,23 @@ const userSlice = createSlice({
       .addCase(getAllUser.fulfilled, (state: any, action: any) => {
         state.loadingUser = false;
         state.dataUser = action.payload;
-        state.currentUser = {...action.payload, userImage: state.currentUser.userImage}
+        const userImg = window.localStorage.getItem('userImage');
+        state.currentUser = {...action.payload, userImage: userImg}
         console.log('currentUser', state.currentUser)
       })
       .addCase(getAllUser.rejected, (state: any, action: any) => {
         state.loadingUser = false;
       })
       .addCase(login.fulfilled, (state: any, action: any) => {
-        console.log('login success', action.payload)
         window.localStorage?.setItem('accessToken', action.payload.accessToken)
+        window.localStorage?.setItem('userImage', action.payload.UserImage)
         if(action.payload.accessToken){
           state.accessToken = window.localStorage?.getItem('accessToken')
-        }        
-        console.log('accessToken', state.to)
+        }
+        if(action.payload.UserImage){
+          state.accessToken = window.localStorage?.getItem('accessToken')
+        }      
         window.localStorage.setItem('idUser', action.payload.userId)
-        state.currentUser.userImage = action.payload.UserImage
       })
       .addCase(login.rejected, (state: any, action: any) => {
         console.log('login error',action.payload)

@@ -40,7 +40,7 @@ const invoiceSlice = createSlice({
     })
     .addCase(getInvoice.fulfilled, (state: any, action: any) => {
       console.log('action.payload', action)
-      state.userInvoice = [action.payload];
+      state.userInvoice = [...action.payload];
     })
     .addCase(getInvoice.rejected, (state: any, action: any) => {
       console.log('action.payload', action)

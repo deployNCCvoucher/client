@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { storage } from './firebase';
 import { getDownloadURL, ref } from 'firebase/storage';
 
-const Image = ({image}: any) => {
+const Image = ({image, width, height}: any) => {
   const [imageUrl, setImageUrl] = useState('');
 
   useEffect(() => {
@@ -19,7 +19,7 @@ const Image = ({image}: any) => {
   }, []);
   return (
     // eslint-disable-next-line jsx-a11y/img-redundant-alt
-    <img src={imageUrl} style ={{ width:'100%'}} alt="Firebase Image" />
+    <img src={imageUrl} style ={{ width: width, height: height}} alt="Firebase Image" />
   );
 };
 

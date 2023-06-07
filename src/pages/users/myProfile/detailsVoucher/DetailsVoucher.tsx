@@ -9,6 +9,7 @@ import {
   TableRow,
   Typography,
   styled,
+  Chip
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
@@ -21,6 +22,7 @@ import {
 } from "../../../../redux/hook/useTypedSeletor";
 import { getInvoice } from "../../../../redux/invoice/invoiceAction";
 import Image from "../../../../components/imageFirebase/Image";
+import Time from '../../../../components/time/Time'
 
 interface IProps {
   codeVoucher: number;
@@ -28,9 +30,12 @@ interface IProps {
 const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
   const value = useAppSelector((state: any) => state.user);
   const invoice = useAppSelector((state) => state.invoice);
-  console.log("invoice", invoice);
   const { userInvoice } = invoice;
+  console.log('userInvoice detail', userInvoice);
+  userInvoice.forEach((i) => console.log('tets', i));
+  console.log(typeof(userInvoice))
   const { currentUser } = value;
+  console.log('currentUser', currentUser);
   const dispatch = useAppDispatch();
   const [openViewImg, setOpenViewImg] = useState<boolean>(false);
   const handleViewIamge = () => {
@@ -51,7 +56,7 @@ const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
     console.log(userId);
     const fetchData = async () => {
       if(userId)
-      await dispatch(getAllUser(parseInt(userId)));
+      await dispatch(getAllUser(userId));
       await dispatch(getInvoice(userId));
     };
     fetchData();
@@ -83,13 +88,13 @@ const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
               <TableCell align="center">Image</TableCell>
               <TableCell align="center">Type</TableCell>
               <TableCell align="center">Status</TableCell>
-              <TableCell align="center">Note</TableCell>
+              <TableCell align="center">create At</TableCell>
               <TableCell align="center"></TableCell>
             </TableRow>
           </TableHead>
           <TableBody sx={{ "& .MuiTableCell-root": { p: " 16px" } }}>
-            {userInvoice.map((invoice: any) => (
-              <TableRow
+            {userInvoice.map((invoice: any, index: number) => (
+              <TableRow key = {index}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
                 <TableCell align="center" width="10%">
@@ -101,12 +106,10 @@ const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
                     sx={{ cursor: "pointer" }}
                     onClick={handleViewIamge}
                   >
-                    <Box sx={{ width: "40px" }}>
-                      <Image image={invoice.image} />
-                    </Box>
+                      <Image image={invoice.image} width = '45px' height= 'auto' />
                     {openViewImg ? (
                       <ViewImg>
-                        <Box sx={{ width: "400px" }}>
+                        <Box sx={{ width: "400px", margin: 'auto' }}>
                           <Image image={invoice.image} />
                         </Box>
                       </ViewImg>
@@ -116,7 +119,13 @@ const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
                   </Box>
                 </TableCell>
                 <TableCell align="center" width="20%">
-                  {invoice.reducedType}
+                  {
+                    invoice.reducedType === '30k' ? 
+                    <Chip label={invoice.reducedType} style= {{ backgroundColor: "blue", color: 'white'}} />
+                    : invoice.reducedType === '50k'
+                    ? <Chip label={invoice.reducedType} style= {{ backgroundColor: "lime",  color: 'white'}} />
+                    : <Chip label={invoice.reducedType} style= {{ backgroundColor: "purple",  color: 'white'}}/>
+                  }
                 </TableCell>
                 <TableCell align="center" width="20%">
                   {invoice.status === "pending" ? (
@@ -134,7 +143,10 @@ const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
                   )}
                 </TableCell>
                 <TableCell align="center" width="30%">
-                  note
+                  <Time time={invoice.createAt}/>
+                </TableCell>
+                <TableCell align="center" width="30%">
+                  <Time time={invoice.createAt}/>
                 </TableCell>
               </TableRow>
             ))}

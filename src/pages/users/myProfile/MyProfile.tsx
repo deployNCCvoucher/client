@@ -1,7 +1,6 @@
 import {
   Avatar,
   Box,
-  Button,
   Grid,
   Paper,
   Table,
@@ -20,8 +19,11 @@ import DetailsVoucher from "./detailsVoucher/DetailsVoucher";
 import { useState } from "react";
 import { useAppSelector } from "../../../redux/hook/useTypedSeletor";
 
+
 const MyProfile = () => {
   const user = useAppSelector((state) => state.user.currentUser);
+  const invoice = useAppSelector((state) => state.invoice)
+  const { userInvoice } = invoice;
   const moths = {
     value: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
     label: "Month",
@@ -127,7 +129,7 @@ const MyProfile = () => {
                   <TableRow
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
-                    <TableCell align="center">Type -30k</TableCell>
+                    <TableCell align="center">Type 30k</TableCell>
                     <TableCell align="center">5</TableCell>
                     <TableCell align="center">2</TableCell>
                     <TableCell align="center">3</TableCell>
@@ -141,7 +143,7 @@ const MyProfile = () => {
                   <TableRow
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
-                    <TableCell align="center">Type -50k</TableCell>
+                    <TableCell align="center">Type 50k</TableCell>
                     <TableCell align="center">5</TableCell>
                     <TableCell align="center">2</TableCell>
                     <TableCell align="center">3</TableCell>
@@ -153,7 +155,7 @@ const MyProfile = () => {
                   <TableRow
                     sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                   >
-                    <TableCell align="center">Type -100k</TableCell>
+                    <TableCell align="center">Type 100k</TableCell>
                     <TableCell align="center">5</TableCell>
                     <TableCell align="center">2</TableCell>
                     <TableCell align="center">3</TableCell>
