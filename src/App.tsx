@@ -1,6 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { publicRoutes, privateRoutes } from "./routes/Routes";
-import PrivateRoutes from "./routes/PrivateRoutes";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/layout/Layout";
 import "./App.css";
 import PrivateRoute from "./routes/PrivateRoutes";
@@ -16,7 +14,7 @@ function App() {
             <Route element={<PrivateRoute />}>
                 <Route element={<Layout />}>
                     <Route path="/app/myProfile" element={<MyProfile />} />
-                    <Route path="/request" element={<MyRequest />} />
+                    <Route path="/app/request" element={<MyRequest />} />
                 </Route>
             </Route>
             <Route element={<PublicRoute />}>

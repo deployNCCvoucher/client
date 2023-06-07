@@ -6,21 +6,19 @@ const Image = ({image}: any) => {
   const [imageUrl, setImageUrl] = useState('');
 
   useEffect(() => {
-    const getImage = async () => {
+    const getImage: any = async () => {
       try {
         const storageRef = ref(storage, image);
         const url = await getDownloadURL(storageRef);
-        console.log('url', url)
         setImageUrl(url);
       } catch (error) {
         console.error('Error getting image from Firebase:', error);
       }
     };
-
     getImage();
   }, []);
-
   return (
+    // eslint-disable-next-line jsx-a11y/img-redundant-alt
     <img src={imageUrl} style ={{ width:'100%'}} alt="Firebase Image" />
   );
 };

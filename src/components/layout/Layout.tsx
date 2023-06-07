@@ -1,13 +1,9 @@
 import { Box } from "@mui/material";
 import Header from "../header/Header";
 import SlideBar from "../slidebar/SlideBar";
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import { styled } from "@mui/system";
 import { Outlet } from "react-router-dom";
-
-interface DefaultLayoutProps {
-  children: ReactNode;
-}
 
 const Layout = (): JSX.Element => {
   const [openSidebar, setOpenSidebar] = useState<boolean>(false);

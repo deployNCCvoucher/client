@@ -17,6 +17,7 @@ import { useForm, Controller } from "react-hook-form";
 import * as yup from "yup";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { ToastContainer, toast } from "react-toastify";
+import { getAllUser } from "../../../redux/user/userAction";
 
 
 const MyRequest = () => {
@@ -24,6 +25,17 @@ const MyRequest = () => {
   const value = useAppSelector((state: any) => state.user)
   const { currentUser } = value
   console.log(currentUser)
+
+  useEffect(() => {
+    const userId = window.localStorage.getItem('idUser')
+    console.log(userId);
+    const fetchData = async () => {
+      if(userId)
+      await dispatch(getAllUser(parseInt(userId)));
+    };
+    fetchData();
+  }, []);
+
   const [imageData, setImageData] = useState('');
   const [file, setFile] = useState<any>(null);
   const schema = yup.object({
@@ -31,7 +43,7 @@ const MyRequest = () => {
       .mixed()
       .required("Vui lòng thêm hình ảnh hóa đơn vào!"),
     code: yup.string(),
-    moneyReduce: yup.number().required("Vui lòng chọn loại voucher!"),
+    moneyReduce: yup.string().required("Vui lòng chọn loại voucher!"),
   });
   const {
     handleSubmit,
@@ -44,15 +56,14 @@ const MyRequest = () => {
     mode: "all",
     resolver: yupResolver(schema),
   });
-  const img = window.localStorage.getItem('img');
   const onSubmit = handleSubmit((data: any) => {  
     console.log("data", data);
     dispatch(createInvoice({
       image: imageData,
-      code: "string",
-      reducedType: '30k',
-      gmail: "nga.nguyenthithanh@ncc.asia",
-      createBy: 1
+      code: data.code,
+      reducedType: data.moneyReduce,
+      gmail: currentUser.gmail,
+      createBy: currentUser.id
     }))
     reset({
       code: "",
@@ -79,7 +90,7 @@ const MyRequest = () => {
     };
     reader.readAsDataURL(file);
   };
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+  const { getRootProps, isDragActive } = useDropzone({ onDrop });
   useEffect(() => {
     if (errors.file?.message) {
       toast.error(errors.file.message as any);
@@ -98,8 +109,6 @@ const MyRequest = () => {
       toast.error("Hóa đơn phải là một hình ảnh!");
     }
   }, [imageData]);
-  console.log('newimg', img)
-  console.log('imgdataa', imageData);
   return (
     <Box>
       <Typography
@@ -251,7 +260,6 @@ const MyRequest = () => {
               {file && file.type.startsWith("image/") && (
                 <Box
                   sx={{
-                    // position: "absolute",
                     top: "0",
                     width: "100%",
                     height: "100%",
@@ -386,17 +394,17 @@ const MyRequest = () => {
                 render={({ field }) => (
                   <RadioGroup {...field}>
                     <FormControlLabel
-                      value={0}
+                      value='30k'
                       control={<Radio />}
                       label="< 3.000.000đ"
                     />
                     <FormControlLabel
-                      value={1}
+                      value='50k'
                       control={<Radio />}
                       label="3.000.000đ - 10.000.000đ"
                     />
                     <FormControlLabel
-                      value={2}
+                      value='100k'
                       control={<Radio />}
                       label=">= 10.000.000đ"
                     />
