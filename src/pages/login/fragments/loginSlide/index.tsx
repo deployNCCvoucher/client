@@ -27,9 +27,8 @@ const LoginSlide = () => {
       gapi.load("client", start);
     }, []);
   const [open, setOpen] = useState(false);
-  const responseGoogle = (response: any) => {
-    console.log('response', response);
-    dispatch(login(response.tokenId))
+  const responseGoogle = async (response: any) => {
+    await dispatch(login(response.tokenId))
   };
   useEffect(() => {
     const handleOpen = (): void => {
