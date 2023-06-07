@@ -8,6 +8,5 @@ const firebaseConfig = {
     storageBucket: 'gs://nestjsproject-388201.appspot.com',
   };
 
-// Khởi tạo kết nối với Firebase
 const app = initializeApp(firebaseConfig)
 export const storage = getStorage(app)

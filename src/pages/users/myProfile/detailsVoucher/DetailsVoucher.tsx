@@ -19,11 +19,7 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../../../redux/hook/useTypedSeletor";
-import { getAllInvoice, getInvoice } from "../../../../redux/invoice/invoiceAction";
-import {
-  filterInvoice,
-  invoiceReducer,
-} from "../../../../redux/invoice/invoiceSlide";
+import { getInvoice } from "../../../../redux/invoice/invoiceAction";
 import Image from "../../../../components/imageFirebase/Image";
 
 interface IProps {
@@ -60,9 +56,6 @@ const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
     };
     fetchData();
   }, []);
-  useEffect(() => {
-    dispatch(filterInvoice(currentUser.id));
-  }, [currentUser, dispatch]);
   return (
     <Box sx={{ boxShadow: "0 5px 15px rgba(0,0,0,.35)", mt: "40px" }}>
       <Typography

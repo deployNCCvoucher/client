@@ -18,7 +18,7 @@ const initialUserState = {
     totalReduce: 0,
     createAt: "",
     updateAt: null,
-    UserImage: ''
+    userImage: ''
   },
   token: false,
 } as any;
@@ -41,7 +41,7 @@ const userSlice = createSlice({
       .addCase(getAllUser.fulfilled, (state: any, action: any) => {
         state.loadingUser = false;
         state.dataUser = action.payload;
-        state.currentUser = {...action.payload}
+        state.currentUser = {...action.payload, userImage: state.currentUser.userImage}
         console.log('currentUser', state.currentUser)
       })
       .addCase(getAllUser.rejected, (state: any, action: any) => {
@@ -55,7 +55,7 @@ const userSlice = createSlice({
         }        
         console.log('accessToken', state.to)
         window.localStorage.setItem('idUser', action.payload.userId)
-        state.currentUser.UserImage = action.payload.userImage
+        state.currentUser.userImage = action.payload.UserImage
       })
       .addCase(login.rejected, (state: any, action: any) => {
         console.log('login error',action.payload)
