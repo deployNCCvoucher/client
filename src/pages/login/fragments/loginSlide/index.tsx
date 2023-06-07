@@ -2,7 +2,6 @@ import "./style.scss";
 import { useEffect, useState } from "react";
 import { GoogleLogin } from "react-google-login";
 import { gapi } from "gapi-script";
-import { createUser } from "../../../../redux/user/userAction";
 import { login } from "../../../../redux/user/userAction";
 import { useAppDispatch } from "../../../../redux/hook/useTypedSeletor";
 
@@ -29,7 +28,8 @@ const LoginSlide = () => {
     }, []);
   const [open, setOpen] = useState(false);
   const responseGoogle = (response: any) => {
-    dispatch(login())
+    console.log('response', response);
+    dispatch(login(response.tokenId))
   };
   useEffect(() => {
     const handleOpen = (): void => {

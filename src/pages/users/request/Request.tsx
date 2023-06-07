@@ -1,7 +1,7 @@
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { useAppDispatch } from "../../../redux/hook/useTypedSeletor";
+import { useAppDispatch, useAppSelector } from "../../../redux/hook/useTypedSeletor";
 import { createInvoice } from "../../../redux/invoice/invoiceAction"
 import {
   Box,
@@ -21,6 +21,9 @@ import { ToastContainer, toast } from "react-toastify";
 
 const MyRequest = () => {
   const dispatch = useAppDispatch();
+  const value = useAppSelector((state: any) => state.user)
+  const { currentUser } = value
+  console.log(currentUser)
   const [imageData, setImageData] = useState('');
   const [file, setFile] = useState<any>(null);
   const schema = yup.object({

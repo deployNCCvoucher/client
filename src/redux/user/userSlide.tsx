@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getAllUser, createUser, login } from "./userAction";
+import { getAllUser, login } from "./userAction";
 
 let auth: any = '';
 if (window.localStorage.getItem('accessToken') !== null) {
@@ -8,7 +8,6 @@ if (window.localStorage.getItem('accessToken') !== null) {
 }
 const initialUserState = {
   loadingUser: false,
-  dataUser: [],
   accessToken: auth,
   currentEmail: "",
   currentUser: {
@@ -19,22 +18,15 @@ const initialUserState = {
     totalReduce: 0,
     createAt: "",
     updateAt: null,
+    UserImage: ''
   },
   token: false,
 } as any;
-
 
 const userSlice = createSlice({
   name: "user",
   initialState: initialUserState,
   reducers: {
-    setUser: (state) => {
-      const userEmail = window.localStorage.getItem('currentUser');
-      const newState = state.dataUser.filter(
-        (user: any) => user.gmail === userEmail
-      );
-      state.currentUser = {...newState[0]}
-    },
     logOut: (state) => {
       state.token = null;
       window.localStorage.removeItem('accessToken');
@@ -49,18 +41,10 @@ const userSlice = createSlice({
       .addCase(getAllUser.fulfilled, (state: any, action: any) => {
         state.loadingUser = false;
         state.dataUser = action.payload;
-        const userEmail = window.localStorage.getItem('currentUser');
-        const newState = state.dataUser.find((user: any) => user.gmail === userEmail
-        );
-        state.currentUser = {...newState}
+        state.currentUser = {...action.payload}
+        console.log('currentUser', state.currentUser)
       })
       .addCase(getAllUser.rejected, (state: any, action: any) => {
-        state.loadingUser = false;
-      })
-      .addCase(createUser.fulfilled, (state: any, action: any) => {
-        console.log(123);
-      })
-      .addCase(createUser.rejected, (state: any, action: any) => {
         state.loadingUser = false;
       })
       .addCase(login.fulfilled, (state: any, action: any) => {
@@ -70,6 +54,8 @@ const userSlice = createSlice({
           state.accessToken = window.localStorage?.getItem('accessToken')
         }        
         console.log('accessToken', state.to)
+        window.localStorage.setItem('idUser', action.payload.userId)
+        state.currentUser.UserImage = action.payload.userImage
       })
       .addCase(login.rejected, (state: any, action: any) => {
         console.log('login error',action.payload)
@@ -77,6 +63,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { setUser, logOut } = userSlice.actions;
+export const { logOut } = userSlice.actions;
 const { reducer: userReducer } = userSlice;
 export { userReducer };
