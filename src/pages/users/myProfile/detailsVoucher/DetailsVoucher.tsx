@@ -10,32 +10,41 @@ import {
   Typography,
   styled,
   Chip,
-  Button
+  Button,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { getAllUser } from "../../../../redux/user/userAction";
 import {
   useAppDispatch,
   useAppSelector,
 } from "../../../../redux/hook/useTypedSeletor";
-import { getInvoice } from "../../../../redux/invoice/invoiceAction";
+import {
+  getAllInvoice,
+  getInvoice,
+} from "../../../../redux/invoice/invoiceAction";
 import Image from "../../../../components/imageFirebase/Image";
-import Time from '../../../../components/time/Time'
+import Time from "../../../../components/time/Time";
 import EditModal from "../../../../components/modal/Modal";
 
 interface IProps {
   codeVoucher: number;
+  admin?: boolean;
 }
-const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
-  const [openModal, setOpenModal] = useState(false)
-    const handleOpen = () => setOpenModal(true);
+const DetailsVoucher: React.FC<IProps> = ({ codeVoucher, admin }) => {
+  const [openModal, setOpenModal] = useState(false);
+  const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
   const value = useAppSelector((state: any) => state.user);
   const invoice = useAppSelector((state) => state.invoice);
-  const { userInvoice } = invoice;
+
+  const { userInvoice, listInvoice } = invoice;
+  const invoiceRequest = listInvoice.filter((item) => 
+    item.status !== "pending"
+  );
+  const dataMap = admin ? invoiceRequest : userInvoice;
   const { currentUser } = value;
   const dispatch = useAppDispatch();
   const [openViewImg, setOpenViewImg] = useState<boolean>(false);
@@ -53,11 +62,11 @@ const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
     background: "#000",
   });
   useEffect(() => {
-    const userId = window.localStorage.getItem('idUser')
+    const userId = window.localStorage.getItem("idUser");
     const fetchData = async () => {
-      if(userId)
-      await dispatch(getAllUser(userId));
+      if (userId) await dispatch(getAllUser(userId));
       await dispatch(getInvoice(userId));
+      await dispatch(getAllInvoice());
     };
     fetchData();
   }, []);
@@ -93,65 +102,99 @@ const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
             </TableRow>
           </TableHead>
           <TableBody sx={{ "& .MuiTableCell-root": { p: " 16px" } }}>
-            {userInvoice.map((invoice: any, index: number) => (
-              <>
-              <EditModal open={openModal} handleOpen={handleOpen} handleClose={handleClose}  />
-              <TableRow key = {index}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
-                <TableCell align="center" width="10%">
-                  {invoice.code}
-                </TableCell>
-                <TableCell align="center" width="20%">
-                  <Box
-                    component="span"
-                    sx={{ cursor: "pointer" }}
-                    onClick={handleViewIamge}
-                  >
-                      <Image image={invoice.image} width = '45px' height= 'auto' />
-                    {openViewImg ? (
-                      <ViewImg>
-                        <Box sx={{ width: "400px", margin: 'auto' }}>
-                          <Image image={invoice.image} />
-                        </Box>
-                      </ViewImg>
+            {dataMap.map((invoice: any, index: number) => (
+              <Fragment key={index}>
+                <EditModal
+                  open={openModal}
+                  handleOpen={handleOpen}
+                  handleClose={handleClose}
+                />
+                <TableRow
+                  key={index}
+                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+                >
+                  <TableCell align="center" width="10%">
+                    {invoice.code}
+                  </TableCell>
+                  <TableCell align="center" width="20%">
+                    <Box
+                      component="span"
+                      sx={{ cursor: "pointer" }}
+                      onClick={handleViewIamge}
+                    >
+                      <Image image={invoice.image} width="45px" height="auto" />
+                      {openViewImg ? (
+                        <ViewImg>
+                          <Box sx={{ width: "400px", margin: "auto" }}>
+                            <Image image={invoice.image} />
+                          </Box>
+                        </ViewImg>
+                      ) : (
+                        ""
+                      )}
+                    </Box>
+                  </TableCell>
+                  <TableCell align="center" width="20%">
+                    {invoice.reducedType === "30k" ? (
+                      <Chip
+                        label={invoice.reducedType}
+                        style={{ backgroundColor: "blue", color: "white" }}
+                      />
+                    ) : invoice.reducedType === "50k" ? (
+                      <Chip
+                        label={invoice.reducedType}
+                        style={{ backgroundColor: "lime", color: "white" }}
+                      />
                     ) : (
-                      ""
+                      <Chip
+                        label={invoice.reducedType}
+                        style={{ backgroundColor: "purple", color: "white" }}
+                      />
                     )}
-                  </Box>
-                </TableCell>
-                <TableCell align="center" width="20%">
-                  {
-                    invoice.reducedType === '30k' ? 
-                    <Chip label={invoice.reducedType} style= {{ backgroundColor: "blue", color: 'white'}} />
-                    : invoice.reducedType === '50k'
-                    ? <Chip label={invoice.reducedType} style= {{ backgroundColor: "lime",  color: 'white'}} />
-                    : <Chip label={invoice.reducedType} style= {{ backgroundColor: "purple",  color: 'white'}}/>
-                  }
-                </TableCell>
-                <TableCell align="center" width="20%">
-                  {invoice.status === "pending" ? (
-                    <Box sx={{ color: "yellow" }}>
-                      <MoreHorizOutlinedIcon />
-                    </Box>
-                  ) : invoice.status === "approve" ? (
-                    <Box sx={{ color: "blue" }}>
-                      <CheckIcon />
-                    </Box>
-                  ) : (
-                    <Box sx={{ color: "red" }}>
-                      <CloseIcon />
-                    </Box>
-                  )}
-                </TableCell>
-                <TableCell align="center" width="30%">
-                  <Time time={invoice.createAt}/>
-                </TableCell>
-                <TableCell align="center" width="30%">
-                  <Button onClick={handleOpen}>Edit</Button>
-                </TableCell>
-              </TableRow>
-              </>
+                  </TableCell>
+                  <TableCell align="center" width="20%">
+                    {invoice.status === "pending" ? (
+                      <Box sx={{ color: "yellow" }}>
+                        <MoreHorizOutlinedIcon />
+                      </Box>
+                    ) : invoice.status === "approve" ? (
+                      <Box sx={{ color: "blue" }}>
+                        <CheckIcon />
+                      </Box>
+                    ) : (
+                      <Box sx={{ color: "red" }}>
+                        <CloseIcon />
+                      </Box>
+                    )}
+                  </TableCell>
+                  <TableCell align="center" width="30%">
+                    <Time time={invoice.createAt} />
+                  </TableCell>
+                  <TableCell align="center" width="30%">
+                    {admin ? (
+                      <Box sx={{ display: "flex" }}>
+                        <Button
+                          variant="contained"
+                          sx={{ mr: "8px" }}
+                          color="success"
+                          onClick={handleOpen}
+                        >
+                          Aprove
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="error"
+                          onClick={handleOpen}
+                        >
+                          Reject
+                        </Button>
+                      </Box>
+                    ) : (
+                      <Button onClick={handleOpen}>Edit</Button>
+                    )}
+                  </TableCell>
+                </TableRow>
+              </Fragment>
             ))}
           </TableBody>
         </Table>
