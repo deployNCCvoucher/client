@@ -18,7 +18,6 @@ const Image = ({image, width, height}: any) => {
     getImage();
   }, []);
   return (
-    // eslint-disable-next-line jsx-a11y/img-redundant-alt
     <img src={imageUrl} style ={{ width: width, height: height}} alt="Firebase Image" />
   );
 };
