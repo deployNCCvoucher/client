@@ -15,27 +15,36 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { getAllUser } from "../../../../redux/user/userAction";
 import {
   useAppDispatch,
   useAppSelector,
 } from "../../../../redux/hook/useTypedSeletor";
-import { getInvoice } from "../../../../redux/invoice/invoiceAction";
+import {
+  getAllInvoice,
+  getInvoice,
+} from "../../../../redux/invoice/invoiceAction";
 import Image from "../../../../components/imageFirebase/Image";
 import Time from "../../../../components/time/Time";
 import EditModal from "../../../../components/modal/Modal";
 
 interface IProps {
   codeVoucher: number;
+  admin?: boolean;
 }
-const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
+const DetailsVoucher: React.FC<IProps> = ({ codeVoucher, admin }) => {
   const [openModal, setOpenModal] = useState(false);
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
   const value = useAppSelector((state: any) => state.user);
   const invoice = useAppSelector((state) => state.invoice);
-  const { userInvoice } = invoice;
+
+  const { userInvoice, listInvoice } = invoice;
+  const invoiceRequest = listInvoice.filter((item) => 
+    item.status !== "pending"
+  );
+  const dataMap = admin ? invoiceRequest : userInvoice;
   const { currentUser } = value;
   const dispatch = useAppDispatch();
 
@@ -44,6 +53,7 @@ const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
     const fetchData = async () => {
       if (userId) await dispatch(getAllUser(userId));
       await dispatch(getInvoice(userId));
+      await dispatch(getAllInvoice());
     };
     fetchData();
   }, []);
@@ -79,13 +89,13 @@ const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
             </TableRow>
           </TableHead>
           <TableBody sx={{ "& .MuiTableCell-root": { p: " 16px" } }}>
-            {userInvoice.map((invoice: any, index: number) => (
-              <>
+            {dataMap.map((invoice: any, index: number) => (
+              <Fragment key={index}>
                 <EditModal
-                  invoice={invoice}
                   open={openModal}
                   handleOpen={handleOpen}
                   handleClose={handleClose}
+                  invoice={invoice}
                 />
                 <TableRow
                   key={index}
@@ -139,10 +149,30 @@ const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
                     <Time time={invoice.createAt} />
                   </TableCell>
                   <TableCell align="center" width="30%">
-                    <Button onClick={handleOpen}>Edit</Button>
+                    {admin ? (
+                      <Box sx={{ display: "flex" }}>
+                        <Button
+                          variant="contained"
+                          sx={{ mr: "8px" }}
+                          color="success"
+                          onClick={handleOpen}
+                        >
+                          Aprove
+                        </Button>
+                        <Button
+                          variant="contained"
+                          color="error"
+                          onClick={handleOpen}
+                        >
+                          Reject
+                        </Button>
+                      </Box>
+                    ) : (
+                      <Button onClick={handleOpen}>Edit</Button>
+                    )}
                   </TableCell>
                 </TableRow>
-              </>
+              </Fragment>
             ))}
           </TableBody>
         </Table>

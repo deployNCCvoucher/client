@@ -39,10 +39,6 @@ const style = {
   p: 4,
 };
 
-interface IProps {
-  codeVoucher: number;
-}
-
 const DetailVoucher = () => {
   const [openModal, setOpenModal] = useState(false);
   const handleOpen = () => setOpenModal(true);
@@ -124,6 +120,21 @@ const DetailVoucher = () => {
                         label={invoice.reducedType}
                         style={{ backgroundColor: "purple", color: "white" }}
                       />
+                    )}
+                  </TableCell>
+                  <TableCell align="center" width="20%">
+                    {invoice.status === "pending" ? (
+                      <Box sx={{ color: "yellow" }}>
+                        <MoreHorizOutlinedIcon />
+                      </Box>
+                    ) : invoice.status === "approve" ? (
+                      <Box sx={{ color: "blue" }}>
+                        <CheckIcon />
+                      </Box>
+                    ) : (
+                      <Box sx={{ color: "red" }}>
+                        <CloseIcon />
+                      </Box>
                     )}
                   </TableCell>
                   <TableCell align="center" width="20%">

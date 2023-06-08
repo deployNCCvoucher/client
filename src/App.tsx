@@ -6,6 +6,7 @@ import PublicRoute from "./routes/PublicRoutes";
 import Profile from "./pages/users/profile/Profile";
 import MyRequest from "./pages/users/request/Request";
 import Login from "./pages/login";
+import { AdminPage } from "./pages/admin/Admin";
 function App() {
   return (
     <div className="App">
@@ -13,6 +14,7 @@ function App() {
             <Route path="" element={<Navigate to="/login" replace />} />
             <Route element={<PrivateRoute />}>
                 <Route element={<Layout />}>
+                    <Route path="/app/admin" element={<AdminPage />} />
                     <Route path="/app/myProfile" element={<Profile />} />
                     <Route path="/app/request" element={<MyRequest />} />
                 </Route>
