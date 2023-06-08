@@ -6,6 +6,7 @@ if (window.localStorage.getItem('accessToken') !== null) {
   const result = window.localStorage.getItem('accessToken');
   auth = result
 }
+
 const initialUserState = {
   loadingUser: false,
   accessToken: auth,
