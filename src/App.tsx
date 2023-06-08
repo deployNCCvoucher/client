@@ -3,7 +3,7 @@ import Layout from "./components/layout/Layout";
 import "./App.css";
 import PrivateRoute from "./routes/PrivateRoutes";
 import PublicRoute from "./routes/PublicRoutes";
-import MyProfile from "./pages/users/myProfile/MyProfile";
+import Profile from "./pages/users/profile/Profile";
 import MyRequest from "./pages/users/request/Request";
 import Login from "./pages/login";
 import { AdminPage } from "./pages/admin/Admin";
@@ -15,7 +15,7 @@ function App() {
             <Route element={<PrivateRoute />}>
                 <Route element={<Layout />}>
                     <Route path="/app/admin" element={<AdminPage />} />
-                    <Route path="/app/myProfile" element={<MyProfile />} />
+                    <Route path="/app/myProfile" element={<Profile />} />
                     <Route path="/app/request" element={<MyRequest />} />
                 </Route>
             </Route>

@@ -5,7 +5,7 @@ export const createInvoice = createAsyncThunk(
   'invoices/createInvoice',
   async (params: any, thunkApi) => {
     try {
-      const { data } = await axiosClient.post('/invoices/createInvoice', { ...params });
+      const { data } = await axiosClient.post('/invoices/createInvoice', params,{headers: {'Content-Type': 'multipart/form-data'}});
       return data;
     } catch (error: any) {
       return thunkApi.rejectWithValue(error.response?.data?.error?.message);

@@ -11,40 +11,41 @@ import {
   styled,
   Chip,
   Button,
+  Modal,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { getAllUser } from "../../../../redux/user/userAction";
 import {
   useAppDispatch,
   useAppSelector,
 } from "../../../../redux/hook/useTypedSeletor";
-import {
-  getAllInvoice,
-  getInvoice,
-} from "../../../../redux/invoice/invoiceAction";
+import { getInvoice } from "../../../../redux/invoice/invoiceAction";
 import Image from "../../../../components/imageFirebase/Image";
 import Time from "../../../../components/time/Time";
 import EditModal from "../../../../components/modal/Modal";
 
-interface IProps {
-  codeVoucher: number;
-  admin?: boolean;
-}
-const DetailsVoucher: React.FC<IProps> = ({ codeVoucher, admin }) => {
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
+
+const DetailVoucher = () => {
   const [openModal, setOpenModal] = useState(false);
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
   const value = useAppSelector((state: any) => state.user);
   const invoice = useAppSelector((state) => state.invoice);
-
-  const { userInvoice, listInvoice } = invoice;
-  const invoiceRequest = listInvoice.filter((item) => 
-    item.status !== "pending"
-  );
-  const dataMap = admin ? invoiceRequest : userInvoice;
+  const { userInvoice } = invoice;
   const { currentUser } = value;
   const dispatch = useAppDispatch();
 
@@ -53,7 +54,6 @@ const DetailsVoucher: React.FC<IProps> = ({ codeVoucher, admin }) => {
     const fetchData = async () => {
       if (userId) await dispatch(getAllUser(userId));
       await dispatch(getInvoice(userId));
-      await dispatch(getAllInvoice());
     };
     fetchData();
   }, []);
@@ -72,6 +72,12 @@ const DetailsVoucher: React.FC<IProps> = ({ codeVoucher, admin }) => {
       >
         Detail
       </Typography>
+      <EditModal
+        invoice={invoice}
+        open={openModal}
+        handleOpen={handleOpen}
+        handleClose={handleClose}
+      />
       <TableContainer component={Paper} sx={{ p: "0 15px" }}>
         <Table
           size="small"
@@ -88,29 +94,15 @@ const DetailsVoucher: React.FC<IProps> = ({ codeVoucher, admin }) => {
               <TableCell align="center"></TableCell>
             </TableRow>
           </TableHead>
-          <TableBody sx={{ "& .MuiTableCell-root": { p: " 16px" } }}>
-            {dataMap.map((invoice: any, index: number) => (
-              <Fragment key={index}>
-                <EditModal
-                  open={openModal}
-                  handleOpen={handleOpen}
-                  handleClose={handleClose}
-                  invoice={invoice}
-                />
-                <TableRow
-                  key={index}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
+          <TableBody>
+            {userInvoice.map((invoice: any, index: number) => (
+              <>
+                <TableRow>
                   <TableCell align="center" width="10%">
                     {invoice.code}
                   </TableCell>
                   <TableCell align="center" width="20%">
-                    <Box
-                      component="span"
-                      sx={{ cursor: "pointer" }}
-                    >
-                      <Image image={invoice.image} width="45px" height="auto" />
-                    </Box>
+                    <Image image={invoice.image} width="45px" height="auto" />
                   </TableCell>
                   <TableCell align="center" width="20%">
                     {invoice.reducedType === "30k" ? (
@@ -145,34 +137,14 @@ const DetailsVoucher: React.FC<IProps> = ({ codeVoucher, admin }) => {
                       </Box>
                     )}
                   </TableCell>
-                  <TableCell align="center" width="30%">
+                  <TableCell align="center" width="20%">
                     <Time time={invoice.createAt} />
                   </TableCell>
                   <TableCell align="center" width="30%">
-                    {admin ? (
-                      <Box sx={{ display: "flex" }}>
-                        <Button
-                          variant="contained"
-                          sx={{ mr: "8px" }}
-                          color="success"
-                          onClick={handleOpen}
-                        >
-                          Aprove
-                        </Button>
-                        <Button
-                          variant="contained"
-                          color="error"
-                          onClick={handleOpen}
-                        >
-                          Reject
-                        </Button>
-                      </Box>
-                    ) : (
-                      <Button onClick={handleOpen}>Edit</Button>
-                    )}
+                    <Button onClick={handleOpen}>Edit</Button>
                   </TableCell>
                 </TableRow>
-              </Fragment>
+              </>
             ))}
           </TableBody>
         </Table>
@@ -180,4 +152,5 @@ const DetailsVoucher: React.FC<IProps> = ({ codeVoucher, admin }) => {
     </Box>
   );
 };
-export default DetailsVoucher;
+
+export default DetailVoucher;

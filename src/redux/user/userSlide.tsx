@@ -6,6 +6,7 @@ if (window.localStorage.getItem('accessToken') !== null) {
   const result = window.localStorage.getItem('accessToken');
   auth = result
 }
+
 const initialUserState = {
   loadingUser: false,
   accessToken: auth,
@@ -69,7 +70,6 @@ const userSlice = createSlice({
       });
   },
 });
-
 export const { logOut } = userSlice.actions;
 const { reducer: userReducer } = userSlice;
 export { userReducer };

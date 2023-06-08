@@ -1,44 +1,61 @@
-import * as React from 'react';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
+import * as React from "react";
+import Modal from "@mui/material/Modal";
+import "react-toastify/dist/ReactToastify.css";
+import Box from "@mui/material/Box";
+import MyRequest from "../../pages/users/request/Request";
 
 const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "70%",
+  bgcolor: "background.paper",
   boxShadow: 24,
   p: 4,
+  height: "80vh",
+  overflowY: "scroll",
+  borderRadius: "10px",
+  "@media (max-width: 679px)": {
+    width: "90%",
+    p: 2,
+  },
+  "@media (max-width: 376px)": {
+    width: "100%",
+  },
+  "&::-webkit-scrollbar": {
+    width: "12px",
+  },
+  "&::webkit-scrollbar-track": {
+    background: 'transparent',
+    marginLeft: '10px',
+  },
+  "&::-webkit-scrollbar-thumb": {
+    borderRadius: "25px",
+    background: '#ccc',
+  }
 };
 
 interface ModalEditProp {
-  open: boolean
-  handleOpen: () => void
-  handleClose: () => void
+  open: boolean;
+  handleOpen: () => void;
+  handleClose: () => void;
+  invoice: any;
 }
 
-export default function EditModal({open, handleOpen, handleClose}: ModalEditProp) {
-
+export default function EditModal({
+  open,
+  handleOpen,
+  handleClose,
+  invoice,
+}: ModalEditProp) {
   return (
     <div>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+      <Modal open={open} onClose={handleClose}>
         <Box sx={style}>
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            Text in a modal
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </Typography>
+          <Box>
+            <MyRequest modal={true} invoice={invoice}/>
+          </Box>
         </Box>
       </Modal>
     </div>

@@ -1,8 +1,11 @@
 import "react-toastify/dist/ReactToastify.css";
 import { useEffect, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { useAppDispatch, useAppSelector } from "../../../redux/hook/useTypedSeletor";
-import { createInvoice } from "../../../redux/invoice/invoiceAction"
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../../redux/hook/useTypedSeletor";
+import { createInvoice } from "../../../redux/invoice/invoiceAction";
 import {
   Box,
   Typography,
@@ -19,29 +22,29 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { ToastContainer, toast } from "react-toastify";
 import { getAllUser } from "../../../redux/user/userAction";
 
+interface RequestProps {
+  modal?: boolean;
+  invoice?: any
+}
 
-const MyRequest = () => {
+const MyRequest = (props: RequestProps) => {
+  const { modal, invoice } = props;
   const dispatch = useAppDispatch();
-  const value = useAppSelector((state: any) => state.user)
-  const { currentUser } = value
-  console.log(currentUser)
-
+  const value = useAppSelector((state: any) => state.user);
+  const { currentUser } = value;
   useEffect(() => {
-    const userId = window.localStorage.getItem('idUser')
+    const userId = window.localStorage.getItem("idUser");
     console.log(userId);
     const fetchData = async () => {
-      if(userId)
-      await dispatch(getAllUser(parseInt(userId)));
+      if (userId) await dispatch(getAllUser(parseInt(userId)));
     };
     fetchData();
   }, []);
 
-  const [imageData, setImageData] = useState('');
   const [file, setFile] = useState<any>(null);
   const schema = yup.object({
-    file: yup
-      .mixed()
-      .required("Vui lòng thêm hình ảnh hóa đơn vào!"),
+    file: yup.mixed()
+    .required("Vui lòng thêm hình ảnh hóa đơn vào!"),
     code: yup.string(),
     moneyReduce: yup.string().required("Vui lòng chọn loại voucher!"),
   });
@@ -49,22 +52,22 @@ const MyRequest = () => {
     handleSubmit,
     register,
     reset,
-    setValue,
     control,
+    setValue,
     formState: { errors },
   } = useForm<any>({
     mode: "all",
     resolver: yupResolver(schema),
   });
-  const onSubmit = handleSubmit((data: any) => {  
-    console.log("data", data);
-    dispatch(createInvoice({
-      image: imageData,
-      code: data.code,
-      reducedType: data.moneyReduce,
-      gmail: currentUser.gmail,
-      createBy: currentUser.id
-    }))
+  console.log("file", file);
+  const onSubmit = handleSubmit((data: any) => {
+    const formData = new FormData();
+    formData.append("image", file);
+    formData.append("code", data.code);
+    formData.append("reducedType", data.moneyReduce);
+    formData.append("gmail", currentUser.gmail);
+    formData.append("createBy", currentUser.id);
+    dispatch(createInvoice(formData));
     reset({
       code: "",
       moneyReduce: undefined,
@@ -79,16 +82,11 @@ const MyRequest = () => {
     if (file !== null) {
       if (file.type.startsWith("image/")) {
         setFile(file);
+        setValue('file', file);
       } else {
         toast.error("Hóa đơn phải là một hình ảnh!");
       }
     }
-    const reader = new FileReader();
-    reader.onload = () => {
-      const base64Data: any = reader.result;
-      setImageData(base64Data);
-    };
-    reader.readAsDataURL(file);
   };
   const { getRootProps, isDragActive } = useDropzone({ onDrop });
   useEffect(() => {
@@ -104,11 +102,10 @@ const MyRequest = () => {
   }, [errors]);
   useEffect(() => {
     if (file !== null && file.type.startsWith("image/")) {
-      setValue("file", imageData);
     } else if (file !== null) {
       toast.error("Hóa đơn phải là một hình ảnh!");
     }
-  }, [imageData]);
+  }, [file]);
   return (
     <Box>
       <Typography
@@ -123,11 +120,11 @@ const MyRequest = () => {
       </Typography>
       <Box
         sx={{
-          width: "80%",
-          margin: "20px auto",
+          width: modal ? "100%" : "80%",
+          margin: modal ? "15px auto" : "20px auto",
           display: "flex",
           flexDirection: "column",
-          gap: "20px",
+          gap: modal ? "15px" : "20px",
           "@media (max-width: 1025px)": {
             width: "100%",
           },
@@ -394,17 +391,17 @@ const MyRequest = () => {
                 render={({ field }) => (
                   <RadioGroup {...field}>
                     <FormControlLabel
-                      value='30k'
+                      value="30k"
                       control={<Radio />}
                       label="< 3.000.000đ"
                     />
                     <FormControlLabel
-                      value='50k'
+                      value="50k"
                       control={<Radio />}
                       label="3.000.000đ - 10.000.000đ"
                     />
                     <FormControlLabel
-                      value='100k'
+                      value="100k"
                       control={<Radio />}
                       label=">= 10.000.000đ"
                     />
