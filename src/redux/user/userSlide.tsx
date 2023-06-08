@@ -51,20 +51,19 @@ const userSlice = createSlice({
       .addCase(login.fulfilled, (state: any, action: any) => {
         window.localStorage?.setItem('accessToken', action.payload.accessToken)
         window.localStorage?.setItem('userImage', action.payload.UserImage)
+        window.localStorage.setItem('idUser', action.payload.userId)
         if(action.payload.accessToken){
           state.accessToken = window.localStorage?.getItem('accessToken')
         }
         if(action.payload.UserImage){
           state.accessToken = window.localStorage?.getItem('accessToken')
         }      
-        window.localStorage.setItem('idUser', action.payload.userId)
       })
       .addCase(login.rejected, (state: any, action: any) => {
         console.log('login error',action.payload)
       });
   },
 });
-
 export const { logOut } = userSlice.actions;
 const { reducer: userReducer } = userSlice;
 export { userReducer };

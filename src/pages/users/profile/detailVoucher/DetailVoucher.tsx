@@ -11,6 +11,7 @@ import {
   styled,
   Chip,
   Button,
+  Modal,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
@@ -26,10 +27,23 @@ import Image from "../../../../components/imageFirebase/Image";
 import Time from "../../../../components/time/Time";
 import EditModal from "../../../../components/modal/Modal";
 
+const style = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "background.paper",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+};
+
 interface IProps {
   codeVoucher: number;
 }
-const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
+
+const DetailVoucher = () => {
   const [openModal, setOpenModal] = useState(false);
   const handleOpen = () => setOpenModal(true);
   const handleClose = () => setOpenModal(false);
@@ -62,6 +76,12 @@ const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
       >
         Detail
       </Typography>
+      <EditModal
+        invoice={invoice}
+        open={openModal}
+        handleOpen={handleOpen}
+        handleClose={handleClose}
+      />
       <TableContainer component={Paper} sx={{ p: "0 15px" }}>
         <Table
           size="small"
@@ -78,29 +98,15 @@ const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
               <TableCell align="center"></TableCell>
             </TableRow>
           </TableHead>
-          <TableBody sx={{ "& .MuiTableCell-root": { p: " 16px" } }}>
+          <TableBody>
             {userInvoice.map((invoice: any, index: number) => (
               <>
-                <EditModal
-                  invoice={invoice}
-                  open={openModal}
-                  handleOpen={handleOpen}
-                  handleClose={handleClose}
-                />
-                <TableRow
-                  key={index}
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
+                <TableRow>
                   <TableCell align="center" width="10%">
                     {invoice.code}
                   </TableCell>
                   <TableCell align="center" width="20%">
-                    <Box
-                      component="span"
-                      sx={{ cursor: "pointer" }}
-                    >
-                      <Image image={invoice.image} width="45px" height="auto" />
-                    </Box>
+                    <Image image={invoice.image} width="45px" height="auto" />
                   </TableCell>
                   <TableCell align="center" width="20%">
                     {invoice.reducedType === "30k" ? (
@@ -121,21 +127,6 @@ const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
                     )}
                   </TableCell>
                   <TableCell align="center" width="20%">
-                    {invoice.status === "pending" ? (
-                      <Box sx={{ color: "yellow" }}>
-                        <MoreHorizOutlinedIcon />
-                      </Box>
-                    ) : invoice.status === "approve" ? (
-                      <Box sx={{ color: "blue" }}>
-                        <CheckIcon />
-                      </Box>
-                    ) : (
-                      <Box sx={{ color: "red" }}>
-                        <CloseIcon />
-                      </Box>
-                    )}
-                  </TableCell>
-                  <TableCell align="center" width="30%">
                     <Time time={invoice.createAt} />
                   </TableCell>
                   <TableCell align="center" width="30%">
@@ -150,4 +141,5 @@ const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
     </Box>
   );
 };
-export default DetailsVoucher;
+
+export default DetailVoucher;
