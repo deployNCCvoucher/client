@@ -49,15 +49,20 @@ const userSlice = createSlice({
         state.loadingUser = false;
       })
       .addCase(login.fulfilled, (state: any, action: any) => {
-        window.localStorage?.setItem('accessToken', action.payload.accessToken)
-        window.localStorage?.setItem('userImage', action.payload.UserImage)
+        
+        window.localStorage.setItem('accessToken', action.payload.accessToken)
+        window.localStorage.setItem('userImage', action.payload.UserImage)
+        window.localStorage.setItem('idUser', action.payload.userId)
+        window.localStorage.setItem('userRole', action.payload.userRole)
+        // const dataUser = {accessToken: action.payload.accessToken, userImage: action.payload.UserImage, idUser: action.payload.userId}
+        // window.localStorage.setItem('data', JSON.stringify(dataUser))
+        state.test = action.payload
         if(action.payload.accessToken){
-          state.accessToken = window.localStorage?.getItem('accessToken')
+          state.accessToken = window.localStorage.getItem('accessToken')
         }
         if(action.payload.UserImage){
-          state.accessToken = window.localStorage?.getItem('accessToken')
+          state.userImage = window.localStorage.getItem('userImage')
         }      
-        window.localStorage.setItem('idUser', action.payload.userId)
       })
       .addCase(login.rejected, (state: any, action: any) => {
         console.log('login error',action.payload)

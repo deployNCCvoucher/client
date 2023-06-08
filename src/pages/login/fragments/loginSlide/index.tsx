@@ -7,8 +7,10 @@ import { useAppDispatch } from "../../../../redux/hook/useTypedSeletor";
 
 const LoginSlide = () => {
   const dispatch = useAppDispatch()
+
   const clientId =
     "9811993498-flmr9etgn9vr42st1lhl2mf14of8jlu4.apps.googleusercontent.com";
+
     useEffect(() => {
       function start() {
         gapi.load("auth2", () => {
@@ -26,7 +28,9 @@ const LoginSlide = () => {
       }
       gapi.load("client", start);
     }, []);
+
   const [open, setOpen] = useState(false);
+  
   const responseGoogle = async (response: any) => {
     await dispatch(login(response.tokenId))
   };
