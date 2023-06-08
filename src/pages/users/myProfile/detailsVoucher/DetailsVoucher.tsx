@@ -9,7 +9,8 @@ import {
   TableRow,
   Typography,
   styled,
-  Chip
+  Chip,
+  Button
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import CheckIcon from "@mui/icons-material/Check";
@@ -23,19 +24,19 @@ import {
 import { getInvoice } from "../../../../redux/invoice/invoiceAction";
 import Image from "../../../../components/imageFirebase/Image";
 import Time from '../../../../components/time/Time'
+import EditModal from "../../../../components/modal/Modal";
 
 interface IProps {
   codeVoucher: number;
 }
 const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
+  const [openModal, setOpenModal] = useState(false)
+    const handleOpen = () => setOpenModal(true);
+  const handleClose = () => setOpenModal(false);
   const value = useAppSelector((state: any) => state.user);
   const invoice = useAppSelector((state) => state.invoice);
   const { userInvoice } = invoice;
-  console.log('userInvoice detail', userInvoice);
-  userInvoice.forEach((i) => console.log('tets', i));
-  console.log(typeof(userInvoice))
   const { currentUser } = value;
-  console.log('currentUser', currentUser);
   const dispatch = useAppDispatch();
   const [openViewImg, setOpenViewImg] = useState<boolean>(false);
   const handleViewIamge = () => {
@@ -53,7 +54,6 @@ const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
   });
   useEffect(() => {
     const userId = window.localStorage.getItem('idUser')
-    console.log(userId);
     const fetchData = async () => {
       if(userId)
       await dispatch(getAllUser(userId));
@@ -62,7 +62,7 @@ const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
     fetchData();
   }, []);
   return (
-    <Box sx={{ boxShadow: "0 5px 15px rgba(0,0,0,.35)", mt: "40px" }}>
+    <Box sx={{ boxShadow: "0 5px 15px rgba(240, 240, 240, 0.35)", mt: "40px" }}>
       <Typography
         component="h2"
         sx={{
@@ -74,7 +74,7 @@ const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
           lineHeight: "32px",
         }}
       >
-        Chi tiet voucher
+        Detail
       </Typography>
       <TableContainer component={Paper} sx={{ p: "0 15px" }}>
         <Table
@@ -94,6 +94,8 @@ const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
           </TableHead>
           <TableBody sx={{ "& .MuiTableCell-root": { p: " 16px" } }}>
             {userInvoice.map((invoice: any, index: number) => (
+              <>
+              <EditModal open={openModal} handleOpen={handleOpen} handleClose={handleClose}  />
               <TableRow key = {index}
                 sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
               >
@@ -146,9 +148,10 @@ const DetailsVoucher: React.FC<IProps> = ({ codeVoucher }) => {
                   <Time time={invoice.createAt}/>
                 </TableCell>
                 <TableCell align="center" width="30%">
-                  <Time time={invoice.createAt}/>
+                  <Button onClick={handleOpen}>Edit</Button>
                 </TableCell>
               </TableRow>
+              </>
             ))}
           </TableBody>
         </Table>
