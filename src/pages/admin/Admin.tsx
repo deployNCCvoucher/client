@@ -3,7 +3,7 @@ import { ListRequest } from "./components/ListRequest/ListRequest"
 export const AdminPage = () => {
     return (
         <Box>
-            <ListRequest />
+            <ListRequest history={false}/>
         </Box>
     )
 }

@@ -19,32 +19,56 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm, Controller } from "react-hook-form";
 import * as yup from "yup";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import { ToastContainer, toast } from "react-toastify";
-import { getAllUser } from "../../../redux/user/userAction";
+import { toast } from "react-toastify";
+import { getUser } from "../../../redux/user/userAction";
 
 interface RequestProps {
   modal?: boolean;
-  invoice?: any
+  invoice?: any;
+  isEdit?: boolean;
+  idEdit?: any;
 }
 
-const MyRequest = (props: RequestProps) => {
-  const { modal, invoice } = props;
+export interface MuiProps {
+  defaultValue?: any;
+  value?: any;
+}
+
+const MyRequest: React.FC<RequestProps> = ({ modal, invoice, isEdit, idEdit }) => {
   const dispatch = useAppDispatch();
   const value = useAppSelector((state: any) => state.user);
   const { currentUser } = value;
+  const invoices = useAppSelector((state) => state.invoice.listInvoice);
+  const [urlImage, setUrlImage] = useState<{url: string, type: string}>({url: '', type: ''});
+  const [file, setFile] = useState<any>(null);
+  // useEffect(() => {
+  //   const getImage: any = async () => {
+  //     try {
+  //       const storageRef = ref(storage, idEdit.image);
+  //       const url = await getDownloadURL(storageRef);
+  //       setUrlImage({ url: url, type: "image/" });
+  //       console.log('url',urlImage)
+  //       setFile(urlImage);
+  //     } catch (error) {
+  //       console.error("Error getting image from Firebase:", error);
+  //     }
+  //   };
+  //   if (isEdit) {
+  //     getImage();
+  //   }
+  // }, []);
+
+  console.log('file', file);
   useEffect(() => {
     const userId = window.localStorage.getItem("idUser");
-    console.log(userId);
     const fetchData = async () => {
-      if (userId) await dispatch(getAllUser(parseInt(userId)));
+      if (userId) await dispatch(getUser(parseInt(userId)));
     };
     fetchData();
   }, []);
 
-  const [file, setFile] = useState<any>(null);
   const schema = yup.object({
-    file: yup.mixed()
-    .required("Vui lòng thêm hình ảnh hóa đơn vào!"),
+    file: yup.mixed().required("Vui lòng thêm hình ảnh hóa đơn vào!"),
     code: yup.string(),
     moneyReduce: yup.string().required("Vui lòng chọn loại voucher!"),
   });
@@ -59,7 +83,7 @@ const MyRequest = (props: RequestProps) => {
     mode: "all",
     resolver: yupResolver(schema),
   });
-  console.log("file", file);
+
   const onSubmit = handleSubmit((data: any) => {
     const formData = new FormData();
     formData.append("image", file);
@@ -82,12 +106,13 @@ const MyRequest = (props: RequestProps) => {
     if (file !== null) {
       if (file.type.startsWith("image/")) {
         setFile(file);
-        setValue('file', file);
+        setValue("file", file);
       } else {
         toast.error("Hóa đơn phải là một hình ảnh!");
       }
     }
   };
+
   const { getRootProps, isDragActive } = useDropzone({ onDrop });
   useEffect(() => {
     if (errors.file?.message) {
@@ -101,7 +126,7 @@ const MyRequest = (props: RequestProps) => {
     }
   }, [errors]);
   useEffect(() => {
-    if (file !== null && file.type.startsWith("image/")) {
+    if (file !== null && file.type?.startsWith("image/")) {
     } else if (file !== null) {
       toast.error("Hóa đơn phải là một hình ảnh!");
     }
@@ -116,7 +141,7 @@ const MyRequest = (props: RequestProps) => {
           fontSize: "30px",
         }}
       >
-        SENT REQUEST
+        SEND REQUEST
       </Typography>
       <Box
         sx={{
@@ -148,7 +173,7 @@ const MyRequest = (props: RequestProps) => {
             <Box
               sx={{
                 width: "100%",
-                height: "600px",
+                height: "250px",
                 borderRadius: "15px",
                 display: "flex",
                 justifyContent: "center",
@@ -176,13 +201,13 @@ const MyRequest = (props: RequestProps) => {
                 <>
                   <CloudUploadIcon
                     sx={{
-                      fontSize: "400px",
+                      fontSize: "180px",
                       color: "var(--secondary-color)",
                       "@media (max-width: 1025px)": {
-                        fontSize: "200px",
+                        fontSize: "150px",
                       },
                       "@media (max-width: 769px)": {
-                        fontSize: "100px",
+                        fontSize: "150px",
                       },
                     }}
                   />
@@ -201,6 +226,7 @@ const MyRequest = (props: RequestProps) => {
                   ) : (
                     <Typography
                       sx={{
+                        mt: "-20px",
                         fontSize: "20px",
                         color: "var(--secondary-color)",
                         "@media (max-width: 1025px)": {
@@ -213,7 +239,7 @@ const MyRequest = (props: RequestProps) => {
                   )}
                 </>
               )}
-              {file && !file.type.startsWith("image/") && (
+              {file && !file.type?.startsWith("image/") && (
                 <>
                   <CloudUploadIcon
                     sx={{
@@ -254,7 +280,7 @@ const MyRequest = (props: RequestProps) => {
                   )}
                 </>
               )}
-              {file && file.type.startsWith("image/") && (
+              {file && file.type?.startsWith("image/") && (
                 <Box
                   sx={{
                     top: "0",
@@ -274,12 +300,17 @@ const MyRequest = (props: RequestProps) => {
                       overflowY: "scroll",
                     }}
                   >
-                    <img
+                    {isEdit ?  <img
+                      src={(file.url)}
+                      alt="Uploaded file"
+                      width="100%"
+                      style={{ margin: "auto" }}
+                    /> : <img
                       src={URL.createObjectURL(file)}
                       alt="Uploaded file"
                       width="100%"
                       style={{ margin: "auto" }}
-                    />
+                    />}
                   </Box>
                   <Box
                     sx={{
@@ -356,32 +387,6 @@ const MyRequest = (props: RequestProps) => {
                   },
                 }}
               >
-                Code
-              </Typography>
-              <TextField
-                {...register("code")}
-                name="code"
-                id="code"
-                variant="outlined"
-                sx={{ width: "100%" }}
-              />
-            </Box>
-            <Box
-              sx={{
-                width: "50%",
-                "@media (max-width: 1025px)": {
-                  width: "100%",
-                },
-              }}
-            >
-              <Typography
-                sx={{
-                  fontSize: "14px",
-                  "@media (max-width: 1025px)": {
-                    fontSize: "12px",
-                  },
-                }}
-              >
                 Loại voucher <span style={{ color: "red" }}>*</span>
               </Typography>
               <Controller
@@ -409,6 +414,33 @@ const MyRequest = (props: RequestProps) => {
                 )}
               />
             </Box>
+            <Box
+              sx={{
+                width: "50%",
+                "@media (max-width: 1025px)": {
+                  width: "100%",
+                },
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: "14px",
+                  "@media (max-width: 1025px)": {
+                    fontSize: "12px",
+                  },
+                }}
+              >
+                Code
+              </Typography>
+              <TextField
+                {...register("code")}
+                defaultValue={""}
+                name="code"
+                id="code"
+                variant="outlined"
+                sx={{ width: "100%" }}
+              />
+            </Box>
           </Box>
           <Box sx={{ width: "100%", margin: "auto" }}>
             <Button
@@ -426,18 +458,6 @@ const MyRequest = (props: RequestProps) => {
           </Box>
         </form>
       </Box>
-      <ToastContainer
-        position="bottom-right"
-        autoClose={3000}
-        hideProgressBar
-        newestOnTop={false}
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable={false}
-        pauseOnHover
-        theme="colored"
-      />
     </Box>
   );
 };

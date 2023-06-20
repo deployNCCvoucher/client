@@ -41,6 +41,7 @@ interface ModalEditProp {
   handleOpen: () => void;
   handleClose: () => void;
   invoice: any;
+  idEdit: any
 }
 
 export default function EditModal({
@@ -48,13 +49,14 @@ export default function EditModal({
   handleOpen,
   handleClose,
   invoice,
+  idEdit
 }: ModalEditProp) {
   return (
     <div>
       <Modal open={open} onClose={handleClose}>
         <Box sx={style}>
           <Box>
-            <MyRequest modal={true} invoice={invoice}/>
+            <MyRequest modal={true} invoice={invoice} isEdit idEdit={idEdit}/>
           </Box>
         </Box>
       </Modal>

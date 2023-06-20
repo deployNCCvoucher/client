@@ -1,7 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { createInvoice, getAllInvoice, getInvoice } from "./invoiceAction";
+import { createInvoice, getAllInvoice, getInvoice, updateInvoice, getInvoicesByFilter } from "./invoiceAction";
 import { toast } from "react-toastify";
-interface Invoice {
+
+export interface Invoice {
   checkBy: number;
   code: string;
   createAt: string;
@@ -12,60 +13,107 @@ interface Invoice {
   reducedType: string;
   status: string;
   updateAt: string;
+  checkAt: string;
 }
 
 interface initialValueInter {
   listInvoice: Invoice[]
+  getInvoicesByFilter: Invoice[]
   userInvoice: Invoice[]
   currentUserId: number
+  year: number
+  month: number
+  typeVoucher?: string | number
+  page: number
+  limit: number
+  totalCount: number
 }
 
 const initialValue: initialValueInter = {
   listInvoice: [],
+  getInvoicesByFilter: [],
   userInvoice: [],
   currentUserId: 0,
+  month: new Date().getMonth()+1,
+  year: new Date().getFullYear(),
+  typeVoucher: 0,
+  page: 1,
+  limit: 10,
+  totalCount: 0
 };
 const invoiceSlice = createSlice({
   name: "invoice",
   initialState: initialValue,
   reducers: {
     filterInvoice: (state, action) => {
-      console.log("action.payload test139024", action.payload);
       const newList = state.listInvoice.filter(
         (invoice: any) => invoice.createBy === action.payload
       );
       state.userInvoice = [...newList];
-      console.log("new list", newList);
-      console.log("state.userInvoice", state.userInvoice);
     },
+    setYearFilter: (state, action) => {
+      state.year = action.payload
+    },
+    setMonthFilter: (state, action) => {
+      state.month = action.payload
+    },
+    setTypeFilter: (state, action) => {
+      state.typeVoucher = action.payload
+    },
+    setPageInvoice: (state, action) => {
+      state.page = action.payload
+    },
+    setTotalCountInvoice: (state, action) => {
+      state.totalCount = action.payload
+    }
   },
   extraReducers: (builder) => {
     builder
-      .addCase(createInvoice.fulfilled, (state: any, action: any) => {
-        toast.success("request success");
-        console.log("action.payload", action);
+      .addCase(createInvoice.fulfilled, (state, action) => {
+        toast.success("Upload file successful!");
+        // state.listInvoice.push(...action.payload.)
+        console.log(action.payload)
       })
-      .addCase(createInvoice.rejected, (state: any, action: any) => {
-        console.log("action.payload", action);
+      .addCase(createInvoice.rejected, (state, action) => {
         toast.error("request error");
       })
-      .addCase(getAllInvoice.fulfilled, (state: any, action: any) => {
-        console.log("action.payload", action);
+      // getAllInvoice
+      .addCase(getAllInvoice.fulfilled, (state, action) => {
         state.listInvoice = action.payload;
       })
-      .addCase(getAllInvoice.rejected, (state: any, action: any) => {
-        console.log("action.payload", action);
+      .addCase(getAllInvoice.rejected, (state, action) => {
       })
-      .addCase(getInvoice.fulfilled, (state: any, action: any) => {
-        console.log("action.payload", action);
+      // getInvoicesNotPendingPagin
+      .addCase(getInvoicesByFilter.fulfilled, (state, action) => {
+        state.getInvoicesByFilter = action.payload.data;
+      })
+      .addCase(getInvoicesByFilter.rejected, (state, action) => {
+      })
+      // getInvoice
+      .addCase(getInvoice.fulfilled, (state, action) => {
         state.userInvoice = [...action.payload];
       })
-      .addCase(getInvoice.rejected, (state: any, action: any) => {
-        console.log("action.payload", action);
-      });
+      .addCase(getInvoice.rejected, (state, action) => {
+        
+      })
+      .addCase(updateInvoice.fulfilled, (state, action) => {
+        state.listInvoice.map((item: Invoice) => {
+          if (item.id === action.payload.id) {
+            item.createBy = action.payload.createBy
+            item.status = action.payload.status
+          }
+          return item
+        })
+      })
+      .addCase(updateInvoice.pending, (state, action) => {
+        
+      })
+      .addCase(updateInvoice.rejected, (state, action) => {
+        
+      })
   },
 });
 
-export const { filterInvoice } = invoiceSlice.actions;
+export const { filterInvoice, setMonthFilter, setYearFilter, setTypeFilter, setPageInvoice, setTotalCountInvoice } = invoiceSlice.actions;
 const { reducer: invoiceReducer } = invoiceSlice;
 export { invoiceReducer };

@@ -1,22 +1,65 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import axiosClient from '../../api/axiosClient';
+import { createAsyncThunk } from "@reduxjs/toolkit";
+import axiosClient from "../../api/axiosClient";
 
-export const createInvoice = createAsyncThunk(
-  'invoices/createInvoice',
-  async (params: any, thunkApi) => {
+export const getAllInvoice = createAsyncThunk(
+  "invoices/getAllInvoice",
+  async (params, thunkApi) => {
     try {
-      const { data } = await axiosClient.post('/invoices/createInvoice', params,{headers: {'Content-Type': 'multipart/form-data'}});
+      const { data } = await axiosClient.get("/invoices/getAll");
       return data;
     } catch (error: any) {
       return thunkApi.rejectWithValue(error.response?.data?.error?.message);
     }
   }
 );
-export const getAllInvoice = createAsyncThunk(
-  'invoices/getAllInvoice',
-  async (params, thunkApi) => {
+
+interface ParamsInvoicesPaginationInter {
+  page: number;
+  limit: number;
+  type?: string | number;
+  status?: string;
+  month?: number;
+  year?: number;
+  userId?: number;
+}
+
+export const getInvoicesByFilter = createAsyncThunk(
+  "invoices/getInvoicesByFilter",
+  async (params: ParamsInvoicesPaginationInter, thunkApi) => {
+    let url = "";
+    if (params.userId) {
+      url += `&userId=${params.userId}`;
+    }
+    if (params.month) {
+      url += `&month=${params.month}`;
+    }
+    if (params.year) {
+      url += `&year=${params.year}`;
+    }
+    if (params.type) {
+      url += `&type=${params.type}`;
+    }
+    if (params.status) {
+      url += `&status=${params.status}`;
+    }
     try {
-      const { data } = await axiosClient.get('/invoices/getAll');
+      const { data } = await axiosClient.get(
+        `/invoices/getInvoicesByFilter?page=${params.page}&limit=${params.limit}${url}`
+      );
+      return data;
+    } catch (error: any) {
+      return thunkApi.rejectWithValue(error.response?.data?.error?.message);
+    }
+  }
+);
+
+export const createInvoice = createAsyncThunk(
+  "invoices/createInvoice",
+  async (params: FormData, thunkApi) => {
+    try {
+      const data = await axiosClient.post("/invoices/createInvoice", params, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       return data;
     } catch (error: any) {
       return thunkApi.rejectWithValue(error.response?.data?.error?.message);
@@ -24,7 +67,7 @@ export const getAllInvoice = createAsyncThunk(
   }
 );
 export const getInvoice = createAsyncThunk(
-  'invoices/getInvoice',
+  "invoices/getInvoice",
   async (params: any, thunkApi) => {
     try {
       const { data } = await axiosClient.get(`/invoices/getByUserId/${params}`);
@@ -35,3 +78,17 @@ export const getInvoice = createAsyncThunk(
   }
 );
 
+export const updateInvoice = createAsyncThunk(
+  "invoices/updateInvoice",
+  async (dataUpdate: any, thunkApi) => {
+    try {
+      const { data } = await axiosClient.put(
+        `/invoices/updateStatus/${dataUpdate.id}`,
+        dataUpdate
+      );
+      return data;
+    } catch (error: any) {
+      return thunkApi.rejectWithValue(error.response?.data?.error?.message);
+    }
+  }
+);

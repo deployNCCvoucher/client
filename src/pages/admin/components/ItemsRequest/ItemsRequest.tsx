@@ -1,10 +1,17 @@
-import { Box, Button } from "@mui/material";
-import DetailsVoucher from "../../../users/myProfile/detailsVoucher/DetailsVoucher";
+import { Box } from "@mui/material";
+import DetailVoucher from "../../../users/profile/detailVoucher/DetailVoucher";
+interface ItemsRequestInter {
+  adminHistory?: boolean;
+}
 
-export const ItemsRequest = () => {
+export const ItemsRequest: React.FC<ItemsRequestInter> = ({ adminHistory }) => {
   return (
     <Box>
-      <DetailsVoucher admin={true} codeVoucher={0} />
+      {adminHistory ? (
+        <DetailVoucher adminHistory={adminHistory} />
+      ) : (
+        <DetailVoucher admin={true} adminHistory={false}/>
+      )}
     </Box>
   );
 };

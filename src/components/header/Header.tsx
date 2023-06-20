@@ -5,23 +5,23 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import InputBase from "@mui/material/InputBase";
 import Badge from "@mui/material/Badge";
 import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
-import SearchIcon from "@mui/icons-material/Search";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import MoreIcon from "@mui/icons-material/MoreVert";
 import { GoogleLogout } from "react-google-login";
-import { useAppDispatch } from "../../redux/hook/useTypedSeletor";
+import { useAppDispatch, useAppSelector } from "../../redux/hook/useTypedSeletor";
 import { logOut } from "../../redux/user/userSlide"
 interface Iprops {
   openSidebar: boolean;
   setOpenSidebar: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const Header: React.FC<Iprops> = ({ openSidebar, setOpenSidebar }) => {
+  const invoices = useAppSelector((state) => state.invoice.listInvoice)
+  const number = invoices.filter((item) => item.status === 'pending').length
   const dispatch = useAppDispatch()
     const onSuccess = () => {
         dispatch(logOut())
@@ -172,10 +172,9 @@ const Header: React.FC<Iprops> = ({ openSidebar, setOpenSidebar }) => {
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
             <IconButton
               size="large"
-              aria-label="show 4 new mails"
               color="inherit"
             >
-              <Badge badgeContent={4} color="error">
+              <Badge badgeContent={number} color="error">
                 <MailIcon />
               </Badge>
             </IconButton>
