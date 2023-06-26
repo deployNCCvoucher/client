@@ -387,7 +387,7 @@ const MyRequest: React.FC<RequestProps> = ({ modal, invoice, isEdit, idEdit }) =
                   },
                 }}
               >
-                Loại voucher <span style={{ color: "red" }}>*</span>
+                Loại hóa đơn <span style={{ color: "red" }}>*</span>
               </Typography>
               <Controller
                 {...register("moneyReduce")}

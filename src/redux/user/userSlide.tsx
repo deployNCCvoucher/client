@@ -7,8 +7,7 @@ if (window.localStorage.getItem("accessToken") !== null) {
   auth = result;
 }
 
-
-interface UserInter {
+export interface UserInter {
   createAt: string;
   gmail: string;
   id: number;

@@ -21,6 +21,7 @@ interface ParamsInvoicesPaginationInter {
   month?: number;
   year?: number;
   userId?: number;
+  search?: string;
 }
 
 export const getInvoicesByFilter = createAsyncThunk(
@@ -41,6 +42,9 @@ export const getInvoicesByFilter = createAsyncThunk(
     }
     if (params.status) {
       url += `&status=${params.status}`;
+    }
+    if (params.search) {
+      url += `&search=${params.search}`;
     }
     try {
       const { data } = await axiosClient.get(

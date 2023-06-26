@@ -18,6 +18,7 @@ import {
 import { MultipleSelect } from "../../../../components/select/MultipleSelect";
 import {
   setMonthFilter,
+  setPageInvoice,
   setTypeFilter,
   setYearFilter,
 } from "../../../../redux/invoice/invoiceSlide";
@@ -45,14 +46,17 @@ export const SearchUser = () => {
   };
 
   const handleChangeMonth = (event: SelectChangeEvent) => {
+    dispatch(setPageInvoice(1))
     dispatch(setMonthFilter(event.target.value));
   };
 
   const handleChangeYear = (event: SelectChangeEvent) => {
+    dispatch(setPageInvoice(1))
     dispatch(setYearFilter(event.target.value));
   };
 
   const handleTypeVoucher = (event: SelectChangeEvent) => {
+    dispatch(setPageInvoice(1))
     dispatch(setTypeFilter(event.target.value))
   };
   return (

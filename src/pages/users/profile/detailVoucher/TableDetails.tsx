@@ -21,7 +21,7 @@ import {
 } from "../../../../redux/hook/useTypedSeletor";
 import { updateInvoice } from "../../../../redux/invoice/invoiceAction";
 import EditModal from "../../../../components/modal/Modal";
-import { Fragment, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import { ModalsAdmin } from "../../../admin/components/ModalsAdmin/ModalsAdmin";
 import { updateMoney } from "../../../../redux/user/userAction";
 import { ActionButton } from "../../../admin/components/ActionButton/ActionButton";
@@ -30,6 +30,14 @@ interface TableDetailsInter {
   admin?: boolean;
   dataMap: any;
 }
+interface InvoiceObjectInter {
+  id: number;
+  status: string;
+  checkBy: number;
+  checkAt: string;
+  userId: number;
+  totalReduce: number;
+}
 
 export const TableDetails: React.FC<TableDetailsInter> = ({
   adminHistory,
@@ -37,9 +45,10 @@ export const TableDetails: React.FC<TableDetailsInter> = ({
   admin,
 }) => {
   const invoice = useAppSelector((state) => state.invoice);
-  const value = useAppSelector((state: any) => state.user);
-  const { currentUser } = value;
+  const currentUser = useAppSelector((state) => state.user.currentUser);
   const users = useAppSelector((state) => state.user.users);
+  const searchUserValue = useAppSelector((state) => state.user.searchUserValue)
+  const userFound = users.filter(user => user.gmail.includes(searchUserValue))
   const dispatch = useAppDispatch();
   const [idEdit, setIdEdit] = useState<{}>({});
 
@@ -57,7 +66,9 @@ export const TableDetails: React.FC<TableDetailsInter> = ({
   const handleClose = () => setOpenModal(false);
 
   // Approve - reject for admin
-  const [invoiceObject, setInvoiceObject] = useState<any>({});
+  const [invoiceObject, setInvoiceObject] = useState<
+    InvoiceObjectInter | undefined
+  >();
   const [openModalAdmin, setOpenModalAdmin] = useState(false);
 
   const handleCloseModalAdmin = () => {
@@ -66,17 +77,17 @@ export const TableDetails: React.FC<TableDetailsInter> = ({
 
   const handleModalAdmin = (
     id: number,
-    typeModal: number,
+    status: string,
     type: string,
-    userId: number
+    userId: number,
   ) => {
     setInvoiceObject({
       id: id,
-      status: typeModal === 1 ? "approve" : "reject",
+      status: status,
       checkBy: currentUser.id,
       checkAt: new Date().toISOString(),
       userId: userId,
-      totalReduce: +type.split("k")[0],
+      totalReduce: +type.split("k")[0]
     });
     setOpenModalAdmin(true);
   };
@@ -103,28 +114,19 @@ export const TableDetails: React.FC<TableDetailsInter> = ({
           </TableRow>
         </TableHead>
         <TableBody>
-          {dataMap.map((invoice: Invoice, index: number) => (
+          {dataMap?.map((invoice: Invoice, index: number) => (
             <Fragment key={index}>
               <TableRow>
                 {adminHistory && (
                   <TableCell align="center" width="10%">
                     {
-                      (
-                        users.filter(
-                          (user: { id: number }) =>
-                            +user.id === +invoice.checkBy
-                        )[0]?.gmail + ""
-                      ).split("@")[0]
+                      invoice.checkBy?.gmail.split('@')[0]
                     }
                   </TableCell>
                 )}
                 <TableCell align="center" width="10%">
                   {
-                    (
-                      users.filter(
-                        (user: { id: number }) => +user.id === +invoice.createBy
-                      )[0]?.gmail + ""
-                    ).split("@")[0]
+                    invoice.createBy?.gmail.split('@')[0]
                   }
                 </TableCell>
                 <TableCell
@@ -196,7 +198,7 @@ export const TableDetails: React.FC<TableDetailsInter> = ({
                         onClick={() => {
                           handleModalAdmin(
                             invoice.id,
-                            1,
+                            "approve",
                             invoice.reducedType,
                             +invoice.createBy
                           );
@@ -211,7 +213,7 @@ export const TableDetails: React.FC<TableDetailsInter> = ({
                         onClick={() => {
                           handleModalAdmin(
                             invoice.id,
-                            2,
+                            "reject",
                             invoice.reducedType,
                             +invoice.createBy
                           );
@@ -222,19 +224,25 @@ export const TableDetails: React.FC<TableDetailsInter> = ({
                     </Box>
                   ) : adminHistory ? (
                     <Box>
-                      {/* <ActionButton invoiceStatus={invoice.status} invoiceId={invoice.id}/> */}
-                      <Button
-                        onClick={() => {
-                          handleModalAdmin(
-                            invoice.id,
-                            invoice.status === "reject" ? 1 : 2,
-                            invoice.reducedType,
-                            +invoice.createBy
-                          );
-                        }}
-                      >
-                        {invoice.status === "reject" ? "Approve" : "Reject"}
-                      </Button>
+                      {invoice.status === "reject" ? (
+                        <ActionButton
+                          invoice={invoice}
+                          handleModalAdmin={handleModalAdmin}
+                        />
+                      ) : (
+                        <Button
+                          onClick={() => {
+                            handleModalAdmin(
+                              invoice.id,
+                              "reject",
+                              invoice.reducedType,
+                              +invoice.createBy
+                            );
+                          }}
+                        >
+                          Reject
+                        </Button>
+                      )}
                     </Box>
                   ) : (
                     <Button

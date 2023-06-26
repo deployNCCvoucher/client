@@ -1,12 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { createInvoice, getAllInvoice, getInvoice, updateInvoice, getInvoicesByFilter } from "./invoiceAction";
 import { toast } from "react-toastify";
+import { UserInter } from "../user/userSlide";
 
 export interface Invoice {
-  checkBy: number;
+  checkBy: UserInter;
   code: string;
   createAt: string;
-  createBy: string;
+  createBy: UserInter;
   id: number;
   image: string;
   note: string;
@@ -34,8 +35,10 @@ const initialValue: initialValueInter = {
   getInvoicesByFilter: [],
   userInvoice: [],
   currentUserId: 0,
-  month: new Date().getMonth()+1,
-  year: new Date().getFullYear(),
+  month: 0,
+  year: 0,
+  // month: new Date().getMonth()+1,
+  // year: new Date().getFullYear(),
   typeVoucher: 0,
   page: 1,
   limit: 10,

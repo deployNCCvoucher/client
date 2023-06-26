@@ -1,20 +1,25 @@
 import { Box, Button, Pagination, PaginationItem } from "@mui/material";
-import { useState, useEffect, SetStateAction } from "react";
+import { useState, useEffect, SetStateAction, useRef } from "react";
 import { getInvoicesByFilter } from "../../../../redux/invoice/invoiceAction";
 import {
   useAppDispatch,
   useAppSelector,
 } from "../../../../redux/hook/useTypedSeletor";
-import { setPageInvoice, setTotalCountInvoice } from "../../../../redux/invoice/invoiceSlide";
+import {
+  setPageInvoice,
+  setTotalCountInvoice,
+} from "../../../../redux/invoice/invoiceSlide";
 
 interface PaginationComponentInter {
   history?: boolean;
   request?: boolean;
+  pageTopRef?: any;
 }
 
 export const PaginationComponent: React.FC<PaginationComponentInter> = ({
   history,
-  request
+  request,
+  pageTopRef,
 }) => {
   const dispatch = useAppDispatch();
   const userId = window.localStorage.getItem("idUser")!;
@@ -24,6 +29,7 @@ export const PaginationComponent: React.FC<PaginationComponentInter> = ({
   const type = useAppSelector((state) => state.invoice.typeVoucher);
   const month = useAppSelector((state) => state.invoice.month);
   const year = useAppSelector((state) => state.invoice.year);
+  const search = useAppSelector((state) => state.user.searchUserValue)
 
   const getDataInvoicesFilter = async () => {
     if (request) {
@@ -32,10 +38,17 @@ export const PaginationComponent: React.FC<PaginationComponentInter> = ({
       );
       dispatch(setTotalCountInvoice(data.payload?.totalCount));
     } else if (history) {
-      const data = await dispatch(
-        getInvoicesByFilter({ page, limit, type, month, year })
-      );
-      dispatch(setTotalCountInvoice(data.payload?.totalCount));
+      if (search) {
+        const data = await dispatch(
+          getInvoicesByFilter({ page, limit, type, search, month, year })
+        );
+        dispatch(setTotalCountInvoice(data.payload?.totalCount));
+      } else {
+        const data = await dispatch(
+          getInvoicesByFilter({ page, limit, type, month, year })
+        );
+        dispatch(setTotalCountInvoice(data.payload?.totalCount));
+      }
     } else {
       const data = await dispatch(
         getInvoicesByFilter({ page, userId: +userId, limit, type, month, year })
@@ -46,13 +59,14 @@ export const PaginationComponent: React.FC<PaginationComponentInter> = ({
 
   useEffect(() => {
     getDataInvoicesFilter();
-  }, [page, limit, type, month, year]);
+  }, [page, limit, type, month, year, search]);
 
   const handleChangePage = (
     event: React.ChangeEvent<unknown>,
     value: number
   ) => {
     dispatch(setPageInvoice(value));
+    pageTopRef.current.scrollIntoView();
   };
   return (
     <Box>

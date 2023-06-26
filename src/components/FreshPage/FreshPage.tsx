@@ -7,7 +7,7 @@ export const FreshPage = () => {
   return (
     <Box>
       <Button sx={{ height: "45px" }} variant='outlined' color="error" onClick={refreshPage}>
-        Refesh Page
+        Refresh Page
       </Button>
     </Box>
   );

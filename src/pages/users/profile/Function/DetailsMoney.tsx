@@ -43,6 +43,13 @@ export const DetailsMoney = (invoice: Invoice[]) => {
     pending: 0,
     money: 0,
   };
+  dataReduce.push({
+    total: 0,
+    approve: 0,
+    reject: 0,
+    pending: 0,
+    money: 0,
+  });
 
   dataReduce.forEach((item) => {
     dataTotal.approve += item.approve;

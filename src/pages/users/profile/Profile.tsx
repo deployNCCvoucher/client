@@ -22,6 +22,7 @@ import { DetailsMoney } from "./Function/DetailsMoney";
 import { Information } from "./Information/Information";
 import {
   setMonthFilter,
+  setPageInvoice,
   setTypeFilter,
   setYearFilter,
 } from "../../../redux/invoice/invoiceSlide";
@@ -36,48 +37,59 @@ const Profile = () => {
   const total = DetailsMoney(invoice);
 
   const handleChangeMonth = (event: SelectChangeEvent) => {
+    dispatch(setPageInvoice(1));
     dispatch(setMonthFilter(event.target.value));
   };
 
   const handleChangeYear = (event: SelectChangeEvent) => {
+    dispatch(setPageInvoice(1));
     dispatch(setYearFilter(event.target.value));
   };
-  
+
   const handleTypeVoucher = (data: string) => {
-    dispatch(setTypeFilter(data))
+    dispatch(setPageInvoice(1));
+    dispatch(setTypeFilter(data));
   };
   //
 
   const typeVoucher = useAppSelector((state) => state.invoice.typeVoucher);
-
+  let checkColor = -1;
+  typeVoucher === "30k"
+    ? (checkColor = 0)
+    : typeVoucher === "50k"
+    ? (checkColor = 1)
+    : typeVoucher === "100k"
+    ? (checkColor = 2)
+    : (checkColor = 4);
   return (
     <>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          mb: "25px",
+          alignItems: "center",
+        }}
+      >
+        
+        <MultipleSelect
+          type="Months"
+          handleChange={handleChangeMonth}
+          time={month}
+        />
+        <MultipleSelect
+          type="Years"
+          handleChange={handleChangeYear}
+          time={year}
+        />
+        <FreshPage />
+      </Box>
       <Grid container spacing={2}>
         <Grid item xs={12} md={3.5}>
           <Information user={user} />
         </Grid>
         <Grid item xs={12} md={8.5}>
           <Box sx={{ width: "100%" }}>
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "flex-end",
-                mb: "25px",
-                alignItems: "center",
-              }}
-            >
-              <MultipleSelect
-                type="Months"
-                handleChange={handleChangeMonth}
-                time={month}
-              />
-              <MultipleSelect
-                type="Years"
-                handleChange={handleChangeYear}
-                time={year}
-              />
-              <FreshPage />
-            </Box>
             <TableContainer
               component={Paper}
               sx={{ boxShadow: "0 5px 15px rgba(0,0,0,.35)", p: "0 15px" }}
@@ -129,34 +141,36 @@ const Profile = () => {
                             ? "Type 50k"
                             : index == 2
                             ? "Type 100k"
+                            : index == 3
+                            ? "Amount used"
                             : "Total"}
                         </TableCell>
                         <TableCell align="center">
                           <Typography
                             sx={{ color: "#ff9800", fontWeight: "700" }}
                           >
-                            {item.total}
+                            {index === 3 ? "-" : item.total}
                           </Typography>
                         </TableCell>
                         <TableCell align="center">
                           <Typography
                             sx={{ color: "#4caf50", fontWeight: "700" }}
                           >
-                            {item.approve}
+                            {index === 3 ? "-" : item.approve}
                           </Typography>
                         </TableCell>
                         <TableCell align="center">
                           <Typography
                             sx={{ color: "#f44336", fontWeight: "700" }}
                           >
-                            {item.reject}
+                            {index === 3 ? "-" : item.reject}
                           </Typography>
                         </TableCell>
                         <TableCell align="center">
                           <Typography
                             sx={{ color: "#607d8b", fontWeight: "700" }}
                           >
-                            {item.pending}
+                            {index === 3 ? "-" : item.pending}
                           </Typography>
                         </TableCell>
                         <TableCell align="center">
@@ -167,23 +181,26 @@ const Profile = () => {
                           </Typography>
                         </TableCell>
                         <TableCell align="center">
-                          <Button
-                            size="small"
-                            onClick={(e) =>
-                              handleTypeVoucher(
-                                index === 0
-                                  ? "30k"
-                                  : index == 1
-                                  ? "50k"
-                                  : index == 2
-                                  ? "100k"
-                                  : ""
-                              )
-                            }
-                            variant="outlined"
-                          >
-                            details
-                          </Button>
+                          {index !== 3 && (
+                            <Button
+                              color={checkColor === index ? `error` : "primary"}
+                              size="small"
+                              onClick={(e) =>
+                                handleTypeVoucher(
+                                  index === 0
+                                    ? "30k"
+                                    : index == 1
+                                    ? "50k"
+                                    : index == 2
+                                    ? "100k"
+                                    : ""
+                                )
+                              }
+                              variant="outlined"
+                            >
+                              details
+                            </Button>
+                          )}
                         </TableCell>
                       </TableRow>
                     );
@@ -194,7 +211,7 @@ const Profile = () => {
           </Box>
         </Grid>
       </Grid>
-      <DetailVoucher type={typeVoucher}/>
+      <DetailVoucher type={typeVoucher} />
     </>
   );
 };

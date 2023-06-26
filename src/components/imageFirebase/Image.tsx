@@ -33,7 +33,7 @@ const Image: React.FC<ImageInter> = ({
       }
     };
     getImage();
-  }, []);
+  }, [image]);
   return (
     <Fragment>
       <ModalImage
