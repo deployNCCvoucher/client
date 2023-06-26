@@ -119,7 +119,7 @@ export const ActionButton: React.FC<ActionButton> = ({
               invoice.id,
               "approve",
               invoice.reducedType,
-              +invoice.createBy,
+              +invoice.createBy.id,
               invoice.note
             );
             handleClose();

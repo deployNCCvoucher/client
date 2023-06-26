@@ -60,6 +60,8 @@ export const ModalsAdmin: React.FC<ModalRejectInter> = ({
     }
   };
 
+  console.log('admin', admin)
+
   const handleApprove = async () => {
     const dataApprove = {
       id: invoiceObject.id,
@@ -71,7 +73,7 @@ export const ModalsAdmin: React.FC<ModalRejectInter> = ({
     await dispatch(
       updateMoney({
         id: invoiceObject.userId,
-        totalReduce: invoiceObject.totalReduce,
+        totalReduce: +invoiceObject.totalReduce,
       })
     );
     await dispatch(updateInvoice(dataApprove));
@@ -107,7 +109,7 @@ export const ModalsAdmin: React.FC<ModalRejectInter> = ({
       }
       setReason("");
       handleClose();
-    } 
+    }
   };
   useEffect(() => {
     dispatch(getAllUser());
@@ -121,7 +123,7 @@ export const ModalsAdmin: React.FC<ModalRejectInter> = ({
         aria-describedby="alert-dialog-description"
       >
         <Box sx={{ width: "500px", p: "36px" }}>
-          {invoiceObject?.status === "reject" ? (
+          {invoiceObject?.status !== "approve" ? (
             <Box>
               <Typography sx={{ mb: "24px" }} variant="h5">
                 {admin
@@ -151,7 +153,7 @@ export const ModalsAdmin: React.FC<ModalRejectInter> = ({
               variant="contained"
               color="error"
               onClick={
-                admin
+                admin && !invoiceObject
                   ? handleSumitAdmin
                   : invoiceObject?.status === "reject"
                   ? handleSumitReject
