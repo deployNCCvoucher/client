@@ -47,8 +47,10 @@ export const TableDetails: React.FC<TableDetailsInter> = ({
   const invoice = useAppSelector((state) => state.invoice);
   const currentUser = useAppSelector((state) => state.user.currentUser);
   const users = useAppSelector((state) => state.user.users);
-  const searchUserValue = useAppSelector((state) => state.user.searchUserValue)
-  const userFound = users.filter(user => user.gmail.includes(searchUserValue))
+  const searchUserValue = useAppSelector((state) => state.user.searchUserValue);
+  const userFound = users.filter((user) =>
+    user.gmail.includes(searchUserValue)
+  );
   const dispatch = useAppDispatch();
   const [idEdit, setIdEdit] = useState<{}>({});
 
@@ -79,7 +81,7 @@ export const TableDetails: React.FC<TableDetailsInter> = ({
     id: number,
     status: string,
     type: string,
-    userId: number,
+    userId: number
   ) => {
     setInvoiceObject({
       id: id,
@@ -87,7 +89,7 @@ export const TableDetails: React.FC<TableDetailsInter> = ({
       checkBy: currentUser.id,
       checkAt: new Date().toISOString(),
       userId: userId,
-      totalReduce: +type.split("k")[0]
+      totalReduce: +type.split("k")[0],
     });
     setOpenModalAdmin(true);
   };
@@ -119,15 +121,11 @@ export const TableDetails: React.FC<TableDetailsInter> = ({
               <TableRow>
                 {adminHistory && (
                   <TableCell align="center" width="10%">
-                    {
-                      invoice.checkBy?.gmail.split('@')[0]
-                    }
+                    {invoice.checkBy?.gmail?.split("@")[0]}
                   </TableCell>
                 )}
                 <TableCell align="center" width="10%">
-                  {
-                    invoice.createBy?.gmail.split('@')[0]
-                  }
+                  {invoice.createBy?.gmail?.split("@")[0]}
                 </TableCell>
                 <TableCell
                   sx={{ cursor: "pointer" }}
@@ -260,7 +258,6 @@ export const TableDetails: React.FC<TableDetailsInter> = ({
           ))}
         </TableBody>
         <EditModal
-          idEdit={idEdit}
           invoice={invoice}
           open={openModal}
           handleOpen={handleOpen}

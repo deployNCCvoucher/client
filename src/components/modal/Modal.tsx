@@ -27,13 +27,13 @@ const style = {
     width: "12px",
   },
   "&::webkit-scrollbar-track": {
-    background: 'transparent',
-    marginLeft: '10px',
+    background: "transparent",
+    marginLeft: "10px",
   },
   "&::-webkit-scrollbar-thumb": {
     borderRadius: "25px",
-    background: '#ccc',
-  }
+    background: "#ccc",
+  },
 };
 
 interface ModalEditProp {
@@ -41,7 +41,6 @@ interface ModalEditProp {
   handleOpen: () => void;
   handleClose: () => void;
   invoice: any;
-  idEdit: any
 }
 
 export default function EditModal({
@@ -49,14 +48,13 @@ export default function EditModal({
   handleOpen,
   handleClose,
   invoice,
-  idEdit
 }: ModalEditProp) {
   return (
     <div>
       <Modal open={open} onClose={handleClose}>
         <Box sx={style}>
           <Box>
-            <MyRequest modal={true} invoice={invoice} isEdit idEdit={idEdit}/>
+            <MyRequest modal={true} invoice={invoice} isEdit />
           </Box>
         </Box>
       </Modal>

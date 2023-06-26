@@ -21,6 +21,7 @@ import * as yup from "yup";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { toast } from "react-toastify";
 import { getUser } from "../../../redux/user/userAction";
+import { getUrlImage } from "../../../components/imageFirebase/getUrlImage";
 
 interface RequestProps {
   modal?: boolean;
@@ -34,12 +35,16 @@ export interface MuiProps {
   value?: any;
 }
 
-const MyRequest: React.FC<RequestProps> = ({ modal, invoice, isEdit, idEdit }) => {
+const MyRequest: React.FC<RequestProps> = ({ modal, invoice, isEdit }) => {
   const dispatch = useAppDispatch();
   const value = useAppSelector((state: any) => state.user);
   const { currentUser } = value;
   const invoices = useAppSelector((state) => state.invoice.listInvoice);
-  const [urlImage, setUrlImage] = useState<{url: string, type: string}>({url: '', type: ''});
+  // console.log("invoiceList", invoices);
+  const [urlImage, setUrlImage] = useState<{ url: string; type: string }>({
+    url: "",
+    type: "",
+  });
   const [file, setFile] = useState<any>(null);
   // useEffect(() => {
   //   const getImage: any = async () => {
@@ -58,7 +63,6 @@ const MyRequest: React.FC<RequestProps> = ({ modal, invoice, isEdit, idEdit }) =
   //   }
   // }, []);
 
-  console.log('file', file);
   useEffect(() => {
     const userId = window.localStorage.getItem("idUser");
     const fetchData = async () => {
@@ -300,17 +304,21 @@ const MyRequest: React.FC<RequestProps> = ({ modal, invoice, isEdit, idEdit }) =
                       overflowY: "scroll",
                     }}
                   >
-                    {isEdit ?  <img
-                      src={(file.url)}
-                      alt="Uploaded file"
-                      width="100%"
-                      style={{ margin: "auto" }}
-                    /> : <img
-                      src={URL.createObjectURL(file)}
-                      alt="Uploaded file"
-                      width="100%"
-                      style={{ margin: "auto" }}
-                    />}
+                    {isEdit ? (
+                      <img
+                        src={file.url}
+                        alt="Uploaded file"
+                        width="100%"
+                        style={{ margin: "auto" }}
+                      />
+                    ) : (
+                      <img
+                        src={URL.createObjectURL(file)}
+                        alt="Uploaded file"
+                        width="100%"
+                        style={{ margin: "auto" }}
+                      />
+                    )}
                   </Box>
                   <Box
                     sx={{
