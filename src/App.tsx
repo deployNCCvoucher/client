@@ -8,6 +8,7 @@ import MyRequest from "./pages/users/request/Request";
 import Login from "./pages/login";
 import { AdminPage } from "./pages/admin/Admin";
 import { AdminHistoryPage } from "./pages/admin/historyPage/History";
+import { UserPage } from "./pages/admin/userPage/UserPage";
 function App() {
   return (
     <div className="App">
@@ -19,6 +20,7 @@ function App() {
                     <Route path="/app/myProfile" element={<Profile />} />
                     <Route path="/app/request" element={<MyRequest />} />
                     <Route path="/app/history" element={<AdminHistoryPage />} />
+                    <Route path="/app/user" element={<UserPage />} />
                 </Route>
             </Route>
             <Route element={<PublicRoute />}>

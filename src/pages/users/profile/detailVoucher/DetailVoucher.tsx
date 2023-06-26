@@ -26,8 +26,6 @@ interface IProps {
 
 const DetailVoucher: React.FC<IProps> = ({ admin, adminHistory, type }) => {
   const dispatch = useAppDispatch();
-
-  const search = useAppSelector((state) => state.user.searchUserValue);
   const pageTopRef = useRef(null);
   const dataMap = useAppSelector((state) => state.invoice.getInvoicesByFilter);
 

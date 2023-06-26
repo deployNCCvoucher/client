@@ -90,6 +90,7 @@ export const updateInvoice = createAsyncThunk(
         `/invoices/updateStatus/${dataUpdate.id}`,
         dataUpdate
       );
+      console.log('updateInvoice', data)
       return data;
     } catch (error: any) {
       return thunkApi.rejectWithValue(error.response?.data?.error?.message);

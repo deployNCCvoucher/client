@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getAllUser, getUser, login, updateMoney } from "./userAction";
+import { getAllUser, getAllUserPagin, getUser, login, updateMoney } from "./userAction";
 
 let auth: string | null = "";
 if (window.localStorage.getItem("accessToken") !== null) {
@@ -21,6 +21,7 @@ export interface UserInter {
 interface initialUserStateInter {
   loadingUser: boolean
   accessToken: string | null
+  usersPagin: UserInter[]
   users: UserInter[]
   currentEmail: string
   currentUser: UserInter
@@ -32,6 +33,7 @@ interface initialUserStateInter {
 const initialUserState: initialUserStateInter = {
   loadingUser: false,
   accessToken: auth,
+  usersPagin: [],
   users: [],
   currentEmail: "",
   currentUser: {
@@ -78,6 +80,7 @@ const userSlice = createSlice({
       .addCase(getUser.rejected, (state: any, action: any) => {
         state.loadingUser = false;
       })
+      //
       .addCase(getAllUser.pending, (state: any, action: any) => {
         state.loadingUser = true;
       })
@@ -87,6 +90,14 @@ const userSlice = createSlice({
       })
       .addCase(getAllUser.rejected, (state: any, action: any) => {
         state.loadingUser = false;
+      })
+      //
+      .addCase(getAllUserPagin.pending, (state: any, action: any) => {
+        state.loadingUser = true;
+      })
+      .addCase(getAllUserPagin.fulfilled, (state: any, action: any) => {
+        state.loadingUser = false;
+        state.usersPagin = [...action.payload.data];
       })
       .addCase(login.fulfilled, (state: any, action: any) => {
         window.localStorage.setItem("accessToken", action.payload.accessToken);
