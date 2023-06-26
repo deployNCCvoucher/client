@@ -66,23 +66,36 @@ const Profile = () => {
       <Box
         sx={{
           display: "flex",
-          justifyContent: "flex-end",
+          justifyContent: "space-between",
           mb: "25px",
           alignItems: "center",
         }}
       >
-        
-        <MultipleSelect
-          type="Months"
-          handleChange={handleChangeMonth}
-          time={month}
-        />
-        <MultipleSelect
-          type="Years"
-          handleChange={handleChangeYear}
-          time={year}
-        />
-        <FreshPage />
+        <Box>
+          <Typography
+            variant="h5"
+            style={{
+              fontWeight: "700",
+              color: "var(--secondary-color)",
+              fontSize: "30px",
+            }}
+          >
+            MY PROFILE
+          </Typography>
+        </Box>
+        <Box sx={{display: 'flex', width: '60%', justifyContent: 'flex-end', alignItems: 'center'}}>
+          <MultipleSelect
+            type="Months"
+            handleChange={handleChangeMonth}
+            time={month}
+          />
+          <MultipleSelect
+            type="Years"
+            handleChange={handleChangeYear}
+            time={year}
+          />
+          <FreshPage />
+        </Box>
       </Box>
       <Grid container spacing={2}>
         <Grid item xs={12} md={3.5}>

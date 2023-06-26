@@ -1,10 +1,9 @@
 import { Box, Button, Typography } from "@mui/material";
 import { ItemsRequest } from "../ItemsRequest/ItemsRequest";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ModalsAdmin } from "../ModalsAdmin/ModalsAdmin";
 import { SearchUser } from "../SearchUser/SearchUser";
 import { useAppDispatch } from "../../../../redux/hook/useTypedSeletor";
-import { getInvoicesByFilter } from "../../../../redux/invoice/invoiceAction";
 import { FreshPage } from "../../../../components/FreshPage/FreshPage";
 interface ListRequestInter {
   history?: boolean;

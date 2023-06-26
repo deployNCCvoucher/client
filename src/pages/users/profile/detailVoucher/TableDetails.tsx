@@ -198,7 +198,7 @@ export const TableDetails: React.FC<TableDetailsInter> = ({
                             invoice.id,
                             "approve",
                             invoice.reducedType,
-                            +invoice.createBy
+                            +invoice.createBy.id
                           );
                         }}
                       >
@@ -213,7 +213,7 @@ export const TableDetails: React.FC<TableDetailsInter> = ({
                             invoice.id,
                             "reject",
                             invoice.reducedType,
-                            +invoice.createBy
+                            +invoice.createBy.id
                           );
                         }}
                       >
@@ -234,7 +234,7 @@ export const TableDetails: React.FC<TableDetailsInter> = ({
                               invoice.id,
                               "reject",
                               invoice.reducedType,
-                              +invoice.createBy
+                              +invoice.createBy.id
                             );
                           }}
                         >
@@ -264,6 +264,7 @@ export const TableDetails: React.FC<TableDetailsInter> = ({
           handleClose={handleClose}
         />
         <ModalsAdmin
+          admin={admin}
           open={openModalAdmin}
           invoiceObject={invoiceObject}
           handleClose={handleCloseModalAdmin}
