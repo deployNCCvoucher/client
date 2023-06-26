@@ -13,7 +13,10 @@ import {
   Menu,
 } from "@mui/material";
 import Time from "../../../../components/time/Time";
-import { Invoice } from "../../../../redux/invoice/invoiceSlide";
+import {
+  Invoice,
+  setCurrentInvoice,
+} from "../../../../redux/invoice/invoiceSlide";
 import Image from "../../../../components/imageFirebase/Image";
 import {
   useAppDispatch,
@@ -53,6 +56,7 @@ export const TableDetails: React.FC<TableDetailsInter> = ({
   );
   const dispatch = useAppDispatch();
   const [idEdit, setIdEdit] = useState<{}>({});
+  console.log("datamap", dataMap);
 
   // open modal edit for user
   const [openModal, setOpenModal] = useState(false);
@@ -247,6 +251,7 @@ export const TableDetails: React.FC<TableDetailsInter> = ({
                       onClick={() => {
                         handleSetEdit(invoice.id, invoice.image);
                         handleOpen();
+                        dispatch(setCurrentInvoice(invoice));
                       }}
                     >
                       Edit

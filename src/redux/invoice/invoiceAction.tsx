@@ -70,6 +70,25 @@ export const createInvoice = createAsyncThunk(
     }
   }
 );
+
+// export const editInvoice = createAsyncThunk(
+//   "/api/invoices/updateInvoice",
+//   async (params: any, thunkApi) => {
+//     try {
+//       const data = await axiosClient.put(
+//         `/api/invoices/updateInvoice/${params.id}`,
+//         params.data,
+//         {
+//           headers: { "Content-Type": "multipart/form-data" },
+//         }
+//       );
+//       return data;
+//     } catch (error: any) {
+//       return thunkApi.rejectWithValue(error.response?.data?.error?.message);
+//     }
+//   }
+// );
+
 export const getInvoice = createAsyncThunk(
   "invoices/getInvoice",
   async (params: any, thunkApi) => {
