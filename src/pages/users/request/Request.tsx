@@ -73,60 +73,6 @@ const MyRequest: React.FC<RequestProps> = ({ modal, invoice, isEdit }) => {
     }
   }, [currentInvoice]);
 
-  useEffect(() => {
-    const convertFirebaseLinkToImage = async (url: any, path: string) => {
-      try {
-        // Tải xuống file từ đường dẫn
-        const response = await fetch(url);
-        console.log("responseseeeeeeee", response);
-        const fileBlob = await response.blob();
-        console.log("fileBlob", fileBlob);
-        const generateRandomFileName = () => {
-          const characters =
-            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-          const length = 10;
-          let randomFileName = "";
-
-          for (let i = 0; i < length; i++) {
-            randomFileName += characters.charAt(
-              Math.floor(Math.random() * characters.length)
-            );
-          }
-
-          return `${randomFileName}.jpg`;
-        };
-
-        const randomFileName = generateRandomFileName();
-        const filePath = `${randomFileName}`; // Kết hợp path với tên file ngẫu nhiên
-
-        // Tạo đối tượng File từ Blob
-        const imageFile = new File([fileBlob], filePath, {
-          type: "image/jpeg",
-        });
-        return imageFile;
-      } catch (error) {
-        console.log("Lỗi khi chuyển đổi link Firebase thành file hình:", error);
-        return null;
-      }
-    };
-
-    // Sử dụng hàm convertFirebaseLinkToImage
-    const firebaseLink = imageUrl;
-
-    const path = "invoices"; // Đường dẫn path bạn muốn set
-    const loadImageFile = async () => {
-      const imageFile = await convertFirebaseLinkToImage(firebaseLink, path);
-      if (imageFile) {
-        console.log("Đã chuyển đổi thành công thành file hình:", imageFile);
-        setImageFile(imageFile);
-      } else {
-        console.log("Không thể chuyển đổi link Firebase thành file hình.");
-      }
-    };
-
-    loadImageFile();
-  }, []);
-
   console.log("imageUrl", imageUrl);
   const defaultValues: {
     file: string | null;
@@ -164,15 +110,13 @@ const MyRequest: React.FC<RequestProps> = ({ modal, invoice, isEdit }) => {
   }, [imageFile]);
 
   const onSubmit = handleSubmit((data: any) => {
-    console.log("data", data);
     const formData = new FormData();
     if (isEdit) {
-      formData.append("image", imageFile);
+      formData.append("image", file);
       formData.append("code", data.code);
       formData.append("reducedType", data.moneyReduce);
       formData.append("gmail", currentUser.gmail);
       dispatch(editInvoice({ data: formData, id: currentInvoice.id }));
-      console.log("updatedCheckUpdate", formData);
     } else {
       formData.append("image", file);
       formData.append("code", data.code);
@@ -249,6 +193,14 @@ const MyRequest: React.FC<RequestProps> = ({ modal, invoice, isEdit }) => {
           style={{ display: "flex", flexDirection: "column", gap: "20px" }}
         >
           <Box>
+            {imageFile && (
+              <img
+                src={URL.createObjectURL(imageFile)}
+                alt="Uploaded filedcfvgbhn"
+                width="100%"
+                style={{ margin: "auto" }}
+              />
+            )}
             <Typography
               sx={{
                 fontSize: "14px",
