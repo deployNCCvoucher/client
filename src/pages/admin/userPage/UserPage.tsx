@@ -10,6 +10,7 @@ import {
 } from "../../../redux/hook/useTypedSeletor";
 import { TableUser } from "./TableUser/TableUser";
 import { UseMoney } from "./UseMoney/UseMoney";
+import { SearchUser } from "./SearchUser/SearchUser";
 
 export const UserPage = () => {
   const dispatch = useAppDispatch();
@@ -23,6 +24,8 @@ export const UserPage = () => {
     <Box sx={{ display: "fex", overflow: 'auto'}}>
       <TableUser />
       <Box sx={{width: 'calc(50% - 28px)'}}>
+        {/* <SearchUser /> */}
+        <UseMoney />
         <UseMoney />
       </Box>
     </Box>

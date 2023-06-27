@@ -45,14 +45,14 @@ export const login = createAsyncThunk('login', async (param: any) => {
   }
 })
 
-interface UpdateReaduceInter {
+interface UpdateAvailableInter {
   id: number
-  totalReduce: number
+  totalAvailable: number
 }
 
-export const updateMoney = createAsyncThunk('updateMoney', async (dataUpdate : UpdateReaduceInter, thunkApi) => {
+export const updateMoney = createAsyncThunk('updateMoney', async (dataUpdate : UpdateAvailableInter, thunkApi) => {
   try {
-    const { data } = await axiosClient.put(`/users/updateTotalReduce/${dataUpdate.id}`, {totalReduce: dataUpdate.totalReduce})
+    const { data } = await axiosClient.put(`/users/updateTotalAvailable/${dataUpdate.id}`, {totalAvailable: dataUpdate.totalAvailable})
     toast.success("Update successful!")
     return data;
   } catch (error: any) {

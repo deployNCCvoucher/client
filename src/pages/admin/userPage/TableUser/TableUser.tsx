@@ -19,7 +19,8 @@ import { PaginationComponent } from "../../../users/profile/Pagination/Paginatio
 
 export const TableUser = () => {
   const users = useAppSelector((state) => state.user.users);
-  const usersPagin = useAppSelector((state) => state.user.usersPagin);
+  const usersPagin2 = useAppSelector((state) => state.user.usersPagin);
+  const usersPagin = [...usersPagin2, ...usersPagin2,...usersPagin2, ...usersPagin2,...usersPagin2]
   const pageTopRef = useRef(null);
 
   const dispatch = useAppDispatch();
@@ -69,7 +70,7 @@ export const TableUser = () => {
               >
                 <TableCell align="center">{user.gmail.split("@")[0]}</TableCell>
                 <TableCell align="center">{user.name}</TableCell>
-                <TableCell align="center">{user.totalReduce}</TableCell>
+                <TableCell align="center">{user.totalAvailable}</TableCell>
               </TableRow>
             ))}
           </TableBody>

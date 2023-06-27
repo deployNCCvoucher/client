@@ -59,28 +59,11 @@ const MyRequest: React.FC<RequestProps> = ({ modal, invoice, isEdit }) => {
     fetchData();
   }, []);
   useEffect(() => {
-    if (currentInvoice) {
-      const getImage: any = async () => {
-        try {
-          const storageRef = ref(storage, currentInvoice.image);
-          const url = await getDownloadURL(storageRef);
-          setImageUrl(url);
-        } catch (error) {
-          console.error("Error getting image from Firebase:", error);
-        }
-      };
-      getImage();
-    }
-  }, [currentInvoice]);
-
-  useEffect(() => {
     const convertFirebaseLinkToImage = async (url: any, path: string) => {
       try {
         // Tải xuống file từ đường dẫn
         const response = await fetch(url);
-        console.log("responseseeeeeeee", response);
         const fileBlob = await response.blob();
-        console.log("fileBlob", fileBlob);
         const generateRandomFileName = () => {
           const characters =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -126,6 +109,21 @@ const MyRequest: React.FC<RequestProps> = ({ modal, invoice, isEdit }) => {
 
     loadImageFile();
   }, []);
+  
+  useEffect(() => {
+    if (currentInvoice) {
+      const getImage: any = async () => {
+        try {
+          const storageRef = ref(storage, currentInvoice.image);
+          const url = await getDownloadURL(storageRef);
+          setImageUrl(url);
+        } catch (error) {
+          console.error("Error getting image from Firebase:", error);
+        }
+      };
+      getImage();
+    }
+  }, [currentInvoice]);
 
   console.log("imageUrl", imageUrl);
   const defaultValues: {

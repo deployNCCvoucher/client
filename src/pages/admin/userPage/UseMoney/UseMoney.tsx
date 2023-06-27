@@ -2,6 +2,7 @@ import {
   Autocomplete,
   Box,
   Button,
+  FormControl,
   Paper,
   TextField,
   Typography,
@@ -12,12 +13,35 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../../../redux/hook/useTypedSeletor";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Controller, useForm } from "react-hook-form";
 
 interface OptionInter {
   label: string;
   id: number;
 }
+
+const schema = yup
+  .object({
+    account: yup.object().shape({
+      label: yup.string().required('required'),
+      id: yup.number().required('required'),
+    }),
+    money: yup.string().required("Required"),
+  })
+  .required();
+type FormData = yup.InferType<typeof schema>;
+
 export const UseMoney = () => {
+  const {
+    reset,
+    control,
+    register,
+    handleSubmit,
+    getValues,
+    formState: { errors },
+  } = useForm<FormData>({ mode: "all", resolver: yupResolver(schema) });
   const users = useAppSelector((state) => state.user.users);
   const [selectedValue, setSelectedValue] = useState<OptionInter | null>(null);
   const options = users.map((user) => {
@@ -39,7 +63,10 @@ export const UseMoney = () => {
     }
     return option.id === value.id;
   };
-  console.log("selectedValue", selectedValue);
+
+  const handleSubmitMoney = handleSubmit((value) => {
+    console.log("value", value);
+  });
 
   const dispatch = useAppDispatch();
   useEffect(() => {
@@ -48,6 +75,7 @@ export const UseMoney = () => {
     };
     fetchData();
   }, []);
+
   return (
     <Box
       sx={{
@@ -56,7 +84,8 @@ export const UseMoney = () => {
         p: "8px 24px 24px",
         boxShadow: "0 2px 10px rgba(0,0,0,.35)",
       }}
-      component={Paper}
+      component="form"
+      onSubmit={handleSubmitMoney}
     >
       <Typography variant="h6" sx={{ color: "#3f51b5" }}>
         Use Money Voucher
@@ -72,36 +101,54 @@ export const UseMoney = () => {
           <Box sx={{ mb: "12px" }}>
             <Typography>Account</Typography>
           </Box>
-          <Box sx={{ width: 1 }}>
-            <Autocomplete
-              options={options}
-              //   getOptionDisabled={(option) =>
-              //     option === options[0] || option === timeSlots[2]
-              //   }
-              isOptionEqualToValue={isOptionEqualToValue}
-              value={selectedValue}
-              onChange={handleAutocompleteChange}
-              sx={{ width: 300 }}
-              renderInput={(params) => (
-                <TextField {...params} label="Account" />
+
+          <FormControl sx={{ width: 1 }}>
+            <Controller
+              control={control}
+              name="account"
+              render={({ field }) => (
+                <Autocomplete
+                  {...field}
+                  options={options}
+                  isOptionEqualToValue={isOptionEqualToValue}
+                  getOptionLabel={(option) => option.label}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Account"
+                      error={!!errors.account}
+                      helperText={errors.account?.message}
+                    />
+                  )}
+                  onChange={(_, data) => {
+                    field.onChange(data);
+                    return data
+                  }}
+                  value={field.value}
+                />
               )}
             />
-          </Box>
+          </FormControl>
         </Box>
+
         <Box sx={{ ml: "24px" }}>
           <Box sx={{ mb: "12px" }}>
             <Typography>Money Reduced</Typography>
           </Box>
-          <Box sx={{ width: 1 }}>
-            <TextField sx={{ width: 1 }} />
-          </Box>
+          <FormControl sx={{ width: 1 }}>
+            <TextField sx={{ width: 1 }} {...register("money")} />
+          </FormControl>
         </Box>
       </Box>
-      <Box sx={{ mt: "24px", display: "flex", justifyContent: "flex-end" }}>
-        <Button color="error" variant="contained" size="large">
-          Apply
-        </Button>
-      </Box>
+      <Button
+        sx={{ mt: "24px", display: "flex", justifyContent: "flex-end" }}
+        color="error"
+        variant="contained"
+        size="large"
+        type="submit"
+      >
+        Apply
+      </Button>
     </Box>
   );
 };
