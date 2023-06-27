@@ -7,24 +7,22 @@ import { useAppDispatch } from "../../../../redux/hook/useTypedSeletor";
 
 const LoginSlide = () => {
   const dispatch = useAppDispatch();
-
-  const clientId = '9811993498-flmr9etgn9vr42st1lhl2mf14of8jlu4.apps.googleusercontent.com'
+  const clientId =
+    "9811993498-flmr9etgn9vr42st1lhl2mf14of8jlu4.apps.googleusercontent.com";
 
   useEffect(() => {
-    function start() {
-      gapi.load("auth2", () => {
-        gapi.auth2
-          .init({
-            client_id: clientId,
-            scope: "profile email",
-          })
-          .then(() => {
-            var auth2 = gapi.auth2.getAuthInstance();
-          })
-          .catch((error: any) => {
-            console.log("Lỗi khi khởi tạo gapi.auth2:", error);
-          });
-      });
+    async function start() {
+      try {
+        await gapi.load("auth2");
+        await gapi.auth2.init({
+          client_id: clientId,
+          scope: "profile email",
+        });
+        var auth2 = gapi.auth2.getAuthInstance();
+        // Tiếp tục xử lý với auth2
+      } catch (error) {
+        console.log("Lỗi khi khởi tạo gapi.auth2:", error);
+      }
     }
     gapi.load("client", start);
   }, []);

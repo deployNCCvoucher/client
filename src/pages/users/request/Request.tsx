@@ -5,7 +5,10 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../../redux/hook/useTypedSeletor";
-import { createInvoice } from "../../../redux/invoice/invoiceAction";
+import {
+  createInvoice,
+  editInvoice,
+} from "../../../redux/invoice/invoiceAction";
 import {
   Box,
   Typography,
@@ -21,6 +24,9 @@ import * as yup from "yup";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { toast } from "react-toastify";
 import { getUser } from "../../../redux/user/userAction";
+import { getUrlImage } from "../../../components/imageFirebase/getUrlImage";
+import { storage } from "../../../components/imageFirebase/firebase";
+import { FirebaseStorage, getDownloadURL, ref } from "firebase/storage";
 
 interface RequestProps {
   modal?: boolean;
@@ -34,31 +40,17 @@ export interface MuiProps {
   value?: any;
 }
 
-const MyRequest: React.FC<RequestProps> = ({ modal, invoice, isEdit, idEdit }) => {
+const MyRequest: React.FC<RequestProps> = ({ modal, invoice, isEdit }) => {
   const dispatch = useAppDispatch();
   const value = useAppSelector((state: any) => state.user);
+  const currentInvoice = useAppSelector(
+    (state) => state.invoice.currentInvouce
+  );
+  const [currentInvoiceData, setCurrentInvoiceData] = useState<any>();
+  const [imageUrl, setImageUrl] = useState("");
+  const [imageFile, setImageFile] = useState<any>();
   const { currentUser } = value;
-  const invoices = useAppSelector((state) => state.invoice.listInvoice);
-  const [urlImage, setUrlImage] = useState<{url: string, type: string}>({url: '', type: ''});
   const [file, setFile] = useState<any>(null);
-  // useEffect(() => {
-  //   const getImage: any = async () => {
-  //     try {
-  //       const storageRef = ref(storage, idEdit.image);
-  //       const url = await getDownloadURL(storageRef);
-  //       setUrlImage({ url: url, type: "image/" });
-  //       console.log('url',urlImage)
-  //       setFile(urlImage);
-  //     } catch (error) {
-  //       console.error("Error getting image from Firebase:", error);
-  //     }
-  //   };
-  //   if (isEdit) {
-  //     getImage();
-  //   }
-  // }, []);
-
-  console.log('file', file);
   useEffect(() => {
     const userId = window.localStorage.getItem("idUser");
     const fetchData = async () => {
@@ -66,9 +58,89 @@ const MyRequest: React.FC<RequestProps> = ({ modal, invoice, isEdit, idEdit }) =
     };
     fetchData();
   }, []);
+  useEffect(() => {
+    if (currentInvoice) {
+      const getImage: any = async () => {
+        try {
+          const storageRef = ref(storage, currentInvoice.image);
+          const url = await getDownloadURL(storageRef);
+          setImageUrl(url);
+        } catch (error) {
+          console.error("Error getting image from Firebase:", error);
+        }
+      };
+      getImage();
+    }
+  }, [currentInvoice]);
+
+  useEffect(() => {
+    const convertFirebaseLinkToImage = async (url: any, path: string) => {
+      try {
+        // Tải xuống file từ đường dẫn
+        const response = await fetch(url);
+        console.log("responseseeeeeeee", response);
+        const fileBlob = await response.blob();
+        console.log("fileBlob", fileBlob);
+        const generateRandomFileName = () => {
+          const characters =
+            "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+          const length = 10;
+          let randomFileName = "";
+
+          for (let i = 0; i < length; i++) {
+            randomFileName += characters.charAt(
+              Math.floor(Math.random() * characters.length)
+            );
+          }
+
+          return `${randomFileName}.jpg`;
+        };
+
+        const randomFileName = generateRandomFileName();
+        const filePath = `${randomFileName}`; // Kết hợp path với tên file ngẫu nhiên
+
+        // Tạo đối tượng File từ Blob
+        const imageFile = new File([fileBlob], filePath, {
+          type: "image/jpeg",
+        });
+        return imageFile;
+      } catch (error) {
+        console.log("Lỗi khi chuyển đổi link Firebase thành file hình:", error);
+        return null;
+      }
+    };
+
+    // Sử dụng hàm convertFirebaseLinkToImage
+    const firebaseLink = imageUrl;
+
+    const path = "invoices"; // Đường dẫn path bạn muốn set
+    const loadImageFile = async () => {
+      const imageFile = await convertFirebaseLinkToImage(firebaseLink, path);
+      if (imageFile) {
+        console.log("Đã chuyển đổi thành công thành file hình:", imageFile);
+        setImageFile(imageFile);
+      } else {
+        console.log("Không thể chuyển đổi link Firebase thành file hình.");
+      }
+    };
+
+    loadImageFile();
+  }, []);
+
+  console.log("imageUrl", imageUrl);
+  const defaultValues: {
+    file: string | null;
+    code: string;
+    moneyReduce: string;
+  } = {
+    file: isEdit ? imageFile : null,
+    code: isEdit ? currentInvoice.code : "",
+    moneyReduce: isEdit ? currentInvoice.reducedType : "",
+  };
+  console.log("defaultInvoice", defaultValues);
 
   const schema = yup.object({
-    file: yup.mixed().required("Vui lòng thêm hình ảnh hóa đơn vào!"),
+    file: yup.mixed(),
     code: yup.string(),
     moneyReduce: yup.string().required("Vui lòng chọn loại voucher!"),
   });
@@ -82,16 +154,34 @@ const MyRequest: React.FC<RequestProps> = ({ modal, invoice, isEdit, idEdit }) =
   } = useForm<any>({
     mode: "all",
     resolver: yupResolver(schema),
+    defaultValues: defaultValues,
   });
+  console.log("imageFileimageFileimageFile", imageFile);
+  useEffect(() => {
+    setValue("file", imageFile);
+    setValue("code", currentInvoice.code);
+    setValue("moneyReduce", currentInvoice.reducedType);
+  }, [imageFile]);
 
   const onSubmit = handleSubmit((data: any) => {
+    console.log("data", data);
     const formData = new FormData();
-    formData.append("image", file);
-    formData.append("code", data.code);
-    formData.append("reducedType", data.moneyReduce);
-    formData.append("gmail", currentUser.gmail);
-    formData.append("createBy", currentUser.id);
-    dispatch(createInvoice(formData));
+    if (isEdit) {
+      formData.append("image", imageFile);
+      formData.append("code", data.code);
+      formData.append("reducedType", data.moneyReduce);
+      formData.append("gmail", currentUser.gmail);
+      dispatch(editInvoice({ data: formData, id: currentInvoice.id }));
+      console.log("updatedCheckUpdate", formData);
+    } else {
+      formData.append("image", file);
+      formData.append("code", data.code);
+      formData.append("reducedType", data.moneyReduce);
+      formData.append("gmail", currentUser.gmail);
+      formData.append("createBy", currentUser.id);
+      dispatch(createInvoice(formData));
+    }
+
     reset({
       code: "",
       moneyReduce: undefined,
@@ -112,7 +202,6 @@ const MyRequest: React.FC<RequestProps> = ({ modal, invoice, isEdit, idEdit }) =
       }
     }
   };
-
   const { getRootProps, isDragActive } = useDropzone({ onDrop });
   useEffect(() => {
     if (errors.file?.message) {
@@ -197,7 +286,82 @@ const MyRequest: React.FC<RequestProps> = ({ modal, invoice, isEdit, idEdit }) =
               }}
               {...getRootProps()}
             >
-              {file === null && (
+              {isEdit && file === null && imageUrl !== "" && (
+                <Box
+                  sx={{
+                    top: "0",
+                    width: "100%",
+                    height: "100%",
+                    overflow: "hidden",
+                    borderRadius: "12px",
+                    "@media (max-width: 1025px)": {
+                      borderRadius: "7px",
+                    },
+                  }}
+                >
+                  <Box
+                    className="scrollbar"
+                    sx={{
+                      height: "85%",
+                      overflowY: "scroll",
+                    }}
+                  >
+                    <img
+                      src={imageUrl}
+                      alt="Uploaded file"
+                      width="100%"
+                      style={{ margin: "auto" }}
+                    />
+                  </Box>
+                  <Box
+                    sx={{
+                      width: "100%",
+                      height: "15%",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: "10px",
+                      backgroundColor: "var(--secondary-color)",
+                    }}
+                  >
+                    <CloudUploadIcon
+                      sx={{
+                        fontSize: "40px",
+                        color: "var(--secondary-color01)",
+                        "@media (max-width: 1025px)": {
+                          fontSize: "22px",
+                        },
+                      }}
+                    />
+                    {isDragActive ? (
+                      <Typography
+                        sx={{
+                          fontSize: "20px",
+                          color: "var(--secondary-color01)",
+                          "@media (max-width: 1025px)": {
+                            fontSize: "12px",
+                          },
+                        }}
+                      >
+                        Thả file vào đây
+                      </Typography>
+                    ) : (
+                      <Typography
+                        sx={{
+                          fontSize: "20px",
+                          color: "var(--secondary-color01)",
+                          "@media (max-width: 1025px)": {
+                            fontSize: "12px",
+                          },
+                        }}
+                      >
+                        Kéo và thả hoặc click để chọn file khác
+                      </Typography>
+                    )}
+                  </Box>
+                </Box>
+              )}
+              {file === null && !isEdit && (
                 <>
                   <CloudUploadIcon
                     sx={{
@@ -300,17 +464,12 @@ const MyRequest: React.FC<RequestProps> = ({ modal, invoice, isEdit, idEdit }) =
                       overflowY: "scroll",
                     }}
                   >
-                    {isEdit ?  <img
-                      src={(file.url)}
-                      alt="Uploaded file"
-                      width="100%"
-                      style={{ margin: "auto" }}
-                    /> : <img
+                    <img
                       src={URL.createObjectURL(file)}
                       alt="Uploaded file"
                       width="100%"
                       style={{ margin: "auto" }}
-                    />}
+                    />
                   </Box>
                   <Box
                     sx={{

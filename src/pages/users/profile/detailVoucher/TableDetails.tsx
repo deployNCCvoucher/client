@@ -13,13 +13,17 @@ import {
 import Time from "../../../../components/time/Time";
 import Image from "../../../../components/imageFirebase/Image";
 import {
+  useAppDispatch,
   useAppSelector,
 } from "../../../../redux/hook/useTypedSeletor";
 import EditModal from "../../../../components/modal/Modal";
 import { Fragment, useState } from "react";
 import { ModalsAdmin } from "../../../admin/components/ModalsAdmin/ModalsAdmin";
 import { ActionButton } from "../../../admin/components/ActionButton/ActionButton";
-import { Invoice } from "../../../../redux/invoice/invoiceSlide";
+import {
+  Invoice,
+  setCurrentInvoice,
+} from "../../../../redux/invoice/invoiceSlide";
 interface TableDetailsInter {
   adminHistory?: boolean;
   admin?: boolean;
@@ -42,6 +46,9 @@ export const TableDetails: React.FC<TableDetailsInter> = ({
   const invoice = useAppSelector((state) => state.invoice);
   const currentUser = useAppSelector((state) => state.user.currentUser);
   const [idEdit, setIdEdit] = useState<{}>({});
+
+  const dispatch = useAppDispatch();
+  console.log("datamap", dataMap);
 
   // open modal edit for user
   const [openModal, setOpenModal] = useState(false);
@@ -236,6 +243,7 @@ export const TableDetails: React.FC<TableDetailsInter> = ({
                       onClick={() => {
                         handleSetEdit(invoice.id, invoice.image);
                         handleOpen();
+                        dispatch(setCurrentInvoice(invoice));
                       }}
                     >
                       Edit
@@ -247,7 +255,6 @@ export const TableDetails: React.FC<TableDetailsInter> = ({
           ))}
         </TableBody>
         <EditModal
-          idEdit={idEdit}
           invoice={invoice}
           open={openModal}
           handleOpen={handleOpen}

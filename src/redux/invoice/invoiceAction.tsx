@@ -70,6 +70,25 @@ export const createInvoice = createAsyncThunk(
     }
   }
 );
+
+export const editInvoice = createAsyncThunk(
+  "invoices/updateDataInvoice",
+  async (params: any, thunkApi) => {
+    try {
+      const data = await axiosClient.put(
+        `/invoices/updateInvoice/${params.id}`,
+        params.data,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+      return data;
+    } catch (error: any) {
+      return thunkApi.rejectWithValue(error.response?.data?.error?.message);
+    }
+  }
+);
+
 export const getInvoice = createAsyncThunk(
   "invoices/getInvoice",
   async (params: any, thunkApi) => {
@@ -90,7 +109,7 @@ export const updateInvoice = createAsyncThunk(
         `/invoices/updateStatus/${dataUpdate.id}`,
         dataUpdate
       );
-      console.log('updateInvoice', data)
+      console.log("updateInvoice", data);
       return data;
     } catch (error: any) {
       return thunkApi.rejectWithValue(error.response?.data?.error?.message);
