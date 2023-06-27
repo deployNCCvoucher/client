@@ -20,6 +20,21 @@ export const getAllUser = createAsyncThunk('/users/getAll/', async () => {
   }
 }); 
 
+interface ParamsInter {
+  limit: number
+  page: number
+}
+
+export const getAllUserPagin = createAsyncThunk('/users/getAllPagin/', async (params :ParamsInter) => {
+  try {
+    const { data } = await axiosClient.get(`/users/getAllPagin?page=${params.page}&limit=${params.limit}`);
+    return data;
+  } catch (error: any) {
+    return error
+  }
+}); 
+
+
 export const login = createAsyncThunk('login', async (param: any) => {
   try {
     const { data } = await axiosClient.post('/auth/google', {access_token: param})

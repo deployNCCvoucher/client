@@ -9,29 +9,25 @@ import {
   Chip,
   Box,
   Button,
-  MenuItem,
-  Menu,
 } from "@mui/material";
 import Time from "../../../../components/time/Time";
-import {
-  Invoice,
-  setCurrentInvoice,
-} from "../../../../redux/invoice/invoiceSlide";
 import Image from "../../../../components/imageFirebase/Image";
 import {
   useAppDispatch,
   useAppSelector,
 } from "../../../../redux/hook/useTypedSeletor";
-import { updateInvoice } from "../../../../redux/invoice/invoiceAction";
 import EditModal from "../../../../components/modal/Modal";
-import { Fragment, useRef, useState } from "react";
+import { Fragment, useState } from "react";
 import { ModalsAdmin } from "../../../admin/components/ModalsAdmin/ModalsAdmin";
-import { updateMoney } from "../../../../redux/user/userAction";
 import { ActionButton } from "../../../admin/components/ActionButton/ActionButton";
+import {
+  Invoice,
+  setCurrentInvoice,
+} from "../../../../redux/invoice/invoiceSlide";
 interface TableDetailsInter {
   adminHistory?: boolean;
   admin?: boolean;
-  dataMap: any;
+  dataMap: Invoice[];
 }
 interface InvoiceObjectInter {
   id: number;
@@ -49,13 +45,9 @@ export const TableDetails: React.FC<TableDetailsInter> = ({
 }) => {
   const invoice = useAppSelector((state) => state.invoice);
   const currentUser = useAppSelector((state) => state.user.currentUser);
-  const users = useAppSelector((state) => state.user.users);
-  const searchUserValue = useAppSelector((state) => state.user.searchUserValue);
-  const userFound = users.filter((user) =>
-    user.gmail.includes(searchUserValue)
-  );
-  const dispatch = useAppDispatch();
   const [idEdit, setIdEdit] = useState<{}>({});
+
+  const dispatch = useAppDispatch();
   console.log("datamap", dataMap);
 
   // open modal edit for user

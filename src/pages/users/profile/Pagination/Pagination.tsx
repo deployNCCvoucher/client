@@ -1,5 +1,5 @@
-import { Box, Button, Pagination, PaginationItem } from "@mui/material";
-import { useState, useEffect, SetStateAction, useRef } from "react";
+import { Box, Pagination } from "@mui/material";
+import { useEffect } from "react";
 import { getInvoicesByFilter } from "../../../../redux/invoice/invoiceAction";
 import {
   useAppDispatch,
@@ -9,17 +9,20 @@ import {
   setPageInvoice,
   setTotalCountInvoice,
 } from "../../../../redux/invoice/invoiceSlide";
+import { getAllUserPagin } from "../../../../redux/user/userAction";
 
 interface PaginationComponentInter {
   history?: boolean;
   request?: boolean;
   pageTopRef?: any;
+  user?: boolean;
 }
 
 export const PaginationComponent: React.FC<PaginationComponentInter> = ({
   history,
   request,
   pageTopRef,
+  user,
 }) => {
   const dispatch = useAppDispatch();
   const userId = window.localStorage.getItem("idUser")!;
@@ -29,7 +32,7 @@ export const PaginationComponent: React.FC<PaginationComponentInter> = ({
   const type = useAppSelector((state) => state.invoice.typeVoucher);
   const month = useAppSelector((state) => state.invoice.month);
   const year = useAppSelector((state) => state.invoice.year);
-  const search = useAppSelector((state) => state.user.searchUserValue)
+  const search = useAppSelector((state) => state.user.searchUserValue);
 
   const getDataInvoicesFilter = async () => {
     if (request) {
@@ -49,6 +52,9 @@ export const PaginationComponent: React.FC<PaginationComponentInter> = ({
         );
         dispatch(setTotalCountInvoice(data.payload?.totalCount));
       }
+    } else if (user) {
+      const data = await dispatch(getAllUserPagin({ page, limit }));
+      dispatch(setTotalCountInvoice(data.payload?.totalCount));
     } else {
       const data = await dispatch(
         getInvoicesByFilter({ page, userId: +userId, limit, type, month, year })
@@ -66,7 +72,7 @@ export const PaginationComponent: React.FC<PaginationComponentInter> = ({
     value: number
   ) => {
     dispatch(setPageInvoice(value));
-    pageTopRef.current.scrollIntoView();
+    pageTopRef?.current.scrollIntoView();
   };
   return (
     <Box>

@@ -54,6 +54,14 @@ const SlideBar = () => {
                 </ListItemButton>
               </ListItem>
             </NavLink>
+            <NavLink to="/app/user" className="nav-link">
+              <ListItem disablePadding>
+                <ListItemButton>
+                  <AccountBoxIcon sx={{ mr: "15px" }} />
+                  <ListItemText primary="User" />
+                </ListItemButton>
+              </ListItem>
+            </NavLink>
           </Fragment>
         )}
       </List>

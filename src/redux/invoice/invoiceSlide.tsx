@@ -5,6 +5,7 @@ import {
   getInvoice,
   updateInvoice,
   getInvoicesByFilter,
+  editInvoice,
 } from "./invoiceAction";
 import { toast } from "react-toastify";
 import { UserInter } from "../user/userSlide";
@@ -119,6 +120,14 @@ const invoiceSlice = createSlice({
       })
       .addCase(updateInvoice.pending, (state, action) => {})
       .addCase(updateInvoice.rejected, (state, action) => {
+        toast.error("request error");
+      })
+      .addCase(editInvoice.fulfilled, (state, action) => {
+        toast.success("edit file successful!");
+        console.log(action.payload);
+      })
+      .addCase(editInvoice.rejected, (state, action) => {
+        console.log(action.payload);
         toast.error("request error");
       });
   },

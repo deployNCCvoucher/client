@@ -60,8 +60,6 @@ export const ModalsAdmin: React.FC<ModalRejectInter> = ({
     }
   };
 
-  console.log('admin', admin)
-
   const handleApprove = async () => {
     const dataApprove = {
       id: invoiceObject.id,

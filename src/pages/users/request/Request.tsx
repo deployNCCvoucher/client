@@ -7,7 +7,7 @@ import {
 } from "../../../redux/hook/useTypedSeletor";
 import {
   createInvoice,
-  updateInvoice,
+  editInvoice,
 } from "../../../redux/invoice/invoiceAction";
 import {
   Box,
@@ -69,7 +69,6 @@ const MyRequest: React.FC<RequestProps> = ({ modal, invoice, isEdit }) => {
           console.error("Error getting image from Firebase:", error);
         }
       };
-
       getImage();
     }
   }, [currentInvoice]);
@@ -79,7 +78,9 @@ const MyRequest: React.FC<RequestProps> = ({ modal, invoice, isEdit }) => {
       try {
         // Tải xuống file từ đường dẫn
         const response = await fetch(url);
+        console.log("responseseeeeeeee", response);
         const fileBlob = await response.blob();
+        console.log("fileBlob", fileBlob);
         const generateRandomFileName = () => {
           const characters =
             "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -110,8 +111,9 @@ const MyRequest: React.FC<RequestProps> = ({ modal, invoice, isEdit }) => {
     };
 
     // Sử dụng hàm convertFirebaseLinkToImage
-    const firebaseLink = currentInvoice.image;
-    const path = "invoices/nga.nguyenthithanh"; // Đường dẫn path bạn muốn set
+    const firebaseLink = imageUrl;
+
+    const path = "invoices"; // Đường dẫn path bạn muốn set
     const loadImageFile = async () => {
       const imageFile = await convertFirebaseLinkToImage(firebaseLink, path);
       if (imageFile) {
@@ -165,13 +167,12 @@ const MyRequest: React.FC<RequestProps> = ({ modal, invoice, isEdit }) => {
     console.log("data", data);
     const formData = new FormData();
     if (isEdit) {
-      formData.append("image", file);
+      formData.append("image", imageFile);
       formData.append("code", data.code);
       formData.append("reducedType", data.moneyReduce);
       formData.append("gmail", currentUser.gmail);
-      formData.append("createBy", currentUser.id);
-      dispatch(updateInvoice({ ...formData, id: currentInvoice.id }));
-      console.log("updated");
+      dispatch(editInvoice({ data: formData, id: currentInvoice.id }));
+      console.log("updatedCheckUpdate", formData);
     } else {
       formData.append("image", file);
       formData.append("code", data.code);
