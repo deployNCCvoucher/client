@@ -36,8 +36,8 @@ interface InvoiceObjectInter {
 
 export const TableDetails: React.FC<TableDetailsInter> = ({
   adminHistory,
-  dataMap,
   admin,
+  dataMap,
 }) => {
   const invoice = useAppSelector((state) => state.invoice);
   const currentUser = useAppSelector((state) => state.user.currentUser);

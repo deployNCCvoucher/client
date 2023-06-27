@@ -19,8 +19,7 @@ import { PaginationComponent } from "../../../users/profile/Pagination/Paginatio
 
 export const TableUser = () => {
   const users = useAppSelector((state) => state.user.users);
-  const usersPagin2 = useAppSelector((state) => state.user.usersPagin);
-  const usersPagin = [...usersPagin2, ...users];
+  const usersPagin = useAppSelector((state) => state.user.usersPagin);
   const pageTopRef = useRef(null);
 
   const dispatch = useAppDispatch();
