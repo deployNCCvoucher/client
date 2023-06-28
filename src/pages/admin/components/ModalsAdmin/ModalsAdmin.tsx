@@ -71,7 +71,7 @@ export const ModalsAdmin: React.FC<ModalRejectInter> = ({
     await dispatch(
       updateMoney({
         id: invoiceObject.userId,
-        totalReduce: +invoiceObject.totalReduce,
+        totalAvailable: +invoiceObject.totalAvailable,
       })
     );
     await dispatch(updateInvoice(dataApprove));

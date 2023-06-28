@@ -13,7 +13,8 @@ export interface UserInter {
   id: number;
   name: string;
   role: string;
-  totalReduce: number;
+  totalAvailable: number;
+  totalUsed: number;
   updateAt: string;
   userImage?: string;
 }

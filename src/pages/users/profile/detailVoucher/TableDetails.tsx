@@ -35,13 +35,13 @@ interface InvoiceObjectInter {
   checkBy: number;
   checkAt: string;
   userId: number;
-  totalReduce: number;
+  totalAvailable: number;
 }
 
 export const TableDetails: React.FC<TableDetailsInter> = ({
   adminHistory,
-  dataMap,
   admin,
+  dataMap,
 }) => {
   const invoice = useAppSelector((state) => state.invoice);
   const currentUser = useAppSelector((state) => state.user.currentUser);
@@ -85,7 +85,7 @@ export const TableDetails: React.FC<TableDetailsInter> = ({
       checkBy: currentUser.id,
       checkAt: new Date().toISOString(),
       userId: userId,
-      totalReduce: +type.split("k")[0],
+      totalAvailable: +type.split("k")[0],
     });
     setOpenModalAdmin(true);
   };
