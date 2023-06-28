@@ -24,7 +24,6 @@ import * as yup from "yup";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { toast } from "react-toastify";
 import { getUser } from "../../../redux/user/userAction";
-import { getUrlImage } from "../../../components/imageFirebase/getUrlImage";
 import { storage } from "../../../components/imageFirebase/firebase";
 import { FirebaseStorage, getDownloadURL, ref } from "firebase/storage";
 
