@@ -1,6 +1,6 @@
 import "./style.scss";
 import { useEffect, useState } from "react";
-import { GoogleLogin } from "react-google-login";
+import { GoogleLogin } from "@react-oauth/google";
 import { gapi } from "gapi-script";
 import { login } from "../../../../redux/user/userAction";
 import { useAppDispatch } from "../../../../redux/hook/useTypedSeletor";
@@ -30,7 +30,7 @@ const LoginSlide = () => {
   const [open, setOpen] = useState(false);
 
   const responseGoogle = async (response: any) => {
-    await dispatch(login(response.tokenId));
+    await dispatch(login(response.credential));
   };
   useEffect(() => {
     const handleOpen = (): void => {
@@ -58,26 +58,12 @@ const LoginSlide = () => {
             <img className="logo" src="./images/logo.png" alt="logo" />
             <h1 className="logo-text">VOUCHER</h1>
             <GoogleLogin
-              clientId={clientId}
-              buttonText="Login with Google"
               onSuccess={responseGoogle}
-              onFailure={responseGoogle}
-              cookiePolicy={"single_host_origin"}
-              render={(renderProps) => (
-                <button
-                  onClick={renderProps.onClick}
-                  disabled={renderProps.disabled}
-                  className="button"
-                >
-                  <img
-                    src="./images/google-logo.png"
-                    className="google-logo"
-                    alt=""
-                  />
-                  <p>Sign in with google</p>
-                </button>
-              )}
+              onError={() => {
+                console.log("Login Failed");
+              }}
             />
+            ;
             <p className="term-text">
               By sign in you agree to the{" "}
               <span style={{ fontWeight: "700" }}>Terms</span> and the{" "}

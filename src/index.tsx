@@ -7,29 +7,32 @@ import { Provider } from "react-redux";
 import store from "./redux/store";
 import { BrowserRouter as Router } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <Router>
-      <Provider store={store}>
-        <ToastContainer
-          position="bottom-right"
-          autoClose={3000}
-          hideProgressBar
-          newestOnTop={false}
-          closeOnClick={false}
-          rtl={false}
-          pauseOnFocusLoss
-          draggable={false}
-          pauseOnHover
-          theme="colored"
-        />
-        <App />
-      </Provider>
-    </Router>
+    <GoogleOAuthProvider clientId='9811993498-flmr9etgn9vr42st1lhl2mf14of8jlu4.apps.googleusercontent.com'>
+      <Router>
+        <Provider store={store}>
+          <ToastContainer
+            position="bottom-right"
+            autoClose={3000}
+            hideProgressBar
+            newestOnTop={false}
+            closeOnClick={false}
+            rtl={false}
+            pauseOnFocusLoss
+            draggable={false}
+            pauseOnHover
+            theme="colored"
+          />
+          <App />
+        </Provider>
+      </Router>
+    </GoogleOAuthProvider>
   </React.StrictMode>
 );
 

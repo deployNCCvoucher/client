@@ -12,20 +12,24 @@ import MenuIcon from "@mui/icons-material/Menu";
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import MailIcon from "@mui/icons-material/Mail";
 import MoreIcon from "@mui/icons-material/MoreVert";
-import { GoogleLogout } from "react-google-login";
-import { useAppDispatch, useAppSelector } from "../../redux/hook/useTypedSeletor";
-import { logOut } from "../../redux/user/userSlide"
+import {
+  useAppDispatch,
+  useAppSelector,
+} from "../../redux/hook/useTypedSeletor";
+import { logOut } from "../../redux/user/userSlide";
+import { googleLogout } from "@react-oauth/google";
+import { Button } from "@mui/material";
 interface Iprops {
   openSidebar: boolean;
   setOpenSidebar: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const Header: React.FC<Iprops> = ({ openSidebar, setOpenSidebar }) => {
-  const invoices = useAppSelector((state) => state.invoice.listInvoice)
-  const number = invoices.filter((item) => item.status === 'pending').length
-  const dispatch = useAppDispatch()
-    const onSuccess = () => {
-        dispatch(logOut())
-      };
+  const invoices = useAppSelector((state) => state.invoice.listInvoice);
+  const number = invoices.filter((item) => item.status === "pending").length;
+  const dispatch = useAppDispatch();
+  const onSuccess = () => {
+    dispatch(logOut());
+  };
   const clientId =
     "9811993498-flmr9etgn9vr42st1lhl2mf14of8jlu4.apps.googleusercontent.com";
 
@@ -72,14 +76,7 @@ const Header: React.FC<Iprops> = ({ openSidebar, setOpenSidebar }) => {
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>
-        <GoogleLogout
-          clientId={clientId}
-          buttonText="Logout"
-          onLogoutSuccess={onSuccess}
-          render={renderProps => (
-            <p onClick={renderProps.onClick}>Logout</p>
-          )}
-        ></GoogleLogout>
+        <Button onClick={onSuccess}>Logout</Button>
       </MenuItem>
     </Menu>
   );
@@ -170,10 +167,7 @@ const Header: React.FC<Iprops> = ({ openSidebar, setOpenSidebar }) => {
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
           <Box sx={{ display: { xs: "none", md: "flex" } }}>
-            <IconButton
-              size="large"
-              color="inherit"
-            >
+            <IconButton size="large" color="inherit">
               <Badge badgeContent={number} color="error">
                 <MailIcon />
               </Badge>
