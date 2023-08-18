@@ -37,8 +37,8 @@ const DetailVoucher: React.FC<IProps> = ({ admin, adminHistory, type }) => {
     const fetchData = async () => {
       if (userId) await dispatch(getUser(userId));
       !admin && (await dispatch(getInvoice(userId)));
-      await dispatch(getAllInvoice());
-      await dispatch(getAllUser());
+      // await dispatch(getAllInvoice());
+      // await dispatch(getAllUser());
     };
     fetchData();
   }, []);

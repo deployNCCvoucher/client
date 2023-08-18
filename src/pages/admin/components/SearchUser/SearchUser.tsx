@@ -46,24 +46,30 @@ export const SearchUser = () => {
   };
 
   const handleChangeMonth = (event: SelectChangeEvent) => {
-    dispatch(setPageInvoice(1))
+    dispatch(setPageInvoice(1));
     dispatch(setMonthFilter(event.target.value));
   };
 
   const handleChangeYear = (event: SelectChangeEvent) => {
-    dispatch(setPageInvoice(1))
+    dispatch(setPageInvoice(1));
     dispatch(setYearFilter(event.target.value));
   };
 
   const handleTypeVoucher = (event: SelectChangeEvent) => {
-    dispatch(setPageInvoice(1))
-    dispatch(setTypeFilter(event.target.value))
+    dispatch(setPageInvoice(1));
+    dispatch(setTypeFilter(event.target.value));
   };
   return (
-    <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+      }}
+    >
       <Box>
         <Box sx={{ display: "flex", alignItems: "center" }}>
-          <Typography sx={{color: '#3e50af'}}>Search for: </Typography>
+          <Typography sx={{ color: "#3e50af" }}>Search for: </Typography>
           <Button
             color={searchType === "User" ? "error" : "primary"}
             onClick={handleSearchUser}
@@ -79,15 +85,22 @@ export const SearchUser = () => {
         </Box>
         <TextField
           label={`Search for ${searchType}`}
-          size='small'
+          size="small"
           variant="outlined"
           value={value}
           onChange={(e) => setValue(e.target.value)}
         />
       </Box>
 
-      <Box sx={{ display: "flex", justifyContent: "flex-end", alignItems: 'center',flex: 1 }}>
-      <MultipleSelect
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          flex: 1,
+        }}
+      >
+        <MultipleSelect
           type="Type"
           handleChange={handleTypeVoucher}
           time={typeVoucher}

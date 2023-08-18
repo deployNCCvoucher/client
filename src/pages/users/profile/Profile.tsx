@@ -146,15 +146,16 @@ const Profile = () => {
                         sx={{
                           "&:last-child td, &:last-child th": { border: 0 },
                         }}
+                        key={index}
                       >
                         <TableCell align="center">
-                          {index == 0
+                          {index === 0
                             ? "Type 30k"
-                            : index == 1
+                            : index === 1
                             ? "Type 50k"
-                            : index == 2
+                            : index === 2
                             ? "Type 100k"
-                            : index == 3
+                            : index === 3
                             ? "Amount used"
                             : "Total"}
                         </TableCell>
@@ -202,9 +203,9 @@ const Profile = () => {
                                 handleTypeVoucher(
                                   index === 0
                                     ? "30k"
-                                    : index == 1
+                                    : index === 1
                                     ? "50k"
-                                    : index == 2
+                                    : index === 2
                                     ? "100k"
                                     : ""
                                 )
@@ -224,6 +225,7 @@ const Profile = () => {
           </Box>
         </Grid>
       </Grid>
+      
       <DetailVoucher type={typeVoucher} />
     </>
   );

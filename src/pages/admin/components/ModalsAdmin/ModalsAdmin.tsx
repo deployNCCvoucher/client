@@ -1,7 +1,7 @@
 import * as React from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
-import { Box, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, TextField, Typography } from "@mui/material";
 import {
   useAppDispatch,
   useAppSelector,
@@ -17,6 +17,7 @@ import {
 } from "../../../../redux/user/userAction";
 import { useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
+import { OptionInter } from "../../userPage/UseMoney/UseMoney";
 interface ModalRejectInter {
   open: boolean;
   invoiceObject?: any;
@@ -36,7 +37,20 @@ export const ModalsAdmin: React.FC<ModalRejectInter> = ({
   const month = useAppSelector((state) => state.invoice.month);
   const year = useAppSelector((state) => state.invoice.year);
   const type = useAppSelector((state) => state.invoice.typeVoucher);
+  const options = users.map((user) => {
+    return { label: user.gmail.split("@")[0], id: user.id };
+  });
   const [reason, setReason] = React.useState<string>("");
+  const [account, setAccount] = React.useState<OptionInter>();
+  const isOptionEqualToValue = (
+    option: OptionInter,
+    value: OptionInter | null
+  ): boolean => {
+    if (value === null) {
+      return option === value;
+    }
+    return option.id === value.id;
+  };
   const dispatch = useAppDispatch();
 
   const handleSumitReject = async () => {
@@ -84,28 +98,16 @@ export const ModalsAdmin: React.FC<ModalRejectInter> = ({
   };
 
   const handleSumitAdmin = async () => {
-    if (reason) {
-      if (reason.includes("@")) {
-        const acount = reason.split("@")[0];
-        const acountCheck = users.filter(
-          (item) => item.gmail.split("@")[0] === acount
-        );
-        if (acountCheck.length) {
-          await dispatch(updateAdmin({ id: acountCheck[0].id, role: "admin" }));
-        } else {
-          toast.error("Account not found!");
-        }
+    if (account) {
+      const acountCheck = users.filter(
+        (item) => item.gmail.split("@")[0] === account.label
+      );
+      if (acountCheck.length) {
+        await dispatch(updateAdmin({ id: acountCheck[0].id, role: "admin" }));
       } else {
-        const acountCheck = users.filter(
-          (item) => item.gmail.split("@")[0] === reason
-        );
-        if (acountCheck.length) {
-          await dispatch(updateAdmin({ id: acountCheck[0].id, role: "admin" }));
-        } else {
-          toast.error("Account not found!");
-        }
+        toast.error("Account not found!");
       }
-      setReason("");
+      setAccount(undefined);
       handleClose();
     }
   };
@@ -124,19 +126,39 @@ export const ModalsAdmin: React.FC<ModalRejectInter> = ({
           {invoiceObject?.status !== "approve" ? (
             <Box>
               <Typography sx={{ mb: "24px" }} variant="h5">
-                {admin
+                {admin && !invoiceObject
                   ? "Enter account name:"
                   : "Reason for invoice rejection:"}
               </Typography>
-              <TextField
-                value={reason}
-                error={!reason}
-                onChange={(e) => setReason(e.target.value)}
-                sx={{ width: 1 }}
-                id="standard-basic"
-                variant="standard"
-                helperText={!reason && "required *"}
-              />
+              {admin && !invoiceObject ? (
+                <Autocomplete
+                  isOptionEqualToValue={isOptionEqualToValue}
+                  disablePortal
+                  options={options}
+                  sx={{ width: "100%" }}
+                  value={account}
+                  onChange={(event: any, newValue: any) => {
+                    setAccount(newValue);
+                  }}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Account"
+                      error={!account?.label}
+                    />
+                  )}
+                />
+              ) : (
+                <TextField
+                  value={reason}
+                  error={!reason}
+                  onChange={(e) => setReason(e.target.value)}
+                  sx={{ width: 1 }}
+                  id="standard-basic"
+                  variant="standard"
+                  helperText={!reason && "required *"}
+                />
+              )}
             </Box>
           ) : (
             <Box>

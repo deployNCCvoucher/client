@@ -53,7 +53,6 @@ interface UpdateAvailableInter {
 export const updateMoney = createAsyncThunk('updateMoney', async (dataUpdate : UpdateAvailableInter, thunkApi) => {
   try {
     const { data } = await axiosClient.put(`/users/updateTotalAvailable/${dataUpdate.id}`, {totalAvailable: dataUpdate.totalAvailable})
-    toast.success("Update successful!")
     return data;
   } catch (error: any) {
     return thunkApi.rejectWithValue(error.response.data.error.message);
