@@ -18,23 +18,19 @@ import {
 import { PaginationComponent } from "../../../users/profile/Pagination/Pagination";
 
 export const TableUser = () => {
-  const users = useAppSelector((state) => state.user.users);
   const usersPagin2 = useAppSelector((state) => state.user.usersPagin);
-  const usersPagin = [...usersPagin2, ...usersPagin2,...usersPagin2, ...usersPagin2,...usersPagin2]
+  const usersPagin = [
+    ...usersPagin2,
+    ...usersPagin2,
+    ...usersPagin2,
+    ...usersPagin2,
+    ...usersPagin2,
+  ];
   const pageTopRef = useRef(null);
-
-  const dispatch = useAppDispatch();
-  useEffect(() => {
-    const fetchData = async () => {
-      await dispatch(getAllUser());
-    };
-    fetchData();
-  }, []);
   return (
     <Box
       sx={{
-        width: "50%",
-        m: "8px",
+        width: "100%",
         boxShadow: "0 2px 10px rgba(0,0,0,.35)",
       }}
       ref={pageTopRef}
@@ -54,8 +50,13 @@ export const TableUser = () => {
                 </Typography>
               </TableCell>
               <TableCell align="center">
-                <Typography sx={{ color: "#3f51b5", fontWeight: "700" }}>
-                  Total Money
+                <Typography sx={{ color: "#f44336", fontWeight: "700" }}>
+                  Money Used
+                </Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography sx={{ color: "#4caf50", fontWeight: "700" }}>
+                  Money Available
                 </Typography>
               </TableCell>
               <TableCell align="center"></TableCell>
@@ -70,7 +71,16 @@ export const TableUser = () => {
               >
                 <TableCell align="center">{user.gmail.split("@")[0]}</TableCell>
                 <TableCell align="center">{user.name}</TableCell>
-                <TableCell align="center">{user.totalAvailable}</TableCell>
+                <TableCell align="center">
+                  <Typography sx={{ color: "#f44336", fontWeight: "700" }}>
+                    {user.totalUsed}
+                  </Typography>
+                </TableCell>
+                <TableCell align="center">
+                  <Typography sx={{ color: "#4caf50", fontWeight: "700" }}>
+                    {user.totalAvailable}
+                  </Typography>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

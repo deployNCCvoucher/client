@@ -25,6 +25,7 @@ export interface Invoice {
 }
 
 interface initialValueInter {
+  isLoading: boolean;
   listInvoice: Invoice[];
   getInvoicesByFilter: Invoice[];
   userInvoice: Invoice[];
@@ -39,6 +40,7 @@ interface initialValueInter {
 }
 
 const initialValue: initialValueInter = {
+  isLoading: false,
   listInvoice: [],
   getInvoicesByFilter: [],
   userInvoice: [],
@@ -84,32 +86,53 @@ const invoiceSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      .addCase(createInvoice.pending, (state, action) => {
+        state.isLoading = true;
+      })
       .addCase(createInvoice.fulfilled, (state, action) => {
         toast.success("Upload file successful!");
-        // state.listInvoice.push(...action.payload.)
-        console.log(action.payload);
+        state.isLoading = false;
       })
       .addCase(createInvoice.rejected, (state, action) => {
         toast.error("request error");
       })
       // getAllInvoice
+      .addCase(getAllInvoice.pending, (state, action) => {
+        state.isLoading = true;
+      })
       .addCase(getAllInvoice.fulfilled, (state, action) => {
         state.listInvoice = action.payload;
+        state.isLoading = false;
       })
       .addCase(getAllInvoice.rejected, (state, action) => {})
       // getInvoicesNotPendingPagin
+      .addCase(getInvoicesByFilter.pending, (state, action) => {
+        state.isLoading = true;
+      })
       .addCase(getInvoicesByFilter.fulfilled, (state, action) => {
         state.getInvoicesByFilter = action.payload.data;
+        state.isLoading = false;
       })
       .addCase(getInvoicesByFilter.rejected, (state, action) => {})
       // getInvoice
+      .addCase(getInvoice.pending, (state, action) => {
+        state.isLoading = true;
+      })
       .addCase(getInvoice.fulfilled, (state, action) => {
         state.userInvoice = [...action.payload];
       })
       .addCase(getInvoice.rejected, (state, action) => {})
+      .addCase(updateInvoice.pending, (state, action) => {
+        state.isLoading = true;
+      })
       .addCase(updateInvoice.fulfilled, (state, action) => {
-        toast.success("Upload file successful!");
-        console.log(action.payload);
+        toast.success(
+          `${
+            (action.payload.status + "").charAt(0).toUpperCase() +
+            (action.payload.status + "").slice(1)
+          } invoice successful!`
+        );
+        state.isLoading = false;
         // state.listInvoice.map((item: Invoice) => {
         //   if (item.id === action.payload.id) {
         //     item.createBy = action.payload.createBy;
@@ -118,16 +141,14 @@ const invoiceSlice = createSlice({
         //   return item;
         // });
       })
-      .addCase(updateInvoice.pending, (state, action) => {})
       .addCase(updateInvoice.rejected, (state, action) => {
         toast.error("request error");
       })
       .addCase(editInvoice.fulfilled, (state, action) => {
         toast.success("edit file successful!");
-        console.log(action.payload);
+        state.isLoading = false;
       })
       .addCase(editInvoice.rejected, (state, action) => {
-        console.log(action.payload);
         toast.error("request error");
       });
   },

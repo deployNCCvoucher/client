@@ -65,7 +65,7 @@ const Layout = (): JSX.Element => {
             <Box
               sx={{
                 m: "30px",
-                p: "16px",
+                p: "30px",
                 bgcolor: "#fff",
                 boxShadow: "0 5px 15px rgba(0,0,0,.35)",
               }}
