@@ -8,6 +8,7 @@ import {
 import {
   createInvoice,
   editInvoice,
+  getAllInvoice,
 } from "../../../redux/invoice/invoiceAction";
 import {
   Box,
@@ -32,6 +33,7 @@ interface RequestProps {
   invoice?: any;
   isEdit?: boolean;
   idEdit?: any;
+  handleClose?: () => void;
 }
 
 export interface MuiProps {
@@ -39,7 +41,12 @@ export interface MuiProps {
   value?: any;
 }
 
-const MyRequest: React.FC<RequestProps> = ({ modal, invoice, isEdit }) => {
+const MyRequest: React.FC<RequestProps> = ({
+  modal,
+  invoice,
+  isEdit,
+  handleClose,
+}) => {
   const dispatch = useAppDispatch();
   const value = useAppSelector((state: any) => state.user);
   const currentInvoice = useAppSelector(
@@ -71,8 +78,6 @@ const MyRequest: React.FC<RequestProps> = ({ modal, invoice, isEdit }) => {
       getImage();
     }
   }, [currentInvoice]);
-
-  console.log("imageUrl", imageUrl);
   const defaultValues: {
     file: string | null;
     code: string;
@@ -83,7 +88,6 @@ const MyRequest: React.FC<RequestProps> = ({ modal, invoice, isEdit }) => {
     moneyReduce: isEdit ? currentInvoice.reducedType : "",
   };
   console.log("defaultInvoice", defaultValues);
-
   const schema = yup.object({
     file: yup.mixed(),
     code: yup.string(),
@@ -102,34 +106,62 @@ const MyRequest: React.FC<RequestProps> = ({ modal, invoice, isEdit }) => {
     defaultValues: defaultValues,
   });
   console.log("imageFileimageFileimageFile", imageFile);
+  console.log("file", file);
   useEffect(() => {
     setValue("file", imageFile);
-    setValue("code", currentInvoice.code);
+    if (currentInvoice.code) {
+      setValue("code", currentInvoice.code);
+    }
     setValue("moneyReduce", currentInvoice.reducedType);
   }, [imageFile]);
 
-  const onSubmit = handleSubmit((data: any) => {
+  const onSubmit = handleSubmit(async (data: any) => {
     const formData = new FormData();
-    if (isEdit) {
+    if (isEdit && file !== null) {
       formData.append("image", file);
       formData.append("code", data.code);
       formData.append("reducedType", data.moneyReduce);
       formData.append("gmail", currentUser.gmail);
-      dispatch(editInvoice({ data: formData, id: currentInvoice.id }));
+      await dispatch(editInvoice({ data: formData, id: currentInvoice.id }));
+      const userId = window.localStorage.getItem("idUser");
+      const fetchData = async () => {
+        if (userId) await dispatch(getUser(userId));
+      };
+      await fetchData();
+    } else if (isEdit && file === null) {
+      formData.append("code", data.code);
+      formData.append("reducedType", data.moneyReduce);
+      formData.append("gmail", currentUser.gmail);
+      await dispatch(editInvoice({ data: formData, id: currentInvoice.id }));
+      const userId = window.localStorage.getItem("idUser");
+      const fetchData = async () => {
+        if (userId) await dispatch(getUser(userId));
+      };
+      await fetchData();
+    } else if (!isEdit && file !== null && !file.type?.startsWith("image/")) {
+      toast.error("Hóa đơn phải là một hình ảnh!");
+    } else if (!isEdit && file === null) {
+      toast.error("Vui lòng thêm hình ảnh hóa đơn vào!");
     } else {
       formData.append("image", file);
       formData.append("code", data.code);
       formData.append("reducedType", data.moneyReduce);
       formData.append("gmail", currentUser.gmail);
       formData.append("createBy", currentUser.id);
-      dispatch(createInvoice(formData));
+      await dispatch(createInvoice(formData));
     }
-
-    reset({
-      code: "",
-      moneyReduce: undefined,
-    });
-    setFile(null);
+    if (!isEdit) {
+      setFile(null);
+      reset({
+        code: "",
+        moneyReduce: undefined,
+      });
+    }
+    await setTimeout(() => {
+      if (isEdit && handleClose) {
+        handleClose();
+      }
+    }, 1500);
   });
   const onDrop = (acceptedFiles: any): any => {
     const file = acceptedFiles[0];
@@ -157,12 +189,6 @@ const MyRequest: React.FC<RequestProps> = ({ modal, invoice, isEdit }) => {
       toast.error(errors.moneyReduce.message as any);
     }
   }, [errors]);
-  useEffect(() => {
-    if (file !== null && file.type?.startsWith("image/")) {
-    } else if (file !== null) {
-      toast.error("Hóa đơn phải là một hình ảnh!");
-    }
-  }, [file]);
   return (
     <Box>
       <Typography
@@ -195,7 +221,7 @@ const MyRequest: React.FC<RequestProps> = ({ modal, invoice, isEdit }) => {
             {imageFile && (
               <img
                 src={URL.createObjectURL(imageFile)}
-                alt="Uploaded filedcfvgbhn"
+                alt="Uploaded"
                 width="100%"
                 style={{ margin: "auto" }}
               />

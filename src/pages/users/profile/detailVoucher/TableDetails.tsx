@@ -238,6 +238,10 @@ export const TableDetails: React.FC<TableDetailsInter> = ({
                         </Button>
                       )}
                     </Box>
+                  ) : invoice.status === "approve" ? (
+                    <Button disabled sx={{ cursor: "default" }}>
+                      Edit
+                    </Button>
                   ) : (
                     <Button
                       onClick={() => {

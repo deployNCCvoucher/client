@@ -54,7 +54,12 @@ export default function EditModal({
       <Modal open={open} onClose={handleClose}>
         <Box sx={style}>
           <Box>
-            <MyRequest modal={true} invoice={invoice} isEdit />
+            <MyRequest
+              modal={true}
+              invoice={invoice}
+              isEdit
+              handleClose={handleClose}
+            />
           </Box>
         </Box>
       </Modal>
