@@ -5,152 +5,149 @@
   height: 100vh;
   overflow: hidden;
   background-color: #aabff25e;
-  background-image: url("../../../../../public/images/bg.png");
+  background-image: url("../../../../../public/images/violet.png");
   background-size: 100% 100%;
   background-repeat: no-repeat;
   background-position: center;
   .shape {
     position: absolute;
-    transform: scale(0, 0);
-    animation: zoom-out 0.5s ease-out forwards;
-    animation-delay: 0.5s;
   }
-  .shape-mb {
-    position: absolute;
-    transform: scale(0, 0);
-    animation: zoom-out-mb 0.5s ease-out forwards;
-    animation-delay: 0.5s;
-  }
-  .login-right-wrap {
-    position: absolute;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    text-align: center;
-    top: 100%;
-    animation: in 0.5s ease-out forwards;
-    animation-delay: 1s;
-    .logo {
-      width: 9%;
-      height: auto;
-      margin: auto;
-    }
-    .logo-text {
-      color: var(--primary-color);
-      font-weight: 600;
-      font-size: 50px;
-      width: 100%;
-    }
-    .button {
-      background-color: #fff;
-      width: 40%;
-      margin: auto;
-      display: flex;
-      gap: 10px;
-      border: var(--secondary-color) 3px solid;
-      border-radius: 10px;
-      padding: 10px 40px;
+  .login-wrap {
+    .login-img{
+      content: "";
+      position: absolute;
+      width: 90%;
+      height: 100vh;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background-image: url("../../../../../public/images/bg-min.png");
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      background-position: center;
+      padding: 8%;
+      display:flex;
       justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      .google-logo {
-        width: 20px;
+      flex-direction: column;
+      gap: 18px;
+      .coupon{
+        width: 38%;
       }
-      p {
-        font-size: 18px;
-        color: var(--secondary-color);
-        font-weight: 500;
-      }
-      &:hover {
-        background-color: var(--secondary-color);
-        p {
-          color: #fff;
+      .logo-wrap{
+        display: flex;
+        gap: 14px;
+        align-items: center;
+        .logo {
+          width: 112px;
+          height: 112px;
         }
+        .logo-text {
+          color: #fff;
+          font-weight: 600;
+          font-size: 58px;
+          width: 100%;
+        }
+        .button{
+          padding-bottom: 20px;
+         } 
       }
     }
     .term-text {
-      font-size: 14px;
-      color: var(--secondary-color);
+      font-size: 12px;
+      color: #fff;
     }
   }
 }
 
-@keyframes zoom-out {
-  0% {
-    transform: scale(0.5, 0.5) translateY(-40%);
-    top: 70%;
-  }
-  100% {
-    transform: scale(1, 1) translateY(-40%);
-    top: 70%;
-  }
-}
-@keyframes in {
-  0% {
-    top: 100%;
-    transform: scale(0, 0);
-  }
-  100% {
-    top: 5%;
-    transform: scale(1, 1);
-  }
-}
-@keyframes zoom-out-mb {
-  0% {
-    transform: scale(0.5, 0.5) translateY(-40%);
-    top: 50%;
-  }
-  100% {
-    transform: scale(1, 1) translateY(-40%);
-    top: 60%;
-  }
-}
-@media (max-width: 769px) {
+@media (max-width: 1024px) {
   .login-slide {
-    .login-right-wrap {
-      position: absolute;
-      width: 100%;
-      gap: 10px;
-      top: 100%;
-      animation: in 0.5s ease-out forwards;
-      animation-delay: 1s;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      .mob-wrap{
-        .logo {
-          width: 20%;
-          height: auto;
-          margin: auto;
+    .login-wrap {
+      .login-img{
+        padding: 6%;
+        gap: 14px;
+        .coupon{
+          width: 42%;
         }
-        .logo-text {
-          color: var(--primary-color);
-          font-weight: 600;
-          font-size: 20px;
-          width: 100%;
-        }
-        .button {
-          background-color: #fff;
-          width: 80%;
-          border-radius: 10px;
-          padding: 8px 20px;
-          justify-content: center;
-          align-items: center;
-          .google-logo {
-            width: 20px;
+        .logo-wrap{
+          gap: 8px;
+          .logo {
+            width: 99px;
+          height: 99px;
           }
-          p {
-            font-size: 18px;
-            color: var(--secondary-color);
-            font-weight: 500;
+          .logo-text {
+            color: #fff;
+            font-weight: 600;
+            font-size: 42px;
+            width: 100%;
           }
-        }
-        .term-text {
-          font-size: 12px;
-          color: var(--secondary-color);
+          .button{
+          padding-bottom: 16px;
+         } 
         }
       }
     }
-  }  
+  }
+}
+
+@media (max-width: 769px) {
+  .login-slide {
+    background-image: url("../../../../../public/images/bg-min01.png");
+    .login-wrap {
+      .login-img{
+        padding: 0;
+        background-image: none;
+        .coupon{
+          width: 50%;
+        }
+        .logo-wrap{
+          .logo {
+            width: 80px;
+            height: 80px;
+          }
+          .logo-text {
+            color: #fff;
+            font-weight: 600;
+            font-size: 40px;
+            width: 100%;
+          }
+          .button{
+          padding-bottom: 12px;
+         } 
+        }
+      }
+      .term-text {
+        font-size: 8px;
+      }
+    }
+  }
+}
+@media (max-width: 425px) {
+  .login-slide {
+    .login-wrap {
+      .login-img{
+        background-image: none;
+        .coupon{
+          width: 100%;
+        }
+        .logo-wrap{
+          .logo {
+            width: 80px;
+            height: 80px;
+          }
+          .logo-text {
+            color: #fff;
+            font-weight: 600;
+            font-size: 32px;
+            width: 100%;
+          }
+          .button{
+          padding-bottom: 8px;
+         } 
+        }
+      }
+      .term-text {
+        font-size: 8px;
+      }
+    }
+  }
 }

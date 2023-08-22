@@ -27,6 +27,7 @@ import {
   setYearFilter,
 } from "../../../redux/invoice/invoiceSlide";
 import { FreshPage } from "../../../components/FreshPage/FreshPage";
+import Chart from "../../../components/Chart/Chart";
 
 const Profile = () => {
   const dispatch = useAppDispatch();
@@ -83,7 +84,14 @@ const Profile = () => {
             MY PROFILE
           </Typography>
         </Box>
-        <Box sx={{display: 'flex', width: '60%', justifyContent: 'flex-end', alignItems: 'center'}}>
+        <Box
+          sx={{
+            display: "flex",
+            width: "60%",
+            justifyContent: "flex-end",
+            alignItems: "center",
+          }}
+        >
           <MultipleSelect
             type="Months"
             handleChange={handleChangeMonth}
@@ -96,14 +104,17 @@ const Profile = () => {
           />
           <FreshPage />
         </Box>
+        {/* <Box>
+          <Chart />
+        </Box> */}
       </Box>
       <Grid container spacing={2}>
-        <Grid item xs={12} md={3.5}>
+        <Grid item xs={12}>
           <Information user={user} />
         </Grid>
         <Grid item xs={12} md={8.5}>
           <Box sx={{ width: "100%" }}>
-            <TableContainer
+            {/* <TableContainer
               component={Paper}
               sx={{ boxShadow: "0 5px 15px rgba(0,0,0,.35)", p: "0 15px" }}
             >
@@ -221,11 +232,11 @@ const Profile = () => {
                   })}
                 </TableBody>
               </Table>
-            </TableContainer>
+            </TableContainer> */}
           </Box>
         </Grid>
       </Grid>
-      
+
       <DetailVoucher type={typeVoucher} />
     </>
   );

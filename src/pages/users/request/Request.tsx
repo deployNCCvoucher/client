@@ -105,8 +105,6 @@ const MyRequest: React.FC<RequestProps> = ({
     resolver: yupResolver(schema),
     defaultValues: defaultValues,
   });
-  console.log("imageFileimageFileimageFile", imageFile);
-  console.log("file", file);
   useEffect(() => {
     setValue("file", imageFile);
     if (currentInvoice.code) {

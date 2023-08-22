@@ -119,6 +119,7 @@ const invoiceSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(getInvoice.fulfilled, (state, action) => {
+        console.log("get invoice", action.payload);
         state.userInvoice = [...action.payload];
       })
       .addCase(getInvoice.rejected, (state, action) => {})
@@ -147,6 +148,20 @@ const invoiceSlice = createSlice({
       .addCase(editInvoice.fulfilled, (state, action) => {
         toast.success("edit file successful!");
         state.isLoading = false;
+        console.log("action edit", action.payload.data);
+        let newList: any = state.getInvoicesByFilter.map((invoice: any) => {
+          if (invoice.id === action.payload.data.id) {
+            return {
+              ...action.payload.data,
+            };
+          } else {
+            return {
+              ...invoice,
+            };
+          }
+        });
+        state.getInvoicesByFilter = newList;
+        console.log("newList", newList, state.getInvoicesByFilter);
       })
       .addCase(editInvoice.rejected, (state, action) => {
         toast.error("request error");

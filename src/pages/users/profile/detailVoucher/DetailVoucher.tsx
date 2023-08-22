@@ -28,6 +28,7 @@ const DetailVoucher: React.FC<IProps> = ({ admin, adminHistory, type }) => {
   const dispatch = useAppDispatch();
   const pageTopRef = useRef(null);
   const dataMap = useAppSelector((state) => state.invoice.getInvoicesByFilter);
+  console.log("data map", dataMap);
 
   const header = !type ? "Detail" : `Detail Type ${type}`;
 
@@ -37,8 +38,6 @@ const DetailVoucher: React.FC<IProps> = ({ admin, adminHistory, type }) => {
     const fetchData = async () => {
       if (userId) await dispatch(getUser(userId));
       !admin && (await dispatch(getInvoice(userId)));
-      // await dispatch(getAllInvoice());
-      // await dispatch(getAllUser());
     };
     fetchData();
   }, []);

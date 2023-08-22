@@ -1,5 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getAllUser, getAllUserPagin, getUser, login, updateMoney } from "./userAction";
+import {
+  getAllUser,
+  getAllUserPagin,
+  getUser,
+  login,
+  updateMoney,
+} from "./userAction";
 
 let auth: string | null = "";
 if (window.localStorage.getItem("accessToken") !== null) {
@@ -20,15 +26,15 @@ export interface UserInter {
 }
 
 interface initialUserStateInter {
-  loadingUser: boolean
-  accessToken: string | null
-  usersPagin: UserInter[]
-  users: UserInter[]
-  currentEmail: string
-  currentUser: UserInter
-  token: boolean | null
-  searchUserValue: string
-  searchType: string
+  loadingUser: boolean;
+  accessToken: string | null;
+  usersPagin: UserInter[];
+  users: UserInter[];
+  currentEmail: string;
+  currentUser: UserInter;
+  token: boolean | null;
+  searchUserValue: string;
+  searchType: string;
 }
 
 const initialUserState: initialUserStateInter = {
@@ -48,8 +54,8 @@ const initialUserState: initialUserStateInter = {
     userImage: "",
   },
   token: false,
-  searchUserValue: '',
-  searchType: 'User'
+  searchUserValue: "",
+  searchType: "User",
 } as any;
 
 const userSlice = createSlice({
@@ -62,11 +68,11 @@ const userSlice = createSlice({
       state.accessToken = window.localStorage?.getItem("accessToken");
     },
     setSearchValue: (state, action) => {
-      state.searchUserValue = action.payload
+      state.searchUserValue = action.payload;
     },
     setSearchType: (state, action) => {
-      state.searchType = action.payload
-    }
+      state.searchType = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -76,7 +82,9 @@ const userSlice = createSlice({
       .addCase(getUser.fulfilled, (state: any, action: any) => {
         state.loadingUser = false;
         const userImg = window.localStorage.getItem("userImage");
+        window.localStorage.setItem("userRole", action.payload.role);
         state.currentUser = { ...action.payload, userImage: userImg };
+        console.log("action", action.payload);
       })
       .addCase(getUser.rejected, (state: any, action: any) => {
         state.loadingUser = false;
@@ -104,9 +112,6 @@ const userSlice = createSlice({
         window.localStorage.setItem("accessToken", action.payload.accessToken);
         window.localStorage.setItem("userImage", action.payload.UserImage);
         window.localStorage.setItem("idUser", action.payload.userId);
-        window.localStorage.setItem("userRole", action.payload.userRole);
-        // const dataUser = {accessToken: action.payload.accessToken, userImage: action.payload.UserImage, idUser: action.payload.userId}
-        // window.localStorage.setItem('data', JSON.stringify(dataUser))
         state.test = action.payload;
         if (action.payload.accessToken) {
           state.accessToken = window.localStorage.getItem("accessToken");
