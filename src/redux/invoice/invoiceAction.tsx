@@ -27,6 +27,7 @@ interface ParamsInvoicesPaginationInter {
 export const getInvoicesByFilter = createAsyncThunk(
   "invoices/getInvoicesByFilter",
   async (params: ParamsInvoicesPaginationInter, thunkApi) => {
+    console.log("param", params);
     let url = "";
     if (params.userId) {
       url += `&userId=${params.userId}`;
@@ -46,6 +47,7 @@ export const getInvoicesByFilter = createAsyncThunk(
     if (params.search) {
       url += `&search=${params.search}`;
     }
+    console.log("url", url);
     try {
       const { data } = await axiosClient.get(
         `/invoices/getInvoicesByFilter?page=${params.page}&limit=${params.limit}${url}`
@@ -56,7 +58,6 @@ export const getInvoicesByFilter = createAsyncThunk(
     }
   }
 );
-
 export const createInvoice = createAsyncThunk(
   "invoices/createInvoice",
   async (params: FormData, thunkApi) => {

@@ -1,6 +1,7 @@
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import SendTimeExtensionIcon from "@mui/icons-material/SendTimeExtension";
 import {
+  Avatar,
   Box,
   List,
   ListItem,
@@ -13,58 +14,17 @@ import { Fragment } from "react";
 
 const SlideBar = () => {
   //   const dataStorage = JSON.parse(window.localStorage.getItem("data")!);
-
+  const user = useAppSelector((state) => state.user.currentUser);
   const roleUser = window.localStorage.getItem("userRole");
   return (
     <nav aria-label="">
-      <List>
-        <Box>
-          <NavLink to="/app/myProfile" className="nav-link">
-            <ListItem disablePadding>
-              <ListItemButton>
-                <AccountBoxIcon sx={{ mr: "15px" }} />
-                <ListItemText primary="My Profile" />
-              </ListItemButton>
-            </ListItem>
-          </NavLink>
-          <NavLink to="/app/request" className="nav-link">
-            <ListItem disablePadding>
-              <ListItemButton>
-                <SendTimeExtensionIcon sx={{ mr: "15px" }} />
-                <ListItemText primary="Request" />
-              </ListItemButton>
-            </ListItem>
-          </NavLink>{" "}
-        </Box>
-        {roleUser === "admin" && (
-          <Fragment>
-            <NavLink to="/app/admin" className="nav-link">
-              <ListItem disablePadding>
-                <ListItemButton>
-                  <AccountBoxIcon sx={{ mr: "15px" }} />
-                  <ListItemText primary="List Request" />
-                </ListItemButton>
-              </ListItem>
-            </NavLink>
-            <NavLink to="/app/history" className="nav-link">
-              <ListItem disablePadding>
-                <ListItemButton>
-                  <AccountBoxIcon sx={{ mr: "15px" }} />
-                  <ListItemText primary="History" />
-                </ListItemButton>
-              </ListItem>
-            </NavLink>
-            <NavLink to="/app/user" className="nav-link">
-              <ListItem disablePadding>
-                <ListItemButton>
-                  <AccountBoxIcon sx={{ mr: "15px" }} />
-                  <ListItemText primary="User" />
-                </ListItemButton>
-              </ListItem>
-            </NavLink>
-          </Fragment>
-        )}
-      </List>
+      <Box sx={{ mr: "15px", mt: "15px" }}>
+        <Avatar
+          alt="Remy Sharp"
+          src={user.userImage}
+          sx={{ width: 150, height: 150, bgcolor: "red", mx: "auto" }}
+        />
+      </Box>
     </nav>
   );
 };

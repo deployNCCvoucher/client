@@ -18,44 +18,44 @@ import {
 import { PaginationComponent } from "../../../users/profile/Pagination/Pagination";
 
 export const TableUser = () => {
-  const usersPagin2 = useAppSelector((state) => state.user.usersPagin);
-  const usersPagin = [
-    ...usersPagin2,
-    ...usersPagin2,
-    ...usersPagin2,
-    ...usersPagin2,
-    ...usersPagin2,
-  ];
+  const usersPagin = useAppSelector((state) => state.user.usersPagin);
   const pageTopRef = useRef(null);
   return (
     <Box
       sx={{
         width: "100%",
-        boxShadow: "0 2px 10px rgba(0,0,0,.35)",
       }}
       ref={pageTopRef}
     >
-      <TableContainer component={Paper}>
+      <TableContainer>
         <Table size="small" aria-label="a dense table">
           <TableHead>
             <TableRow sx={{ "& .MuiTableCell-root": { p: "10px 0px" } }}>
               <TableCell align="center">
-                <Typography sx={{ color: "#f44336", fontWeight: "700" }}>
+                <Typography
+                  sx={{ color: "var(--secondary-color)", fontWeight: "700" }}
+                >
                   Account
                 </Typography>
               </TableCell>
               <TableCell align="center">
-                <Typography sx={{ color: "#607d8b", fontWeight: "700" }}>
+                <Typography
+                  sx={{ color: "var(--secondary-color)", fontWeight: "700" }}
+                >
                   Full Name
                 </Typography>
               </TableCell>
               <TableCell align="center">
-                <Typography sx={{ color: "#f44336", fontWeight: "700" }}>
+                <Typography
+                  sx={{ color: "var(--secondary-color)", fontWeight: "700" }}
+                >
                   Money Used
                 </Typography>
               </TableCell>
               <TableCell align="center">
-                <Typography sx={{ color: "#4caf50", fontWeight: "700" }}>
+                <Typography
+                  sx={{ color: "var(--secondary-color)", fontWeight: "700" }}
+                >
                   Money Available
                 </Typography>
               </TableCell>
@@ -72,12 +72,16 @@ export const TableUser = () => {
                 <TableCell align="center">{user.gmail.split("@")[0]}</TableCell>
                 <TableCell align="center">{user.name}</TableCell>
                 <TableCell align="center">
-                  <Typography sx={{ color: "#f44336", fontWeight: "700" }}>
+                  <Typography
+                    sx={{ color: "var(--secondary-color)", fontWeight: "700" }}
+                  >
                     {user.totalUsed}
                   </Typography>
                 </TableCell>
                 <TableCell align="center">
-                  <Typography sx={{ color: "#4caf50", fontWeight: "700" }}>
+                  <Typography
+                    sx={{ color: "var(--secondary-color)", fontWeight: "700" }}
+                  >
                     {user.totalAvailable}
                   </Typography>
                 </TableCell>

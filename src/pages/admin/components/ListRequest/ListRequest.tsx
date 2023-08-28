@@ -4,14 +4,10 @@ import { useState } from "react";
 import { ModalsAdmin } from "../ModalsAdmin/ModalsAdmin";
 import { SearchUser } from "../SearchUser/SearchUser";
 import { useAppDispatch } from "../../../../redux/hook/useTypedSeletor";
-import { FreshPage } from "../../../../components/FreshPage/FreshPage";
 interface ListRequestInter {
   history?: boolean;
 }
-
 export const ListRequest: React.FC<ListRequestInter> = ({ history }) => {
-  const dispatch = useAppDispatch();
-
   const [openNewAdmin, setOpenNewAdmin] = useState<boolean>(false);
   const handleOpenNewAdmin = () => {
     setOpenNewAdmin(true);
@@ -19,48 +15,51 @@ export const ListRequest: React.FC<ListRequestInter> = ({ history }) => {
   const handleCloseNewAdmin = () => {
     setOpenNewAdmin(false);
   };
-
   return (
-    <Box>
+    <Box
+      sx={{
+        marginTop: "10px",
+        background: "#ffffff",
+        borderTopLeftRadius: " 50px",
+        borderTopRightRadius: "50px",
+        padding: "32px",
+        minHeight: "calc( 100vh - 100px )",
+      }}
+    >
       <ModalsAdmin
         admin
         open={openNewAdmin}
         handleClose={handleCloseNewAdmin}
       />
-      <Typography
-        variant="h5"
-        style={{
-          fontWeight: "700",
-          color: "var(--secondary-color)",
-          fontSize: "30px",
-        }}
-      >
-        {history ? "HISTORY" : "ADMIN"}
-      </Typography>
       {!history && (
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            mt: "24px",
-          }}
-        >
-          <Typography variant="h5">Lists requested</Typography>
-          <Box sx={{display: 'flex'}}>
-            <Button
-              size="large"
-              variant="contained"
-              sx={{ backgroundColor: "#f44336", mr: '8px' }}
-              onClick={handleOpenNewAdmin}
-            >
-              New admin
-            </Button>
-            <FreshPage />
-          </Box>
+        <Box>
+          <Typography
+            component="h2"
+            sx={{
+              pb: "30px",
+              textAlign: "center",
+              lineHeight: "32px",
+              color: "#353657",
+              fontSize: "30px",
+              fontWeight: "700",
+              m: "8px 0px",
+            }}
+          >
+            List Request
+          </Typography>
+          <Button
+            size="large"
+            sx={{
+              backgroundColor: "var(--secondary-color)",
+              mr: "8px",
+              color: "#fff",
+            }}
+            onClick={handleOpenNewAdmin}
+          >
+            New admin
+          </Button>
         </Box>
       )}
-      {history && <SearchUser />}
       <Box>
         <ItemsRequest adminHistory={history} />
       </Box>

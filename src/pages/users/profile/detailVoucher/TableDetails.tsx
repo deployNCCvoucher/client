@@ -48,7 +48,6 @@ export const TableDetails: React.FC<TableDetailsInter> = ({
   const [idEdit, setIdEdit] = useState<{}>({});
 
   const dispatch = useAppDispatch();
-  console.log("datamap", dataMap);
 
   // open modal edit for user
   const [openModal, setOpenModal] = useState(false);
@@ -98,7 +97,14 @@ export const TableDetails: React.FC<TableDetailsInter> = ({
         sx={{ width: { xs: "700px", sm: "100%" } }}
       >
         <TableHead>
-          <TableRow sx={{ "& .MuiTableCell-root": { p: "11px 0px" } }}>
+          <TableRow
+            sx={{
+              "& .MuiTableCell-root": {
+                p: "11px 0px",
+                color: "var(--secondary-color)",
+              },
+            }}
+          >
             {adminHistory && <TableCell align="center">Verify By </TableCell>}
             <TableCell align="center">User</TableCell>
             <TableCell align="center">Image</TableCell>
@@ -152,17 +158,26 @@ export const TableDetails: React.FC<TableDetailsInter> = ({
                   {invoice.status === "pending" ? (
                     <Chip
                       label="Pending..."
-                      style={{ backgroundColor: "#607d8b", color: "white" }}
+                      style={{
+                        backgroundColor: "rgb(22, 146, 196)",
+                        color: "white",
+                      }}
                     />
                   ) : invoice.status === "approve" ? (
                     <Chip
                       label="Approved"
-                      style={{ backgroundColor: "#4caf50", color: "white" }}
+                      style={{
+                        backgroundColor: "rgb(255, 151, 224)",
+                        color: "white",
+                      }}
                     />
                   ) : (
                     <Chip
                       label="Rejected"
-                      style={{ backgroundColor: "#f44336", color: "white" }}
+                      style={{
+                        backgroundColor: "rgb(211, 67, 62)",
+                        color: "white",
+                      }}
                     />
                   )}
                 </TableCell>
@@ -187,8 +202,11 @@ export const TableDetails: React.FC<TableDetailsInter> = ({
                     <Box sx={{ display: "flex" }}>
                       <Button
                         variant="contained"
-                        sx={{ mr: "8px", backgroundColor: "#4caf50" }}
-                        color="success"
+                        sx={{
+                          mr: "8px",
+                          backgroundColor: "rgb(255, 151, 224)",
+                          color: "#fff",
+                        }}
                         onClick={() => {
                           handleModalAdmin(
                             invoice.id,
@@ -198,12 +216,14 @@ export const TableDetails: React.FC<TableDetailsInter> = ({
                           );
                         }}
                       >
-                        Aprove
+                        Approve
                       </Button>
                       <Button
                         variant="contained"
-                        sx={{ backgroundColor: "#f44336" }}
-                        color="error"
+                        sx={{
+                          backgroundColor: "rgb(175, 54, 50)",
+                          color: "#fff",
+                        }}
                         onClick={() => {
                           handleModalAdmin(
                             invoice.id,
@@ -224,18 +244,7 @@ export const TableDetails: React.FC<TableDetailsInter> = ({
                           handleModalAdmin={handleModalAdmin}
                         />
                       ) : (
-                        <Button
-                          onClick={() => {
-                            handleModalAdmin(
-                              invoice.id,
-                              "reject",
-                              invoice.reducedType,
-                              +invoice.createBy.id
-                            );
-                          }}
-                        >
-                          Reject
-                        </Button>
+                        <Button disabled>Action</Button>
                       )}
                     </Box>
                   ) : invoice.status === "approve" ? (

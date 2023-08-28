@@ -4,7 +4,6 @@ import { getAllUser } from "../../../redux/user/userAction";
 import { useAppDispatch } from "../../../redux/hook/useTypedSeletor";
 import { TableUser } from "./TableUser/TableUser";
 import { UseMoney } from "./UseMoney/UseMoney";
-import { SearchUser } from "./SearchUser/SearchUser";
 
 export const UserPage = () => {
   const dispatch = useAppDispatch();
@@ -15,28 +14,32 @@ export const UserPage = () => {
     fetchData();
   }, []);
   return (
-    <Box>
+    <Box
+      sx={{
+        marginTop: "10px",
+        background: "#ffffff",
+        borderTopLeftRadius: " 50px",
+        borderTopRightRadius: "50px",
+        padding: "32px",
+        minHeight: "calc( 100vh - 100px)",
+      }}
+    >
       <Typography
-        variant="h5"
-        style={{
-          fontWeight: "700",
-          color: "var(--secondary-color)",
+        component="h2"
+        sx={{
+          pb: "30px",
+          textAlign: "center",
+          lineHeight: "32px",
+          color: "#353657",
           fontSize: "30px",
-          marginBottom: "16px",
+          fontWeight: "700",
+          m: "8px 0px",
         }}
       >
-        Manage Account
+        List User
       </Typography>
-      <Box>
-        <UseMoney />
-        <SearchUser />
-        <TableUser />
-        {/* <Box sx={{ width: "calc(50% - 28px)" }}>
-          <SearchUser />
-          <UseMoney />
-          <UseMoney />
-        </Box> */}
-      </Box>
+      <UseMoney />
+      <TableUser />
     </Box>
   );
 };

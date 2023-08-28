@@ -9,6 +9,8 @@ import {
 } from "./invoiceAction";
 import { toast } from "react-toastify";
 import { UserInter } from "../user/userSlide";
+import axiosClient from "../../api/axiosClient";
+import axios from "axios";
 
 export interface Invoice {
   checkBy: UserInter;
@@ -37,6 +39,7 @@ interface initialValueInter {
   limit: number;
   totalCount: number;
   currentInvouce: any;
+  overview: number;
 }
 
 const initialValue: initialValueInter = {
@@ -47,13 +50,12 @@ const initialValue: initialValueInter = {
   currentUserId: 0,
   month: 0,
   year: 0,
-  // month: new Date().getMonth()+1,
-  // year: new Date().getFullYear(),
   typeVoucher: 0,
   page: 1,
   limit: 10,
   totalCount: 0,
   currentInvouce: {},
+  overview: 1,
 };
 const invoiceSlice = createSlice({
   name: "invoice",
@@ -83,15 +85,28 @@ const invoiceSlice = createSlice({
     setCurrentInvoice: (state, action) => {
       state.currentInvouce = action.payload;
     },
+    setOverview: (state, action) => {
+      state.overview = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
       .addCase(createInvoice.pending, (state, action) => {
         state.isLoading = true;
       })
-      .addCase(createInvoice.fulfilled, (state, action) => {
-        toast.success("Upload file successful!");
+      .addCase(createInvoice.fulfilled, (state, action?: any) => {
+        console.log("action", action.payload);
         state.isLoading = false;
+        const currentDate = new Date();
+        const day = currentDate.getDate();
+        const month = currentDate.getMonth() + 1;
+        const year = currentDate.getFullYear();
+        axiosClient.post("/users/sendEmail", {
+          to: "nga.nguyenthithanh@ncc.asia",
+          subject: `[NCC VOUCHER] - ${action.payload.data.createBy.name} -  new request - ${day}/${month}/${year}`,
+          content: `<h2>New request from ${action.payload.data.createBy.name}</h2> </br> <p>type: ${action.payload.data.reducedType}</p> </br> <p>Status: ${action.payload.data.status}</p>`,
+        });
+        toast.success("Upload file successful!");
       })
       .addCase(createInvoice.rejected, (state, action) => {
         toast.error("request error");
@@ -127,6 +142,15 @@ const invoiceSlice = createSlice({
         state.isLoading = true;
       })
       .addCase(updateInvoice.fulfilled, (state, action) => {
+        const dateObject = new Date(action.payload.createAt);
+        const day = dateObject.getUTCDate();
+        const month = dateObject.getUTCMonth() + 1; // Tháng trong JavaScript bắt đầu từ 0 (0 - 11)
+        const year = dateObject.getUTCFullYear();
+        axiosClient.post("/users/sendEmail", {
+          to: action.payload.createBy.gmail,
+          subject: `[NCC VOUCHER] - ${action.payload.status} voucher `,
+          content: `<h2>New update request</h2> </br> <p>type: ${action.payload.reducedType}</p> </br> <p>Create at: ${day}/${month}/${year} </p> </br> <p>Status: ${action.payload.status}</p> </br> <p>Note: ${action.payload.note} </p>`,
+        });
         toast.success(
           `${
             (action.payload.status + "").charAt(0).toUpperCase() +
@@ -134,13 +158,7 @@ const invoiceSlice = createSlice({
           } invoice successful!`
         );
         state.isLoading = false;
-        // state.listInvoice.map((item: Invoice) => {
-        //   if (item.id === action.payload.id) {
-        //     item.createBy = action.payload.createBy;
-        //     item.status = action.payload.status;
-        //   }
-        //   return item;
-        // });
+        console.log("update statussss", action.payload);
       })
       .addCase(updateInvoice.rejected, (state, action) => {
         toast.error("request error");
@@ -177,6 +195,7 @@ export const {
   setPageInvoice,
   setTotalCountInvoice,
   setCurrentInvoice,
+  setOverview,
 } = invoiceSlice.actions;
 const { reducer: invoiceReducer } = invoiceSlice;
 export { invoiceReducer };

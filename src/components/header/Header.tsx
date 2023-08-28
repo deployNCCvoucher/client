@@ -128,12 +128,12 @@ const Header: React.FC<Iprops> = ({ openSidebar, setOpenSidebar }) => {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar
         sx={{
-          bgcolor: "#f44336",
           zIndex: "4",
           position: "fixed",
           width: "100%",
           height: "64px",
           top: 0,
+          background: "transfer",
         }}
       >
         <Toolbar>

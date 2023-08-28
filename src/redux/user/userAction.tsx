@@ -59,7 +59,10 @@ interface UpdateAvailableInter {
   id: number;
   totalAvailable: number;
 }
-
+interface UpdateUsed {
+  id: number;
+  totalUsed: number;
+}
 export const updateMoney = createAsyncThunk(
   "updateMoney",
   async (dataUpdate: UpdateAvailableInter, thunkApi) => {
@@ -74,7 +77,21 @@ export const updateMoney = createAsyncThunk(
     }
   }
 );
-
+export const updateUsed = createAsyncThunk(
+  "updateUsed",
+  async (dataUpdate: UpdateUsed, thunkApi) => {
+    try {
+      const { data } = await axiosClient.put(
+        `/users/updateTotalUsed/${dataUpdate.id}`,
+        {
+          totalUsed: dataUpdate.totalUsed,
+        }
+      );
+    } catch (error: any) {
+      return thunkApi.rejectWithValue(error.response.data.error.message);
+    }
+  }
+);
 interface UpdateAdminInter {
   id: number;
   role: string;

@@ -18,7 +18,7 @@ import {
   useAppDispatch,
   useAppSelector,
 } from "../../../redux/hook/useTypedSeletor";
-import { DetailsMoney } from "./Function/DetailsMoney";
+import { DetailsMoney } from "../userProfile/Function/DetailsMoney";
 import { Information } from "./Information/Information";
 import {
   setMonthFilter,
@@ -26,8 +26,6 @@ import {
   setTypeFilter,
   setYearFilter,
 } from "../../../redux/invoice/invoiceSlide";
-import { FreshPage } from "../../../components/FreshPage/FreshPage";
-import Chart from "../../../components/Chart/Chart";
 
 const Profile = () => {
   const dispatch = useAppDispatch();
@@ -35,7 +33,6 @@ const Profile = () => {
   const invoice = useAppSelector((state) => state.invoice.userInvoice);
   const month = useAppSelector((state) => state.invoice.month);
   const year = useAppSelector((state) => state.invoice.year);
-  const total = DetailsMoney(invoice);
 
   const handleChangeMonth = (event: SelectChangeEvent) => {
     dispatch(setPageInvoice(1));
@@ -72,7 +69,7 @@ const Profile = () => {
           alignItems: "center",
         }}
       >
-        <Box>
+        {/* <Box>
           <Typography
             variant="h5"
             style={{
@@ -102,15 +99,14 @@ const Profile = () => {
             handleChange={handleChangeYear}
             time={year}
           />
-          <FreshPage />
-        </Box>
+        </Box> */}
         {/* <Box>
           <Chart />
         </Box> */}
       </Box>
       <Grid container spacing={2}>
         <Grid item xs={12}>
-          <Information user={user} />
+          {/* <Information user={user} /> */}
         </Grid>
         <Grid item xs={12} md={8.5}>
           <Box sx={{ width: "100%" }}>
@@ -237,7 +233,7 @@ const Profile = () => {
         </Grid>
       </Grid>
 
-      <DetailVoucher type={typeVoucher} />
+      {/* <DetailVoucher type={typeVoucher} /> */}
     </>
   );
 };

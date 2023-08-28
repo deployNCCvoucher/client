@@ -1,9 +1,10 @@
-import { Box } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import Header from "../header/Header";
 import SlideBar from "../slidebar/SlideBar";
 import { useState } from "react";
 import { styled } from "@mui/system";
 import { Outlet } from "react-router-dom";
+import Navigation from "../Navigation";
 
 const Layout = (): JSX.Element => {
   const [openSidebar, setOpenSidebar] = useState<boolean>(false);
@@ -28,52 +29,26 @@ const Layout = (): JSX.Element => {
   });
   return (
     <>
-      <Header openSidebar={openSidebar} setOpenSidebar={setOpenSidebar} />
-      <Box
-        sx={{
-          pt: "64px",
-          bgcolor: "rgba(170, 191, 242, 0.368627451)",
-        }}
-      >
-        <Box sx={{ display: "flex" }}>
-          {!openSidebar ? (
-            <Box
-              sx={{
-                flexShrink: 0,
-                width: "250px",
-                display: { lg: "block", sm: "none", xs: "none" },
-              }}
-            >
-              <Box
-                sx={{
-                  boxShadow: "0px 10px 8px 0px rgba(0,0,0,.35)",
-                  position: "sticky",
-                  bgcolor: "#fff",
-                  height: "calc(100vh - 64px)",
-                  top: "64px",
-                }}
-              >
-                <SlideBar />
-              </Box>
-            </Box>
-          ) : (
-            <Showsbar>
-              <SlideBar />
-            </Showsbar>
-          )}
-          <Box sx={{ width: "100%" }}>
-            <Box
-              sx={{
-                m: "30px",
-                p: "30px",
-                bgcolor: "#fff",
-                boxShadow: "0 5px 15px rgba(0,0,0,.35)",
-              }}
-            >
-              <Outlet />
-            </Box>
-          </Box>
-        </Box>
+      <Box className="box-container">
+        <Grid
+          sx={{
+            maxWidth: "1440px",
+            paddingLeft: "88px",
+            paddingRight: "88px",
+            margin: "auto",
+            "@media (max-width: 1024px)": {
+              paddingLeft: "48px",
+              paddingRight: "48px",
+            },
+            "@media (max-width: 768px)": {
+              paddingLeft: "0px",
+              paddingRight: "0px",
+            },
+          }}
+        >
+          <Navigation />
+          <Outlet />
+        </Grid>
       </Box>
     </>
   );

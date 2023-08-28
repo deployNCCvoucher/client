@@ -6,7 +6,7 @@
 }
 :root {
   --primary-color: #f1626f;
-  --secondary-color: #3e50af;
+  --secondary-color: #a9a1c4;
   --border-color: #aabff2;
   --text-color: #3a3a3a;
   --secondary-color01: #f2f5fd;
@@ -169,4 +169,9 @@ a {
 }
 .scrollbar::-webkit-scrollbar-track {
   border-radius: 20px;
+}
+.box-container{
+  background-image: url("../public//images/bg-min01.png") !important;
+  background-repeat: no-repeat;
+  background-size: cover !important;
 }

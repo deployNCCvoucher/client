@@ -27,33 +27,40 @@
       background-position: center;
       padding: 8%;
       display:flex;
-      justify-content: center;
-      flex-direction: column;
-      gap: 18px;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 4%;
       .coupon{
-        width: 38%;
+        width: 36%;
       }
-      .logo-wrap{
+      .logo-content{
         display: flex;
-        gap: 14px;
-        align-items: center;
-        .logo {
-          width: 112px;
-          height: 112px;
-        }
-        .logo-text {
-          color: #fff;
-          font-weight: 600;
-          font-size: 58px;
-          width: 100%;
+        flex-direction: column;
+        gap: 20px;
+        .logo-wrap{
+          display: flex;
+          gap: 10px;
+          align-items: center;
+          .logo {
+            width: 80px;
+            height: 80px;
+          }
+          .logo-text {
+            color: #fff;
+            font-weight: 700;
+            font-size: 58px;
+            width: 100%;
+          }
         }
         .button{
           padding-bottom: 20px;
          } 
+
       }
+      
     }
     .term-text {
-      font-size: 12px;
+      font-size: 10px;
       color: #fff;
     }
   }
@@ -68,11 +75,12 @@
         .coupon{
           width: 42%;
         }
+        .logo-content{
         .logo-wrap{
           gap: 8px;
           .logo {
-            width: 99px;
-          height: 99px;
+            width: 56px;
+          height: 56px;
           }
           .logo-text {
             color: #fff;
@@ -85,6 +93,7 @@
          } 
         }
       }
+      }
     }
   }
 }
@@ -96,24 +105,29 @@
       .login-img{
         padding: 0;
         background-image: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
         .coupon{
           width: 50%;
         }
+        .logo-content{
         .logo-wrap{
           .logo {
-            width: 80px;
-            height: 80px;
+            width: 40px;
+            height: 40px;
           }
           .logo-text {
             color: #fff;
             font-weight: 600;
-            font-size: 40px;
+            font-size: 32px;
             width: 100%;
           }
           .button{
           padding-bottom: 12px;
          } 
         }
+      }
       }
       .term-text {
         font-size: 8px;
@@ -129,21 +143,23 @@
         .coupon{
           width: 100%;
         }
+        .logo-content{
         .logo-wrap{
           .logo {
-            width: 80px;
-            height: 80px;
+            width: 32px;
+            height: 32px;
           }
           .logo-text {
             color: #fff;
             font-weight: 600;
-            font-size: 32px;
+            font-size: 22px;
             width: 100%;
           }
           .button{
           padding-bottom: 8px;
          } 
         }
+      }
       }
       .term-text {
         font-size: 8px;

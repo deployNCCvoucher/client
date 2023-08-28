@@ -37,7 +37,14 @@ export const PaginationComponent: React.FC<PaginationComponentInter> = ({
   const getDataInvoicesFilter = async () => {
     if (request) {
       const data = await dispatch(
-        getInvoicesByFilter({ page, limit, status: "pending" })
+        getInvoicesByFilter({
+          page,
+          limit,
+          status: "pending",
+          type,
+          month,
+          year,
+        })
       );
       dispatch(setTotalCountInvoice(data.payload?.totalCount));
     } else if (history) {

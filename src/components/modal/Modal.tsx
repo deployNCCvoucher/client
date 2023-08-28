@@ -2,7 +2,7 @@ import * as React from "react";
 import Modal from "@mui/material/Modal";
 import "react-toastify/dist/ReactToastify.css";
 import Box from "@mui/material/Box";
-import MyRequest from "../../pages/users/request/Request";
+import MyRequest from "../../pages/users/request";
 
 const style = {
   position: "absolute",

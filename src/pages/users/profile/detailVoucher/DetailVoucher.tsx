@@ -17,6 +17,7 @@ import {
   setTypeFilter,
   setYearFilter,
 } from "../../../../redux/invoice/invoiceSlide";
+import { SearchUser } from "../../../admin/components/SearchUser/SearchUser";
 
 interface IProps {
   admin?: boolean;
@@ -49,22 +50,22 @@ const DetailVoucher: React.FC<IProps> = ({ admin, adminHistory, type }) => {
     dispatch(setYearFilter(0));
   }, [admin, adminHistory]);
   return (
-    <Box
-      sx={{ boxShadow: "0 5px 15px rgba(240, 240, 240, 0.35)", mt: "40px" }}
-      ref={pageTopRef}
-    >
+    <Box sx={{ mt: "40px", pb: "40px" }} ref={pageTopRef}>
       <Typography
         component="h2"
         sx={{
           pb: "30px",
           textAlign: "center",
-          borderBottom: "1px solid #e9e9e9",
-          fontSize: "28px",
           lineHeight: "32px",
+          color: "#353657",
+          fontSize: "30px",
+          fontWeight: "700",
         }}
       >
-        {!admin && header}
+        {!admin && !adminHistory && header}
+        {adminHistory && "History"}
       </Typography>
+      {<SearchUser />}
       <Box>
         <TableDetails
           admin={admin}

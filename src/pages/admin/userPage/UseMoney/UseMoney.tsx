@@ -88,6 +88,7 @@ export const UseMoney = () => {
   };
 
   const handleClose = () => {
+    reset();
     setOpen(false);
   };
 
@@ -95,13 +96,18 @@ export const UseMoney = () => {
     <Box>
       <div>
         <Button variant="outlined" onClick={handleClickOpen}>
-          Open alert dialog
+          Use Voucher
         </Button>
         <Dialog open={open} onClose={handleClose}>
           <Box
             component="form"
             onSubmit={handleSubmitMoney}
-            sx={{ display: "flex", flexDirection: "column", p: "24px" }}
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              p: "24px",
+              width: "600px",
+            }}
           >
             <Typography variant="h6" sx={{ color: "#3f51b5" }}>
               Use Money Voucher
@@ -146,7 +152,12 @@ export const UseMoney = () => {
                   <Typography>Money Reduced</Typography>
                 </Box>
                 <FormControl sx={{ width: 1 }}>
-                  <TextField sx={{ width: 1 }} error={!!errors.money} helperText={errors.money?.message} {...register("money")} />
+                  <TextField
+                    sx={{ width: 1 }}
+                    error={!!errors.money}
+                    helperText={errors.money?.message}
+                    {...register("money")}
+                  />
                 </FormControl>
               </Box>
             </Box>

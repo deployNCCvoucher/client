@@ -19,7 +19,6 @@ export const DetailsMoney = (invoice: Invoice[]) => {
       pending: 0,
       money: 0,
     };
-
     invoice.forEach((item: Invoice) => {
       if (item.reducedType == type) {
         temp.total += 1;
@@ -35,6 +34,7 @@ export const DetailsMoney = (invoice: Invoice[]) => {
     });
     dataReduce.push(temp);
   });
+  console.log("dataReduce", dataReduce);
 
   const dataTotal: TotalInter = {
     total: 0,
@@ -43,8 +43,6 @@ export const DetailsMoney = (invoice: Invoice[]) => {
     pending: 0,
     money: 0,
   };
-  dataReduce.push({...dataTotal});
-
   dataReduce.forEach((item) => {
     dataTotal.approve += item.approve;
     dataTotal.money += item.money;

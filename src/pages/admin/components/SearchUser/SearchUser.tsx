@@ -22,7 +22,6 @@ import {
   setTypeFilter,
   setYearFilter,
 } from "../../../../redux/invoice/invoiceSlide";
-import { FreshPage } from "../../../../components/FreshPage/FreshPage";
 
 export const SearchUser = () => {
   const dispatch = useAppDispatch();
@@ -37,13 +36,13 @@ export const SearchUser = () => {
     dispatch(setSearchValue(debounced?.trim()));
   }, [debounced]);
 
-  const handleSearchUser = () => {
-    dispatch(setSearchType("User"));
-  };
+  // const handleSearchUser = () => {
+  //   dispatch(setSearchType("User"));
+  // };
 
-  const handleSearchAdmin = () => {
-    dispatch(setSearchType("Admin"));
-  };
+  // const handleSearchAdmin = () => {
+  //   dispatch(setSearchType("Admin"));
+  // };
 
   const handleChangeMonth = (event: SelectChangeEvent) => {
     dispatch(setPageInvoice(1));
@@ -67,7 +66,7 @@ export const SearchUser = () => {
         alignItems: "center",
       }}
     >
-      <Box>
+      {/* <Box>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Typography sx={{ color: "#3e50af" }}>Search for: </Typography>
           <Button
@@ -90,7 +89,7 @@ export const SearchUser = () => {
           value={value}
           onChange={(e) => setValue(e.target.value)}
         />
-      </Box>
+      </Box> */}
 
       <Box
         sx={{
@@ -115,7 +114,6 @@ export const SearchUser = () => {
           handleChange={handleChangeYear}
           time={year}
         />
-        <FreshPage />
       </Box>
     </Box>
   );
