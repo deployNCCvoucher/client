@@ -40,6 +40,7 @@ interface initialValueInter {
   totalCount: number;
   currentInvouce: any;
   overview: number;
+  isCreate: boolean;
 }
 
 const initialValue: initialValueInter = {
@@ -56,6 +57,7 @@ const initialValue: initialValueInter = {
   totalCount: 0,
   currentInvouce: {},
   overview: 1,
+  isCreate: false,
 };
 const invoiceSlice = createSlice({
   name: "invoice",
@@ -92,11 +94,11 @@ const invoiceSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(createInvoice.pending, (state, action) => {
-        state.isLoading = true;
+        state.isCreate = true;
       })
       .addCase(createInvoice.fulfilled, (state, action?: any) => {
         console.log("action", action.payload);
-        state.isLoading = false;
+        state.isCreate = false;
         const currentDate = new Date();
         const day = currentDate.getDate();
         const month = currentDate.getMonth() + 1;
@@ -109,6 +111,7 @@ const invoiceSlice = createSlice({
         toast.success("Upload file successful!");
       })
       .addCase(createInvoice.rejected, (state, action) => {
+        state.isCreate = false;
         toast.error("request error");
       })
       // getAllInvoice
@@ -163,7 +166,15 @@ const invoiceSlice = createSlice({
       .addCase(updateInvoice.rejected, (state, action) => {
         toast.error("request error");
       })
+      .addCase(editInvoice.rejected, (state, action) => {
+        state.isCreate = false;
+        toast.error("request error");
+      })
+      .addCase(editInvoice.pending, (state, action) => {
+        state.isCreate = true;
+      })
       .addCase(editInvoice.fulfilled, (state, action) => {
+        state.isCreate = false;
         toast.success("edit file successful!");
         state.isLoading = false;
         console.log("action edit", action.payload.data);
@@ -179,10 +190,6 @@ const invoiceSlice = createSlice({
           }
         });
         state.getInvoicesByFilter = newList;
-        console.log("newList", newList, state.getInvoicesByFilter);
-      })
-      .addCase(editInvoice.rejected, (state, action) => {
-        toast.error("request error");
       });
   },
 });

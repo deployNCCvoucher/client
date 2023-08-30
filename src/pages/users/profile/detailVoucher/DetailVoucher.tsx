@@ -1,5 +1,5 @@
 import { Box, Typography } from "@mui/material";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { getAllUser, getUser } from "../../../../redux/user/userAction";
 import {
   useAppDispatch,
@@ -18,6 +18,7 @@ import {
   setYearFilter,
 } from "../../../../redux/invoice/invoiceSlide";
 import { SearchUser } from "../../../admin/components/SearchUser/SearchUser";
+import Loading from "../../../../components/Loading";
 
 interface IProps {
   admin?: boolean;
@@ -32,13 +33,15 @@ const DetailVoucher: React.FC<IProps> = ({ admin, adminHistory, type }) => {
   console.log("data map", dataMap);
 
   const header = !type ? "Detail" : `Detail Type ${type}`;
-
+  const [loading, setLoading] = useState(false);
   // Call api
   useEffect(() => {
     const userId = window.localStorage.getItem("idUser");
     const fetchData = async () => {
+      setLoading(true);
       if (userId) await dispatch(getUser(userId));
       !admin && (await dispatch(getInvoice(userId)));
+      setTimeout(() => setLoading(false), 1000);
     };
     fetchData();
   }, []);
@@ -65,28 +68,44 @@ const DetailVoucher: React.FC<IProps> = ({ admin, adminHistory, type }) => {
         {!admin && !adminHistory && header}
         {adminHistory && "History"}
       </Typography>
-      {<SearchUser />}
-      <Box>
-        <TableDetails
-          admin={admin}
-          adminHistory={adminHistory}
-          dataMap={dataMap}
-        />
-      </Box>
-      {!dataMap.length && (
-        <Box sx={{ textAlign: "center" }}>
-          <Typography sx={{ pt: "36px", pb: "20px" }} variant="h5">
-            No Data Response
-          </Typography>
+      {loading ? (
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            margin: "auto",
+          }}
+        >
+          <Loading />
         </Box>
+      ) : (
+        <>
+          <SearchUser />
+          <Box>
+            <TableDetails
+              admin={admin}
+              adminHistory={adminHistory}
+              dataMap={dataMap}
+            />
+          </Box>
+          {!dataMap.length && (
+            <Box sx={{ textAlign: "center" }}>
+              <Typography sx={{ pt: "36px", pb: "20px" }} variant="h5">
+                No Data Response
+              </Typography>
+            </Box>
+          )}
+
+          <Box sx={{ mt: "14px" }}>
+            <PaginationComponent
+              request={admin}
+              history={adminHistory}
+              pageTopRef={pageTopRef}
+            />
+          </Box>
+        </>
       )}
-      <Box sx={{ mt: "14px" }}>
-        <PaginationComponent
-          request={admin}
-          history={adminHistory}
-          pageTopRef={pageTopRef}
-        />
-      </Box>
     </Box>
   );
 };

@@ -32,7 +32,14 @@ const ProfileCard = ({ user }: any) => {
           }}
         />
         <Typography
-          sx={{ color: "#353657", fontSize: "30px", fontWeight: "700" }}
+          sx={{
+            color: "#353657",
+            fontSize: "30px",
+            fontWeight: "700",
+            "@media (max-width: 768px)": {
+              fontSize: "24px",
+            },
+          }}
         >
           {user.name}
         </Typography>

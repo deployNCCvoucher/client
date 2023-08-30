@@ -16,18 +16,20 @@ import { getUser } from "../../redux/user/userAction";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
 import DiaLogNavbar from "../Dialog";
 import { NavLink } from "react-router-dom";
+import MenuOutlinedIcon from "@mui/icons-material/MenuOutlined";
+import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 
 const Navigation = () => {
   const dispatch = useAppDispatch();
   const roleUser = window.localStorage.getItem("userRole");
   const pages =
     roleUser === "user"
-      ? [{ title: "New Request", link: "/app/request" }]
+      ? [{ title: "NEW REQUEST", link: "/app/request" }]
       : [
-          { title: "New Request", link: "/app/request" },
-          { title: "List Request", link: "/app/admin" },
-          { title: "History", link: "/app/history" },
-          { title: "user", link: "/app/user" },
+          { title: "NEW REQUEST", link: "/app/request" },
+          { title: "LIST REQUEST", link: "/app/admin" },
+          { title: "HISTORY", link: "/app/history" },
+          { title: "USER", link: "/app/user" },
         ];
   const user = useAppSelector((state) => state.user.currentUser);
   console.log("user", user);
@@ -54,9 +56,12 @@ const Navigation = () => {
       sx={{
         display: "flex",
         width: "100%",
-        height: "100px",
+        height: "80px",
         justifyContent: "space-between",
         alignItems: "center",
+        "@media (max-width: 768px)": {
+          padding: "16px",
+        },
       }}
     >
       <Box sx={{ display: "flex", alignItems: "center", gap: "16px" }}>
@@ -69,20 +74,59 @@ const Navigation = () => {
               gap: "10px",
             }}
           >
-            <img
-              className="logo"
-              src="../images/logo.png"
-              alt="logo"
-              style={{ width: "32px", height: "32px" }}
-            />
-            <Typography color={"#fff"} fontSize={"28px"} fontWeight={650}>
+            <Box
+              sx={{
+                width: "32px",
+                height: "32px",
+                "@media (max-width: 1024px)": {
+                  width: "24px",
+                  height: "24px",
+                },
+              }}
+            >
+              <img
+                className="logo"
+                src="../images/logo.png"
+                alt="logo"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
+            </Box>
+
+            <Typography
+              sx={{
+                color: "#fff",
+                fontSize: "28px",
+                "@media (max-width: 1024px)": {
+                  fontSize: "20px",
+                },
+                fontWeight: 650,
+              }}
+            >
               NCC VOUCHER
             </Typography>
           </Box>
         </NavLink>
       </Box>
-      <Box sx={{ display: "flex", gap: "20px", alignItems: "center" }}>
-        <Box sx={{ flexGrow: 1, display: "flex", gap: "20px" }}>
+      <Box
+        sx={{
+          display: "flex",
+          gap: "20px",
+          alignItems: "center",
+        }}
+      >
+        <Box
+          sx={{
+            flexGrow: 1,
+            display: "flex",
+            gap: "20px",
+            "@media (max-width: 1024px)": {
+              display: "none",
+            },
+          }}
+        >
           {pages.map((page) => (
             <NavLink to={page.link} className="nav-link" key={page.link}>
               <Typography
@@ -93,16 +137,39 @@ const Navigation = () => {
             </NavLink>
           ))}
         </Box>
-        <Button
+        <Box
           sx={{
             position: "relative",
             display: "flex",
             flexGrow: 0,
             gap: "10px",
+            cursor: "pointer",
           }}
         >
-          <Box onClick={handleOpenUserMenu}>
+          <Box
+            onClick={handleOpenUserMenu}
+            sx={{
+              "@media (max-width: 1024px)": {
+                display: "none",
+              },
+            }}
+          >
             <AccountCircleOutlinedIcon sx={{ color: "white" }} />
+          </Box>
+          <Box
+            onClick={handleOpenUserMenu}
+            sx={{
+              display: "none",
+              "@media (max-width: 1024px)": {
+                display: "block",
+              },
+            }}
+          >
+            {!anchorElUser ? (
+              <MenuOutlinedIcon sx={{ color: "#fff" }} />
+            ) : (
+              <CloseOutlinedIcon sx={{ color: "#fff" }} />
+            )}
           </Box>
           <Menu
             sx={{ mt: "45px" }}
@@ -120,11 +187,14 @@ const Navigation = () => {
             open={Boolean(anchorElUser)}
             onClose={handleCloseUserMenu}
           >
-            <MenuItem onClick={handleCloseUserMenu}>
+            <Box
+              onClick={handleCloseUserMenu}
+              sx={{ backgroundColor: "#fff", padding: "0" }}
+            >
               <DiaLogNavbar />
-            </MenuItem>
+            </Box>
           </Menu>
-        </Button>
+        </Box>
       </Box>
     </Box>
   );

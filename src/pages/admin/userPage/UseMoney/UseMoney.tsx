@@ -13,7 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import { getAllUser } from "../../../../redux/user/userAction";
+import { getAllUser, updateTotalUsed } from "../../../../redux/user/userAction";
 import {
   useAppDispatch,
   useAppSelector,
@@ -21,36 +21,48 @@ import {
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Controller, useForm } from "react-hook-form";
+import Loading from "../../../../components/Loading";
 
 export interface OptionInter {
   label: string;
   id: number;
+  totalAvailable?: any;
 }
 
-const schema = yup
-  .object({
-    account: yup.object().shape({
-      label: yup.string().required("required"),
-      id: yup.number().required("required"),
-    }),
-    money: yup.number().integer().min(0).required("required"),
-  })
-  .required();
-type FormData = yup.InferType<typeof schema>;
-
-export const UseMoney = () => {
+export const UseMoney = ({ handleOpen, handleClose, open }: any) => {
+  const [max, setMax] = useState<any>(null);
+  const schema = yup
+    .object({
+      account: yup.object().shape({
+        label: yup.string().required("required"),
+        id: yup.number().required("required"),
+        totalAvailable: yup.number(),
+      }),
+      money: yup.number().integer().min(0).max(max).required("required"),
+    })
+    .required();
+  type FormData = yup.InferType<typeof schema>;
   const {
     reset,
     control,
     register,
     handleSubmit,
     getValues,
+    trigger,
     formState: { errors },
   } = useForm<FormData>({ mode: "all", resolver: yupResolver(schema) });
-  const [selectedValue, setSelectedValue] = useState<OptionInter | null>(null);
+
+  const [selectedValue, setSelectedValue] = useState<OptionInter | any>(null);
   const users = useAppSelector((state) => state.user.users);
-  const options = users.map((user) => {
-    return { label: user.gmail.split("@")[0], id: user.id };
+  const isLoading = useAppSelector((state) => state.user.isLoadingTotal);
+  console.log("user pagegina", users);
+  const UserList = users.filter((u) => u.totalAvailable > 0);
+  const options = UserList.map((user) => {
+    return {
+      label: user.gmail.split("@")[0],
+      id: user.id,
+      totalAvailable: user.totalAvailable,
+    };
   });
   const handleAutocompleteChange = (
     event: React.ChangeEvent<{}>,
@@ -69,8 +81,14 @@ export const UseMoney = () => {
     return option.id === value.id;
   };
 
-  const handleSubmitMoney = handleSubmit((value) => {
-    console.log("value", value);
+  const handleSubmitMoney = handleSubmit(async (value) => {
+    await dispatch(
+      updateTotalUsed({
+        id: value.account.id,
+        data: { totalUsed: value.money },
+      })
+    );
+    await handleClickClose();
   });
 
   const dispatch = useAppDispatch();
@@ -80,25 +98,18 @@ export const UseMoney = () => {
     };
     fetchData();
   }, []);
-
-  const [open, setOpen] = useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
+  const [state, setState] = useState(false);
+  const handleClickClose = () => {
+    handleClose();
+    setMax(null);
+    setState(false);
     reset();
-    setOpen(false);
   };
 
   return (
     <Box>
       <div>
-        <Button variant="outlined" onClick={handleClickOpen}>
-          Use Voucher
-        </Button>
-        <Dialog open={open} onClose={handleClose}>
+        <Dialog open={open} onClose={handleClickClose}>
           <Box
             component="form"
             onSubmit={handleSubmitMoney}
@@ -113,55 +124,60 @@ export const UseMoney = () => {
               Use Money Voucher
             </Typography>
             <Box>
-              <Box>
-                <Box sx={{ mb: "12px" }}>
-                  <Typography>Account</Typography>
-                </Box>
+              {!state && !isLoading ? (
+                <Box>
+                  <Box sx={{ mb: "12px", mt: "12px" }}>
+                    <Typography>Account</Typography>
+                  </Box>
 
-                <FormControl sx={{ width: 1 }}>
-                  <Controller
-                    control={control}
-                    name="account"
-                    render={({ field }) => (
-                      <Autocomplete
-                        {...field}
-                        options={options}
-                        isOptionEqualToValue={isOptionEqualToValue}
-                        getOptionLabel={(option) => option.label}
-                        renderInput={(params) => (
-                          <TextField
-                            {...params}
-                            label="Account"
-                            error={!!errors.account}
-                            helperText={errors.account?.message}
-                          />
-                        )}
-                        onChange={(_, data) => {
-                          field.onChange(data);
-                          return data;
-                        }}
-                        value={field.value}
-                      />
-                    )}
-                  />
-                </FormControl>
-              </Box>
-
-              <Box>
-                <Box sx={{ mb: "12px" }}>
-                  <Typography>Money Reduced</Typography>
+                  <FormControl sx={{ width: 1 }}>
+                    <Controller
+                      control={control}
+                      name="account"
+                      render={({ field }) => (
+                        <Autocomplete
+                          {...field}
+                          options={options}
+                          isOptionEqualToValue={isOptionEqualToValue}
+                          getOptionLabel={(option) => option.label}
+                          renderInput={(params) => (
+                            <TextField
+                              {...params}
+                              label="Account"
+                              error={!!errors.account}
+                              helperText={errors.account?.message}
+                            />
+                          )}
+                          onChange={(_, data) => {
+                            field.onChange(data);
+                            return data;
+                          }}
+                          value={field.value}
+                        />
+                      )}
+                    />
+                  </FormControl>
                 </Box>
-                <FormControl sx={{ width: 1 }}>
-                  <TextField
-                    sx={{ width: 1 }}
-                    error={!!errors.money}
-                    helperText={errors.money?.message}
-                    {...register("money")}
-                  />
-                </FormControl>
-              </Box>
+              ) : !isLoading ? (
+                <Box>
+                  <Typography sx={{ mb: "12px", mt: "12px" }}>
+                    money must be less than or equal to {max}
+                  </Typography>
+                  <FormControl sx={{ width: 1 }}>
+                    <TextField
+                      sx={{ width: 1 }}
+                      error={!!errors.money}
+                      helperText={errors.money?.message}
+                      {...register("money")}
+                    />
+                  </FormControl>
+                </Box>
+              ) : (
+                <></>
+              )}
             </Box>
-            <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+            {state && !isLoading && (
+              // <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
               <Button
                 sx={{ mt: "24px" }}
                 color="error"
@@ -171,8 +187,41 @@ export const UseMoney = () => {
               >
                 Apply
               </Button>
-            </Box>
+            )}
           </Box>
+          {!state && !isLoading && (
+            // </Box>
+            <Button
+              sx={{ mt: "24px" }}
+              color="error"
+              variant="contained"
+              size="large"
+              onClick={async () => {
+                const result = await trigger("account");
+                if (result) {
+                  const singleValue = getValues("account");
+                  if (singleValue) {
+                    setMax(singleValue?.totalAvailable);
+                  }
+                  setState(true);
+                }
+              }}
+            >
+              next
+            </Button>
+          )}
+          {isLoading && (
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                padding: "32px",
+              }}
+            >
+              <Loading />
+            </Box>
+          )}
         </Dialog>
       </div>
     </Box>

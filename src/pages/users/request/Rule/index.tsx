@@ -2,8 +2,26 @@ import { Box, Typography } from "@mui/material";
 
 const Rule = () => {
   return (
-    <Box sx={{ display: "flex", alignItems: "center" }}>
-      <Box sx={{ width: "20%" }}>
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        "@media (max-width: 768px)": {
+          flexDirection: "column",
+        },
+      }}
+    >
+      <Box
+        sx={{
+          width: "20%",
+          "@media (max-width: 768px)": {
+            width: "30%",
+          },
+          "@media (max-width: 376px)": {
+            width: "60%",
+          },
+        }}
+      >
         <img
           src="../images/vcoupon.png"
           alt="coupon"

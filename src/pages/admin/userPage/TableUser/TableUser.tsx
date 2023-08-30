@@ -9,7 +9,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { getAllUser } from "../../../../redux/user/userAction";
 import {
   useAppDispatch,
@@ -20,6 +20,7 @@ import { PaginationComponent } from "../../../users/profile/Pagination/Paginatio
 export const TableUser = () => {
   const usersPagin = useAppSelector((state) => state.user.usersPagin);
   const pageTopRef = useRef(null);
+
   return (
     <Box
       sx={{

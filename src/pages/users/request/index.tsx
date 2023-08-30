@@ -11,7 +11,17 @@ const MyRequest = (props: RequestProps) => {
         borderTopLeftRadius: " 50px",
         borderTopRightRadius: "50px",
         padding: "32px",
-        minHeight: "calc( 100vh - 100px)",
+        minHeight: "calc( 100vh - 80px)",
+        "@media (max-width: 1024px)": {
+          padding: "24px",
+          borderTopLeftRadius: " 30px",
+          borderTopRightRadius: "30px",
+        },
+        "@media (max-width: 768px)": {
+          padding: "16px",
+          borderTopLeftRadius: " 0px",
+          borderTopRightRadius: "0px",
+        },
       }}
     >
       <Typography

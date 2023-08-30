@@ -27,6 +27,7 @@ import { getUser } from "../../../../redux/user/userAction";
 import { storage } from "../../../../components/imageFirebase/firebase";
 import { FirebaseStorage, getDownloadURL, ref } from "firebase/storage";
 import axiosClient from "../../../../api/axiosClient";
+import Loading from "../../../../components/Loading";
 
 export interface RequestProps {
   modal?: boolean;
@@ -52,6 +53,8 @@ const Request: React.FC<RequestProps> = ({
   const currentInvoice = useAppSelector(
     (state) => state.invoice.currentInvouce
   );
+  const isCreate = useAppSelector((state) => state.invoice.isCreate);
+  console.log("isLoading check", isCreate);
   const [currentInvoiceData, setCurrentInvoiceData] = useState<any>();
   const [imageUrl, setImageUrl] = useState("");
   const [imageFile, setImageFile] = useState<any>();
@@ -201,308 +204,30 @@ const Request: React.FC<RequestProps> = ({
         },
       }}
     >
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        style={{ display: "flex", flexDirection: "column", gap: "20px" }}
-      >
-        <Box>
-          {imageFile && (
-            <img
-              src={URL.createObjectURL(imageFile)}
-              alt="Uploaded"
-              width="100%"
-              style={{ margin: "auto" }}
-            />
-          )}
-          <Typography
-            sx={{
-              fontSize: "14px",
-              "@media (max-width: 1025px)": {
-                fontSize: "12px",
-              },
-            }}
-          >
-            Hình ảnh <span style={{ color: "red" }}>*</span>
-          </Typography>
-          <Box
-            sx={{
-              width: "100%",
-              height: "250px",
-              borderRadius: "15px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              flexDirection: "column",
-              gap: "20px",
-              cursor: "pointer",
-              margin: "auto",
-              position: "relative",
-              overFlow: "hidden",
-              backgroundColor: "#ffffff",
-              border: "3px solid var(--secondary-color)",
-              "@media (max-width: 1025px)": {
-                height: "400px",
-                borderRadius: "10px",
-              },
-              "@media (max-width: 769px)": {
-                height: "300px",
-                gap: "10px",
-              },
-            }}
-            {...getRootProps()}
-          >
-            {isEdit && file === null && imageUrl !== "" && (
-              <Box
-                sx={{
-                  top: "0",
-                  width: "100%",
-                  height: "100%",
-                  overflow: "hidden",
-                  borderRadius: "12px",
-                  "@media (max-width: 1025px)": {
-                    borderRadius: "7px",
-                  },
-                }}
-              >
-                <Box
-                  className="scrollbar"
-                  sx={{
-                    height: "85%",
-                    overflowY: "scroll",
-                  }}
-                >
-                  <img
-                    src={imageUrl}
-                    alt="Uploaded file"
-                    width="100%"
-                    style={{ margin: "auto" }}
-                  />
-                </Box>
-                <Box
-                  sx={{
-                    width: "100%",
-                    height: "15%",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: "10px",
-                    backgroundColor: "var(--secondary-color)",
-                  }}
-                >
-                  <CloudUploadIcon
-                    sx={{
-                      fontSize: "40px",
-                      color: "var(--secondary-color01)",
-                      "@media (max-width: 1025px)": {
-                        fontSize: "22px",
-                      },
-                    }}
-                  />
-                  {isDragActive ? (
-                    <Typography
-                      sx={{
-                        fontSize: "20px",
-                        color: "var(--secondary-color01)",
-                        "@media (max-width: 1025px)": {
-                          fontSize: "12px",
-                        },
-                      }}
-                    >
-                      Thả file vào đây
-                    </Typography>
-                  ) : (
-                    <Typography
-                      sx={{
-                        fontSize: "20px",
-                        color: "var(--secondary-color01)",
-                        "@media (max-width: 1025px)": {
-                          fontSize: "12px",
-                        },
-                      }}
-                    >
-                      Kéo và thả hoặc click để chọn file khác
-                    </Typography>
-                  )}
-                </Box>
-              </Box>
-            )}
-            {file === null && !isEdit && (
-              <>
-                <CloudUploadIcon
-                  sx={{
-                    fontSize: "180px",
-                    color: "var(--secondary-color)",
-                    "@media (max-width: 1025px)": {
-                      fontSize: "150px",
-                    },
-                    "@media (max-width: 769px)": {
-                      fontSize: "150px",
-                    },
-                  }}
-                />
-                {isDragActive ? (
-                  <Typography
-                    sx={{
-                      fontSize: "20px",
-                      color: "var(--secondary-color)",
-                      "@media (max-width: 1025px)": {
-                        fontSize: "12px",
-                      },
-                    }}
-                  >
-                    Thả file vào đây
-                  </Typography>
-                ) : (
-                  <Typography
-                    sx={{
-                      mt: "-20px",
-                      fontSize: "20px",
-                      color: "var(--secondary-color)",
-                      "@media (max-width: 1025px)": {
-                        fontSize: "12px",
-                      },
-                    }}
-                  >
-                    Kéo và thả hoặc click để chọn file
-                  </Typography>
-                )}
-              </>
-            )}
-            {file && !file.type?.startsWith("image/") && (
-              <>
-                <CloudUploadIcon
-                  sx={{
-                    fontSize: "400px",
-                    color: "var(--secondary-color)",
-                    "@media (max-width: 1025px)": {
-                      fontSize: "200px",
-                    },
-                    "@media (max-width: 769px)": {
-                      fontSize: "100px",
-                    },
-                  }}
-                />
-                {isDragActive ? (
-                  <Typography
-                    sx={{
-                      fontSize: "20px",
-                      color: "var(--secondary-color)",
-                      "@media (max-width: 1025px)": {
-                        fontSize: "12px",
-                      },
-                    }}
-                  >
-                    Thả file vào đây
-                  </Typography>
-                ) : (
-                  <Typography
-                    sx={{
-                      fontSize: "20px",
-                      color: "var(--secondary-color)",
-                      "@media (max-width: 1025px)": {
-                        fontSize: "12px",
-                      },
-                    }}
-                  >
-                    Kéo và thả hoặc click để chọn file
-                  </Typography>
-                )}
-              </>
-            )}
-            {file && file.type?.startsWith("image/") && (
-              <Box
-                sx={{
-                  top: "0",
-                  width: "100%",
-                  height: "100%",
-                  overflow: "hidden",
-                  borderRadius: "12px",
-                  "@media (max-width: 1025px)": {
-                    borderRadius: "7px",
-                  },
-                }}
-              >
-                <Box
-                  className="scrollbar"
-                  sx={{
-                    height: "85%",
-                    overflowY: "scroll",
-                  }}
-                >
-                  <img
-                    src={URL.createObjectURL(file)}
-                    alt="Uploaded file"
-                    width="100%"
-                    style={{ margin: "auto" }}
-                  />
-                </Box>
-                <Box
-                  sx={{
-                    width: "100%",
-                    height: "15%",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: "10px",
-                    backgroundColor: "var(--secondary-color)",
-                  }}
-                >
-                  <CloudUploadIcon
-                    sx={{
-                      fontSize: "40px",
-                      color: "var(--secondary-color01)",
-                      "@media (max-width: 1025px)": {
-                        fontSize: "22px",
-                      },
-                    }}
-                  />
-                  {isDragActive ? (
-                    <Typography
-                      sx={{
-                        fontSize: "20px",
-                        color: "var(--secondary-color01)",
-                        "@media (max-width: 1025px)": {
-                          fontSize: "12px",
-                        },
-                      }}
-                    >
-                      Thả file vào đây
-                    </Typography>
-                  ) : (
-                    <Typography
-                      sx={{
-                        fontSize: "20px",
-                        color: "var(--secondary-color01)",
-                        "@media (max-width: 1025px)": {
-                          fontSize: "12px",
-                        },
-                      }}
-                    >
-                      Kéo và thả hoặc click để chọn file khác
-                    </Typography>
-                  )}
-                </Box>
-              </Box>
-            )}
-          </Box>
-        </Box>
+      {isCreate ? (
         <Box
           sx={{
             display: "flex",
-            gap: "40px",
-            "@media (max-width: 1025px)": {
-              flexDirection: "column",
-            },
+            justifyContent: "center",
+            alignItems: "center",
           }}
         >
-          <Box
-            sx={{
-              width: "50%",
-              "@media (max-width: 1025px)": {
-                width: "100%",
-              },
-            }}
-          >
+          <Loading />
+        </Box>
+      ) : (
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          style={{ display: "flex", flexDirection: "column", gap: "20px" }}
+        >
+          <Box>
+            {imageFile && (
+              <img
+                src={URL.createObjectURL(imageFile)}
+                alt="Uploaded"
+                width="100%"
+                style={{ margin: "auto" }}
+              />
+            )}
             <Typography
               sx={{
                 fontSize: "14px",
@@ -511,76 +236,366 @@ const Request: React.FC<RequestProps> = ({
                 },
               }}
             >
-              Loại hóa đơn <span style={{ color: "red" }}>*</span>
+              Hình ảnh <span style={{ color: "red" }}>*</span>
             </Typography>
-            <Controller
-              {...register("moneyReduce")}
-              control={control}
-              name="moneyReduce"
-              render={({ field }) => (
-                <RadioGroup {...field}>
-                  <FormControlLabel
-                    value="30k"
-                    control={<Radio />}
-                    label="< 3.000.000đ"
-                  />
-                  <FormControlLabel
-                    value="50k"
-                    control={<Radio />}
-                    label="3.000.000đ - 10.000.000đ"
-                  />
-                  <FormControlLabel
-                    value="100k"
-                    control={<Radio />}
-                    label=">= 10.000.000đ"
-                  />
-                </RadioGroup>
+            <Box
+              sx={{
+                width: "100%",
+                height: "250px",
+                borderRadius: "15px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+                gap: "20px",
+                cursor: "pointer",
+                margin: "auto",
+                position: "relative",
+                overFlow: "hidden",
+                backgroundColor: "#ffffff",
+                border: "3px solid var(--secondary-color)",
+                "@media (max-width: 1025px)": {
+                  height: "400px",
+                  borderRadius: "10px",
+                },
+                "@media (max-width: 769px)": {
+                  height: "300px",
+                  gap: "10px",
+                },
+              }}
+              {...getRootProps()}
+            >
+              {isEdit && file === null && imageUrl !== "" && (
+                <Box
+                  sx={{
+                    top: "0",
+                    width: "100%",
+                    height: "100%",
+                    overflow: "hidden",
+                    borderRadius: "12px",
+                    "@media (max-width: 1025px)": {
+                      borderRadius: "7px",
+                    },
+                  }}
+                >
+                  <Box
+                    className="scrollbar"
+                    sx={{
+                      height: "85%",
+                      overflowY: "scroll",
+                    }}
+                  >
+                    <img
+                      src={imageUrl}
+                      alt="Uploaded file"
+                      width="100%"
+                      style={{ margin: "auto" }}
+                    />
+                  </Box>
+                  <Box
+                    sx={{
+                      width: "100%",
+                      height: "15%",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: "10px",
+                      backgroundColor: "var(--secondary-color)",
+                    }}
+                  >
+                    <CloudUploadIcon
+                      sx={{
+                        fontSize: "40px",
+                        color: "var(--secondary-color01)",
+                        "@media (max-width: 1025px)": {
+                          fontSize: "22px",
+                        },
+                      }}
+                    />
+                    {isDragActive ? (
+                      <Typography
+                        sx={{
+                          fontSize: "20px",
+                          color: "var(--secondary-color01)",
+                          "@media (max-width: 1025px)": {
+                            fontSize: "12px",
+                          },
+                        }}
+                      >
+                        Thả file vào đây
+                      </Typography>
+                    ) : (
+                      <Typography
+                        sx={{
+                          fontSize: "20px",
+                          color: "var(--secondary-color01)",
+                          "@media (max-width: 1025px)": {
+                            fontSize: "12px",
+                          },
+                        }}
+                      >
+                        Kéo và thả hoặc click để chọn file khác
+                      </Typography>
+                    )}
+                  </Box>
+                </Box>
               )}
-            />
+              {file === null && !isEdit && (
+                <>
+                  <CloudUploadIcon
+                    sx={{
+                      fontSize: "180px",
+                      color: "var(--secondary-color)",
+                      "@media (max-width: 1025px)": {
+                        fontSize: "150px",
+                      },
+                      "@media (max-width: 769px)": {
+                        fontSize: "150px",
+                      },
+                    }}
+                  />
+                  {isDragActive ? (
+                    <Typography
+                      sx={{
+                        fontSize: "20px",
+                        color: "var(--secondary-color)",
+                        "@media (max-width: 1025px)": {
+                          fontSize: "12px",
+                        },
+                      }}
+                    >
+                      Thả file vào đây
+                    </Typography>
+                  ) : (
+                    <Typography
+                      sx={{
+                        mt: "-20px",
+                        fontSize: "20px",
+                        color: "var(--secondary-color)",
+                        "@media (max-width: 1025px)": {
+                          fontSize: "12px",
+                        },
+                      }}
+                    >
+                      Kéo và thả hoặc click để chọn file
+                    </Typography>
+                  )}
+                </>
+              )}
+              {file && !file.type?.startsWith("image/") && (
+                <>
+                  <CloudUploadIcon
+                    sx={{
+                      fontSize: "400px",
+                      color: "var(--secondary-color)",
+                      "@media (max-width: 1025px)": {
+                        fontSize: "200px",
+                      },
+                      "@media (max-width: 769px)": {
+                        fontSize: "100px",
+                      },
+                    }}
+                  />
+                  {isDragActive ? (
+                    <Typography
+                      sx={{
+                        fontSize: "20px",
+                        color: "var(--secondary-color)",
+                        "@media (max-width: 1025px)": {
+                          fontSize: "12px",
+                        },
+                      }}
+                    >
+                      Thả file vào đây
+                    </Typography>
+                  ) : (
+                    <Typography
+                      sx={{
+                        fontSize: "20px",
+                        color: "var(--secondary-color)",
+                        "@media (max-width: 1025px)": {
+                          fontSize: "12px",
+                        },
+                      }}
+                    >
+                      Kéo và thả hoặc click để chọn file
+                    </Typography>
+                  )}
+                </>
+              )}
+              {file && file.type?.startsWith("image/") && (
+                <Box
+                  sx={{
+                    top: "0",
+                    width: "100%",
+                    height: "100%",
+                    overflow: "hidden",
+                    borderRadius: "12px",
+                    "@media (max-width: 1025px)": {
+                      borderRadius: "7px",
+                    },
+                  }}
+                >
+                  <Box
+                    className="scrollbar"
+                    sx={{
+                      height: "85%",
+                      overflowY: "scroll",
+                    }}
+                  >
+                    <img
+                      src={URL.createObjectURL(file)}
+                      alt="Uploaded file"
+                      width="100%"
+                      style={{ margin: "auto" }}
+                    />
+                  </Box>
+                  <Box
+                    sx={{
+                      width: "100%",
+                      height: "15%",
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      gap: "10px",
+                      backgroundColor: "var(--secondary-color)",
+                    }}
+                  >
+                    <CloudUploadIcon
+                      sx={{
+                        fontSize: "40px",
+                        color: "var(--secondary-color01)",
+                        "@media (max-width: 1025px)": {
+                          fontSize: "22px",
+                        },
+                      }}
+                    />
+                    {isDragActive ? (
+                      <Typography
+                        sx={{
+                          fontSize: "20px",
+                          color: "var(--secondary-color01)",
+                          "@media (max-width: 1025px)": {
+                            fontSize: "12px",
+                          },
+                        }}
+                      >
+                        Thả file vào đây
+                      </Typography>
+                    ) : (
+                      <Typography
+                        sx={{
+                          fontSize: "20px",
+                          color: "var(--secondary-color01)",
+                          "@media (max-width: 1025px)": {
+                            fontSize: "12px",
+                          },
+                        }}
+                      >
+                        Kéo và thả hoặc click để chọn file khác
+                      </Typography>
+                    )}
+                  </Box>
+                </Box>
+              )}
+            </Box>
           </Box>
           <Box
             sx={{
-              width: "50%",
+              display: "flex",
+              gap: "40px",
               "@media (max-width: 1025px)": {
-                width: "100%",
+                flexDirection: "column",
               },
             }}
           >
-            <Typography
+            <Box
               sx={{
-                fontSize: "14px",
+                width: "50%",
                 "@media (max-width: 1025px)": {
-                  fontSize: "12px",
+                  width: "100%",
                 },
               }}
             >
-              Code
-            </Typography>
-            <TextField
-              {...register("code")}
-              defaultValue={""}
-              name="code"
-              id="code"
-              variant="outlined"
-              sx={{ width: "100%" }}
-            />
+              <Typography
+                sx={{
+                  fontSize: "14px",
+                  "@media (max-width: 1025px)": {
+                    fontSize: "12px",
+                  },
+                }}
+              >
+                Loại hóa đơn <span style={{ color: "red" }}>*</span>
+              </Typography>
+              <Controller
+                {...register("moneyReduce")}
+                control={control}
+                name="moneyReduce"
+                render={({ field }: any) => (
+                  <RadioGroup {...field}>
+                    <FormControlLabel
+                      value="30k"
+                      control={<Radio />}
+                      label="< 3.000.000đ"
+                    />
+                    <FormControlLabel
+                      value="50k"
+                      control={<Radio />}
+                      label="3.000.000đ - 10.000.000đ"
+                    />
+                    <FormControlLabel
+                      value="100k"
+                      control={<Radio />}
+                      label=">= 10.000.000đ"
+                    />
+                  </RadioGroup>
+                )}
+              />
+            </Box>
+            <Box
+              sx={{
+                width: "50%",
+                "@media (max-width: 1025px)": {
+                  width: "100%",
+                },
+              }}
+            >
+              <Typography
+                sx={{
+                  fontSize: "14px",
+                  "@media (max-width: 1025px)": {
+                    fontSize: "12px",
+                  },
+                }}
+              >
+                Code
+              </Typography>
+              <TextField
+                {...register("code")}
+                defaultValue={""}
+                name="code"
+                id="code"
+                variant="outlined"
+                sx={{ width: "100%" }}
+              />
+            </Box>
           </Box>
-        </Box>
-        <Box sx={{ width: "100%", margin: "auto" }}>
-          <Button
-            sx={{
-              width: "100%",
-              backgroundColor: "var(--secondary-color)",
-              color: "#fff",
-              fontSize: "20px",
-              margin: "auto",
-            }}
-            type="submit"
-          >
-            Submit
-          </Button>
-        </Box>
-      </form>
+          <Box sx={{ width: "100%", margin: "auto" }}>
+            <Button
+              sx={{
+                width: "100%",
+                backgroundColor: "var(--secondary-color)",
+                color: "#fff",
+                fontSize: "20px",
+                margin: "auto",
+              }}
+              type="submit"
+            >
+              Submit
+            </Button>
+          </Box>
+        </form>
+      )}
     </Box>
   );
 };

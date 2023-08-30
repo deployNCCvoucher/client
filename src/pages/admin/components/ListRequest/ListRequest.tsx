@@ -1,14 +1,16 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Tooltip, Typography } from "@mui/material";
 import { ItemsRequest } from "../ItemsRequest/ItemsRequest";
 import { useState } from "react";
 import { ModalsAdmin } from "../ModalsAdmin/ModalsAdmin";
 import { SearchUser } from "../SearchUser/SearchUser";
 import { useAppDispatch } from "../../../../redux/hook/useTypedSeletor";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 interface ListRequestInter {
   history?: boolean;
 }
 export const ListRequest: React.FC<ListRequestInter> = ({ history }) => {
   const [openNewAdmin, setOpenNewAdmin] = useState<boolean>(false);
+  const [modalAdmin, setModalAdmin] = useState<boolean>(false);
   const handleOpenNewAdmin = () => {
     setOpenNewAdmin(true);
   };
@@ -18,12 +20,21 @@ export const ListRequest: React.FC<ListRequestInter> = ({ history }) => {
   return (
     <Box
       sx={{
-        marginTop: "10px",
         background: "#ffffff",
         borderTopLeftRadius: " 50px",
         borderTopRightRadius: "50px",
         padding: "32px",
-        minHeight: "calc( 100vh - 100px )",
+        minHeight: "calc( 100vh - 80px )",
+        "@media (max-width: 1024px)": {
+          padding: "24px",
+          borderTopLeftRadius: " 30px",
+          borderTopRightRadius: "30px",
+        },
+        "@media (max-width: 768px)": {
+          padding: "16px",
+          borderTopLeftRadius: " 0px",
+          borderTopRightRadius: "0px",
+        },
       }}
     >
       <ModalsAdmin
@@ -32,7 +43,12 @@ export const ListRequest: React.FC<ListRequestInter> = ({ history }) => {
         handleClose={handleCloseNewAdmin}
       />
       {!history && (
-        <Box>
+        <Box
+          sx={{
+            width: "100%",
+            position: "relative",
+          }}
+        >
           <Typography
             component="h2"
             sx={{
@@ -47,17 +63,18 @@ export const ListRequest: React.FC<ListRequestInter> = ({ history }) => {
           >
             List Request
           </Typography>
-          <Button
-            size="large"
-            sx={{
-              backgroundColor: "var(--secondary-color)",
-              mr: "8px",
-              color: "#fff",
-            }}
-            onClick={handleOpenNewAdmin}
-          >
-            New admin
-          </Button>
+          <Box sx={{ position: "absolute", right: "0", top: "0" }}>
+            <Tooltip title="New admin">
+              <MoreVertIcon
+                sx={{
+                  color: "#353657",
+                  fontSize: "30px",
+                  cursor: "pointer",
+                }}
+                onClick={handleOpenNewAdmin}
+              />
+            </Tooltip>
+          </Box>
         </Box>
       )}
       <Box>

@@ -112,3 +112,20 @@ export const updateAdmin = createAsyncThunk(
     }
   }
 );
+export const updateTotalUsed = createAsyncThunk(
+  "updateTotalUsed",
+  async (dataUpdate: any) => {
+    try {
+      const { data } = await axiosClient.put(
+        `/users/updateTotalUsed/${dataUpdate.id}`,
+        {
+          ...dataUpdate.data,
+        }
+      );
+      toast.success("request use voucher successful!");
+      return data;
+    } catch (error: any) {
+      toast.success("request use voucher error!");
+    }
+  }
+);

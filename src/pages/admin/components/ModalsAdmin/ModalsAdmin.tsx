@@ -18,6 +18,7 @@ import {
 import { useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import { OptionInter } from "../../userPage/UseMoney/UseMoney";
+import Loading from "../../../../components/Loading";
 interface ModalRejectInter {
   open: boolean;
   invoiceObject?: any;
@@ -31,6 +32,7 @@ export const ModalsAdmin: React.FC<ModalRejectInter> = ({
   handleClose,
   admin,
 }) => {
+  const [loading, setLoading] = React.useState(false);
   const users = useAppSelector((state) => state.user.users);
   const page = useAppSelector((state) => state.invoice.page);
   const limit = useAppSelector((state) => state.invoice.limit);
@@ -75,6 +77,7 @@ export const ModalsAdmin: React.FC<ModalRejectInter> = ({
   };
 
   const handleApprove = async () => {
+    setLoading(true);
     const dataApprove = {
       id: invoiceObject.id,
       status: "approve",
@@ -94,6 +97,7 @@ export const ModalsAdmin: React.FC<ModalRejectInter> = ({
     } else {
       await dispatch(getInvoicesByFilter({ page, limit, type, month, year }));
     }
+    setLoading(false);
     handleClose();
   };
 
@@ -169,19 +173,23 @@ export const ModalsAdmin: React.FC<ModalRejectInter> = ({
           )}
 
           <Box sx={{ display: "flex", justifyContent: "flex-end", mt: "24px" }}>
-            <Button
-              variant="contained"
-              color="error"
-              onClick={
-                admin && !invoiceObject
-                  ? handleSumitAdmin
-                  : invoiceObject?.status === "reject"
-                  ? handleSumitReject
-                  : handleApprove
-              }
-            >
-              {invoiceObject?.status === "reject" ? "Send" : "Confirm"}
-            </Button>
+            {!loading ? (
+              <Button
+                variant="contained"
+                color="error"
+                onClick={
+                  admin && !invoiceObject
+                    ? handleSumitAdmin
+                    : invoiceObject?.status === "reject"
+                    ? handleSumitReject
+                    : handleApprove
+                }
+              >
+                {invoiceObject?.status === "reject" ? "Send" : "Confirm"}
+              </Button>
+            ) : (
+              <Loading />
+            )}
           </Box>
         </Box>
       </Dialog>

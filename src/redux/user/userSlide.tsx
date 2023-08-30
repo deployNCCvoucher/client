@@ -5,6 +5,7 @@ import {
   getUser,
   login,
   updateMoney,
+  updateTotalUsed,
 } from "./userAction";
 
 let auth: string | null = "";
@@ -35,6 +36,8 @@ interface initialUserStateInter {
   token: boolean | null;
   searchUserValue: string;
   searchType: string;
+  isLoadingLogin: boolean;
+  isLoadingTotal: boolean;
 }
 
 const initialUserState: initialUserStateInter = {
@@ -56,6 +59,8 @@ const initialUserState: initialUserStateInter = {
   token: false,
   searchUserValue: "",
   searchType: "User",
+  isLoadingLogin: false,
+  isLoadingTotal: false,
 } as any;
 
 const userSlice = createSlice({
@@ -84,7 +89,6 @@ const userSlice = createSlice({
         const userImg = window.localStorage.getItem("userImage");
         window.localStorage.setItem("userRole", action.payload.role);
         state.currentUser = { ...action.payload, userImage: userImg };
-        console.log("action", action.payload);
       })
       .addCase(getUser.rejected, (state: any, action: any) => {
         state.loadingUser = false;
@@ -94,8 +98,8 @@ const userSlice = createSlice({
         state.loadingUser = true;
       })
       .addCase(getAllUser.fulfilled, (state: any, action: any) => {
-        state.loadingUser = false;
         state.users = [...action.payload];
+        state.loadingUser = false;
       })
       .addCase(getAllUser.rejected, (state: any, action: any) => {
         state.loadingUser = false;
@@ -131,6 +135,31 @@ const userSlice = createSlice({
       })
       .addCase(updateMoney.rejected, (state: any, action: any) => {
         state.loadingUser = false;
+      })
+      .addCase(updateTotalUsed.fulfilled, (state: any, action: any) => {
+        const newList = state.usersPagin.map((user: any) => {
+          if (user.id === action.payload.id) {
+            return { ...action.payload };
+          } else {
+            return { ...user };
+          }
+        });
+        const newListUser = state.users.map((user: any) => {
+          if (user.id === action.payload.id) {
+            return { ...action.payload };
+          } else {
+            return { ...user };
+          }
+        });
+        state.users = [...newListUser];
+        state.usersPagin = [...newList];
+        state.isLoadingTotal = false;
+      })
+      .addCase(updateTotalUsed.pending, (state: any, action: any) => {
+        state.isLoadingTotal = true;
+      })
+      .addCase(updateTotalUsed.rejected, (state: any, action: any) => {
+        state.isLoadingTotal = false;
       });
   },
 });

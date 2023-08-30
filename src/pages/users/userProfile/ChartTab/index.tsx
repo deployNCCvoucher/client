@@ -69,6 +69,13 @@ const ChartTab = () => {
         border: "5px solid #a9a1c4",
         borderRadius: "35px",
         padding: "20px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        "@media (max-width: 1024px)": {
+          borderTopLeftRadius: 0,
+          borderTopRightRadius: 0,
+        },
       }}
     >
       <Box sx={{ width: "60%", margin: "auto" }}>
