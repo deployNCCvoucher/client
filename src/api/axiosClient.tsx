@@ -1,10 +1,10 @@
 import axios from "axios";
 
 const axiosClient = axios.create({
-  baseURL: "http://10.10.21.212:3333/api",
+  baseURL: "https://ncc-voucherbackend.vercel.app/api/",
   headers: {
     "Access-Control-Allow-Origin": "*",
-    "content-type": "application/json",
+    Accept: "application/json",
   },
   withCredentials: false,
 });
