@@ -1,10 +1,11 @@
 import axios from "axios";
 
 const axiosClient = axios.create({
-  baseURL: "https://ncc-voucherbackend.vercel.app/api/",
+  baseURL: "https://be-dusky.vercel.app/api/",
   headers: {
     "Access-Control-Allow-Origin": "*",
-    Accept: "application/json",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+    "Access-Control-Allow-Headers": "Content-Type",
   },
   withCredentials: false,
 });
