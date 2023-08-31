@@ -44,10 +44,16 @@ export const getAllUserPagin = createAsyncThunk(
 
 export const login = createAsyncThunk("login", async (param: any) => {
   try {
-    const url = new URL("https://be-mocha-ten.vercel.app/api/auth/google");
-    url.searchParams.append("access_token", param);
-
-    const response = await fetch(url.toString());
+    const response = await fetch(
+      "https://be-mocha-ten.vercel.app/api/auth/google",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json", // Đặt header Content-Type là application/json
+        },
+        body: JSON.stringify({ access_token: param }),
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Network response was not ok");
