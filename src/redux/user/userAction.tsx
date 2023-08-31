@@ -44,14 +44,21 @@ export const getAllUserPagin = createAsyncThunk(
 
 export const login = createAsyncThunk("login", async (param: any) => {
   try {
-    const { data } = await axiosClient.post("/auth/google", {
-      access_token: param,
-    });
+    const url = new URL("https://be-mocha-ten.vercel.app/api/auth/google");
+    url.searchParams.append("access_token", param);
+
+    const response = await fetch(url.toString());
+
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+
+    const data = await response.json();
     console.log("data", data);
     return data;
-  } catch (error: any) {
+  } catch (error) {
     console.log(error);
-    // return thunkApi.rejectWithValue(error.response.data.error.message);
+    // return thunkApi.rejectWithValue(error.message);
   }
 });
 
