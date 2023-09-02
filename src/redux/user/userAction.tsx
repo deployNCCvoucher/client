@@ -7,7 +7,7 @@ export const getUser = createAsyncThunk(
   async (params: any, thunkApi) => {
     try {
       const res = await fetch(
-        `https://be-psi-six.vercel.app/api/users/getById/${params}`
+        `https://back-nganguyenth.vercel.app/api/users/getById/${params}`
       );
       const data = await res.json();
       return data;
@@ -19,7 +19,9 @@ export const getUser = createAsyncThunk(
 
 export const getAllUser = createAsyncThunk("/users/getAll/", async () => {
   try {
-    const res = await fetch(`https://be-psi-six.vercel.app/api/users/getAll`);
+    const res = await fetch(
+      `https://back-nganguyenth.vercel.app/api/users/getAll`
+    );
     const data = res.json();
     return data;
   } catch (error: any) {
@@ -49,11 +51,12 @@ export const getAllUserPagin = createAsyncThunk(
 export const login = createAsyncThunk("login", async (param: any) => {
   try {
     const response = await fetch(
-      "https://be-psi-six.vercel.app/api/auth/google",
+      "https://back-nganguyenth.vercel.app/api/auth/google",
       {
         method: "POST",
         headers: {
-          "Access-Control-Allow-Origin": "https://be-psi-six.vercel.app",
+          "Access-Control-Allow-Origin":
+            "https://back-nganguyenth.vercel.app/api",
           "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
           "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
         },
@@ -121,11 +124,12 @@ export const updateAdmin = createAsyncThunk(
   async (dataUpdate: UpdateAdminInter, thunkApi) => {
     try {
       const res = await fetch(
-        `https://be-psi-six.vercel.app/api/users/updateAdmin/${dataUpdate.id}`,
+        `https://back-nganguyenth.vercel.app/api/users/updateAdmin/${dataUpdate.id}`,
         {
           method: "POST",
           headers: {
-            "Access-Control-Allow-Origin": "https://be-psi-six.vercel.app",
+            "Access-Control-Allow-Origin":
+              "https://back-nganguyenth.vercel.app",
             "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
             "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
           },
