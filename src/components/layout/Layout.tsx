@@ -30,7 +30,7 @@ const Layout = (): JSX.Element => {
   const fetchData = async () => {
     try {
       const response = await fetch(
-        "https://be-mocha-ten.vercel.app/api/users/getAll"
+        "https://be-psi-six.vercel.app/api/users/getAll"
       );
       const data = await response.json();
       console.log("data", data);

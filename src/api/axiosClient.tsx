@@ -3,11 +3,11 @@ import axios from "axios";
 const axiosClient = axios.create({
   baseURL: "https://be-psi-six.vercel.app/api",
   headers: {
-    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Origin": "https://be-psi-six.vercel.app",
     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
     "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
   },
-  withCredentials: false,
+  withCredentials: true,
 });
 
 axiosClient.interceptors.request.use((config: any) => {

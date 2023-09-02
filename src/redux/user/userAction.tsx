@@ -6,7 +6,10 @@ export const getUser = createAsyncThunk(
   "/users/getById/",
   async (params: any, thunkApi) => {
     try {
-      const { data } = await axiosClient.get(`/users/getById/${params}`);
+      const res = await fetch(
+        `https://be-psi-six.vercel.app/api/users/getById/${params}`
+      );
+      const data = await res.json();
       return data;
     } catch (error: any) {
       return thunkApi.rejectWithValue(error.response.data.error.message);
@@ -16,7 +19,8 @@ export const getUser = createAsyncThunk(
 
 export const getAllUser = createAsyncThunk("/users/getAll/", async () => {
   try {
-    const { data } = await axiosClient.get(`/users/getAll`);
+    const res = await fetch(`https://be-psi-six.vercel.app/api/users/getAll`);
+    const data = res.json();
     return data;
   } catch (error: any) {
     return error;
@@ -116,10 +120,23 @@ export const updateAdmin = createAsyncThunk(
   "updateAdmin",
   async (dataUpdate: UpdateAdminInter, thunkApi) => {
     try {
-      const { data } = await axiosClient.put(
-        `/users/updateAdmin/${dataUpdate.id}`,
-        { role: dataUpdate.role }
+      const res = await fetch(
+        `https://be-psi-six.vercel.app/api/users/updateAdmin/${dataUpdate.id}`,
+        {
+          method: "POST",
+          headers: {
+            "Access-Control-Allow-Origin": "https://be-psi-six.vercel.app",
+            "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+          },
+          body: JSON.stringify({ role: dataUpdate.role }),
+        }
       );
+      const data = await res.json();
+      // const { data } = await axiosClient.put(
+      //   `/users/updateAdmin/${dataUpdate.id}`,
+      //   { role: dataUpdate.role }
+      // );
       toast.success("Create admin successful!");
       return data;
     } catch (error: any) {

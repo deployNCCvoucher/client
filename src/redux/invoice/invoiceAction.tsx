@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axiosClient from "../../api/axiosClient";
-const api = "https://be-mocha-ten.vercel.app/api";
+const api = "https://be-psi-six.vercel.app/api/";
 
 export const getAllInvoice = createAsyncThunk(
   "invoices/getAllInvoice",
