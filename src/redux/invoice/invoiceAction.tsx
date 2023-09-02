@@ -1,11 +1,13 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axiosClient from "../../api/axiosClient";
+const api = "https://be-mocha-ten.vercel.app/api";
 
 export const getAllInvoice = createAsyncThunk(
   "invoices/getAllInvoice",
   async (params, thunkApi) => {
     try {
-      const { data } = await axiosClient.get("/invoices/getAll");
+      const response = await fetch(`${api}/invoices/getAll`);
+      const data = await response.json();
       return data;
     } catch (error: any) {
       return thunkApi.rejectWithValue(error.response?.data?.error?.message);
@@ -49,9 +51,10 @@ export const getInvoicesByFilter = createAsyncThunk(
     }
     console.log("url", url);
     try {
-      const { data } = await axiosClient.get(
-        `/invoices/getInvoicesByFilter?page=${params.page}&limit=${params.limit}${url}`
+      const response = await fetch(
+        `${api}/invoices/getInvoicesByFilter?page=${params.page}&limit=${params.limit}${url}`
       );
+      const data = await response.json();
       return data;
     } catch (error: any) {
       return thunkApi.rejectWithValue(error.response?.data?.error?.message);

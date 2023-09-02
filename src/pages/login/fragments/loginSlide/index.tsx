@@ -6,7 +6,18 @@ import { useEffect, useState } from "react";
 const LoginSlide = () => {
   const dispatch = useAppDispatch();
   const responseGoogle = async (response: any) => {
-    await dispatch(login(response.credential));
+    // await dispatch(login(response.credential));
+    const res = await fetch(
+      "https://be-ncc-nganguyenth.vercel.app/api/auth/google",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          // "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify({ access_token: response.credential }),
+      }
+    );
   };
   const [open, setOpen] = useState(false);
   useEffect(() => {

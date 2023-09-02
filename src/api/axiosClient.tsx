@@ -1,11 +1,11 @@
 import axios from "axios";
 
 const axiosClient = axios.create({
-  baseURL: "https://be-mocha-ten.vercel.app/api",
+  baseURL: "https://be-nganguyenth.vercel.app/api",
   headers: {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
-    "Access-Control-Allow-Headers": "Content-Type",
+    "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
   },
   withCredentials: false,
 });

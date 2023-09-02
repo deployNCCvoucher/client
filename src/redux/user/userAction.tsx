@@ -45,11 +45,13 @@ export const getAllUserPagin = createAsyncThunk(
 export const login = createAsyncThunk("login", async (param: any) => {
   try {
     const response = await fetch(
-      "https://be-mocha-ten.vercel.app/api/auth/google",
+      "https://be-psi-six.vercel.app/api/auth/google",
       {
         method: "POST",
         headers: {
-          "Content-Type": "application/json", // Đặt header Content-Type là application/json
+          "Access-Control-Allow-Origin": "https://be-psi-six.vercel.app",
+          "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE",
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
         },
         body: JSON.stringify({ access_token: param }),
       }

@@ -14,7 +14,7 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <GoogleOAuthProvider clientId='9811993498-flmr9etgn9vr42st1lhl2mf14of8jlu4.apps.googleusercontent.com'>
+    <GoogleOAuthProvider clientId="9811993498-flmr9etgn9vr42st1lhl2mf14of8jlu4.apps.googleusercontent.com">
       <Router>
         <Provider store={store}>
           <ToastContainer

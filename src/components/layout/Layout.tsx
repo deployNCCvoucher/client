@@ -1,4 +1,4 @@
-import { Box, Grid } from "@mui/material";
+import { Box, Button, Grid } from "@mui/material";
 import Header from "../header/Header";
 import SlideBar from "../slidebar/SlideBar";
 import { useState } from "react";
@@ -27,6 +27,17 @@ const Layout = (): JSX.Element => {
       },
     },
   });
+  const fetchData = async () => {
+    try {
+      const response = await fetch(
+        "https://be-mocha-ten.vercel.app/api/users/getAll"
+      );
+      const data = await response.json();
+      console.log("data", data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
   return (
     <>
       <Box className="box-container">
@@ -47,6 +58,7 @@ const Layout = (): JSX.Element => {
           }}
         >
           <Navigation />
+          <Button onClick={() => fetchData()}>Click</Button>
           <Outlet />
         </Grid>
       </Box>
